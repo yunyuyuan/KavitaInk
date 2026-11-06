@@ -93,4 +93,11 @@
     <string name="update_install_anyway">Trotzdem installieren</string>
     <string name="update_no_installer">Auf diesem Gerät ist kein Installationsprogramm verfügbar</string>
     <string name="update_no_browser">Kein Browser verfügbar. Adresse: %1$s</string>
+    <string name="perm_title">Speicherberechtigung erforderlich</string>
+    <string name="perm_msg">Heruntergeladene Dateien werden im Originalformat unter %1$s gespeichert. Die Ordnerstruktur des Servers bleibt erhalten, sodass auch andere Lese-Apps sie öffnen können.</string>
+    <string name="perm_go">Erlauben</string>
+    <string name="set_perm_granted">Speicherberechtigung: erteilt</string>
+    <string name="set_perm_missing">Speicherberechtigung: nicht erteilt (zum Erteilen tippen)</string>
+    <string name="set_concurrency">Gleichzeitige Downloads</string>
+    <string name="set_concurrency_note">Anzahl gleichzeitig heruntergeladener Kapitel; beim seitenweisen Download werden ebenso viele Seiten gleichzeitig geladen. Weniger spart Strom</string>
 </resources>

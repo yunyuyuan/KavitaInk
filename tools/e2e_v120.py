@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from adbui import *  # noqa: E402,F401
 import translate as T  # noqa: E402
 
-LIB = "/sdcard/Android/data/com.manus.kavitaink/files/library"
+LIB = "/sdcard/Android/data/com.manus.kavitaink/files/index"
 FONTS_DIR = f"/data/data/{PKG}/files/fonts"
 RESULTS = os.path.join(SHOTS, "v120_results.json")
 R = json.load(open(RESULTS)) if os.path.exists(RESULTS) else {}
@@ -215,6 +215,7 @@ def download_all(lib, series, timeout=1200):
 def sec_login():
     """（重新）登录测试服：设置被清空时用"""
     stop()
+    grant_storage()
     am(".ui.LoginActivity", wait=5)
     wait_text(pre("login_title") if "login_title" in ZH else "Kavita", 60)
     fields = [(x, y) for t, x, y, n in nodes() if n.get("class") == "android.widget.EditText"]

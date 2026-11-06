@@ -95,4 +95,11 @@
     <string name="update_install_anyway">Всё равно установить</string>
     <string name="update_no_installer">На устройстве нет доступного установщика</string>
     <string name="update_no_browser">Нет доступного браузера. Адрес: %1$s</string>
+    <string name="perm_title">Нужен доступ к хранилищу</string>
+    <string name="perm_msg">Скачанные файлы сохраняются в исходном формате в %1$s со структурой папок сервера, поэтому их можно открыть и в других приложениях для чтения.</string>
+    <string name="perm_go">Разрешить</string>
+    <string name="set_perm_granted">Доступ к хранилищу: разрешён</string>
+    <string name="set_perm_missing">Доступ к хранилищу: не разрешён (нажмите, чтобы разрешить)</string>
+    <string name="set_concurrency">Одновременные загрузки</string>
+    <string name="set_concurrency_note">число глав, загружаемых одновременно; при постраничной загрузке столько же страниц загружается за раз. Чем меньше, тем ниже расход энергии</string>
 </resources>

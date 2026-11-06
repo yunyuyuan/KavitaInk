@@ -91,4 +91,11 @@
     <string name="update_install_anyway">仍然安装</string>
     <string name="update_no_installer">这台设备上没有可用的安装器</string>
     <string name="update_no_browser">没有可用的浏览器。地址：%1$s</string>
+    <string name="perm_title">需要存储权限</string>
+    <string name="perm_msg">下载的文件会按原格式保存到 %1$s，保持服务器上的文件夹结构，其他阅读器也能直接打开。</string>
+    <string name="perm_go">去授权</string>
+    <string name="set_perm_granted">存储权限：已允许</string>
+    <string name="set_perm_missing">存储权限：未允许（点按去授权）</string>
+    <string name="set_concurrency">同时下载</string>
+    <string name="set_concurrency_note">同时下载的章节数；逐页下载时一章内也同时下载这么多页。越少越省电</string>
 </resources>

@@ -139,7 +139,7 @@ class MainActivity : BaseActivity() {
     private fun askDeleteSelected() {
         val items = sel.selectedItems()
         if (items.isEmpty()) return
-        bg({ items.sumOf { app.storage.sizeOf(it.dir) } }) { bytes, _ ->
+        bg({ items.sumOf { app.storage.sizeOf(it) } }) { bytes, _ ->
             val n = items.size
             val msg = if (n == 1) getString(R.string.shelf_delete_one_msg, items[0].name, formatBytes(bytes ?: 0).ifBlank { "0 KB" })
             else resources.getQuantityString(R.plurals.shelf_delete_msg, n, n, formatBytes(bytes ?: 0).ifBlank { "0 KB" })

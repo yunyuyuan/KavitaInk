@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
+import com.manus.kavitaink.StorageAccess
 import com.manus.kavitaink.App
 import com.manus.kavitaink.Lang
 import com.manus.kavitaink.Prefs
@@ -81,6 +82,46 @@ abstract class BaseActivity : Activity() {
         super.onResume()
         // 从设置页返回时立即生效
         applyOrientation()
+        // 从系统授权页回来：已授权就接着做刚才被拦下的操作（例如下载）
+        val pending = afterStorageGranted
+        if (pending != null && StorageAccess.granted(this)) {
+            afterStorageGranted = null
+            pending()
+        }
+    }
+
+    private var afterStorageGranted: (() -> Unit)? = null
+
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        @Suppress("DEPRECATION")
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != StorageAccess.REQUEST_CODE || StorageAccess.granted(this)) return  // 已授权：onResume 里接着做
+        if (!shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            // 「拒绝且不再询问」：系统不会再弹窗，打开应用详情页让用户手动允许，回来后自动继续
+            android.widget.Toast.makeText(this, StorageAccess.deniedText(), android.widget.Toast.LENGTH_LONG).show()
+            StorageAccess.openAppDetails(this)
+        } else {
+            afterStorageGranted = null
+            android.widget.Toast.makeText(this, StorageAccess.deniedText(), android.widget.Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /** 需要写下载目录的操作：已授权直接执行；否则先说明用途，再打开系统授权页，授权后自动继续 */
+    fun withStorageAccess(action: () -> Unit) {
+        if (StorageAccess.granted(this)) {
+            action()
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.perm_title)
+            .setMessage(getString(R.string.perm_msg, app.storage.contentRoot.absolutePath) + "\n\n" + getString(StorageAccess.stepText()))
+            .setPositiveButton(R.string.perm_go) { _, _ ->
+                afterStorageGranted = action
+                StorageAccess.request(this)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     protected fun applyOrientation() {

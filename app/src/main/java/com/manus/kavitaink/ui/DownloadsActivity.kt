@@ -64,7 +64,7 @@ class DownloadsActivity : BaseActivity() {
 
     /** 有正在进行的任务 → 全部暂停；否则 → 全部继续 */
     private fun toggleAll() {
-        if (hasActive()) app.queue.pauseAll() else app.queue.resumeAll()
+        if (hasActive()) app.queue.pauseAll() else withStorageAccess { app.queue.resumeAll() }
     }
 
     private fun hasActive() = app.queue.snapshot().any {
@@ -77,7 +77,7 @@ class DownloadsActivity : BaseActivity() {
             .setTitle(R.string.dlq_title)
             .setItems(opts) { _, which ->
                 when (which) {
-                    0 -> app.queue.retryAll()
+                    0 -> withStorageAccess { app.queue.retryAll() }
                     1 -> app.queue.clearFailed()
                     2 -> if (app.queue.size() > 0) {
                         confirm(getString(R.string.dlq_cancel_all_title), getString(R.string.dlq_cancel_all_msg), getString(R.string.dlq_cancel_all_title)) { app.queue.cancelAll() }
@@ -92,11 +92,11 @@ class DownloadsActivity : BaseActivity() {
         val title = getString(R.string.title_dot, e.task.seriesName, e.task.title(x))
         val actions = ArrayList<Pair<String, () -> Unit>>()
         when (e.state) {
-            State.RUNNING -> if (e.stopping) actions += getString(R.string.resume) to { app.queue.resume(e) }
+            State.RUNNING -> if (e.stopping) actions += getString(R.string.resume) to { withStorageAccess { app.queue.resume(e) } }
             else actions += getString(R.string.pause) to { app.queue.pause(e) }
             State.QUEUED -> actions += getString(R.string.pause) to { app.queue.pause(e) }
-            State.PAUSED -> actions += getString(R.string.resume) to { app.queue.resume(e) }
-            State.FAILED -> actions += getString(R.string.dlq_retry_one) to { app.queue.resume(e) }
+            State.PAUSED -> actions += getString(R.string.resume) to { withStorageAccess { app.queue.resume(e) } }
+            State.FAILED -> actions += getString(R.string.dlq_retry_one) to { withStorageAccess { app.queue.resume(e) } }
         }
         actions += getString(R.string.dlq_cancel_one) to {
             confirm(getString(R.string.dlq_cancel_one), getString(R.string.dlq_cancel_one_msg, title), getString(R.string.dlq_cancel_one)) { app.queue.cancel(e) }

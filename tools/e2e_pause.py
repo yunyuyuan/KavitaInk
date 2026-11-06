@@ -1,6 +1,7 @@
 """
-模拟器端到端测试：下载进度、暂停 / 继续、重启后保持暂停、网络卡死时暂停、断网自动重试、通知栏按钮、取消。
-需要：Kavita(5000) + tools/throttle_proxy.py(5001)，服务器上有 Big Manga（80 页）和 Big Novel（15 MB EPUB）。
+模拟器端到端测试：下载进度、暂停 / 继续、重启后保持暂停、网络卡死时暂停、断网自动重试、通知栏按钮、取消、两章同时下载。
+需要：Kavita(5000) + tools/throttle_proxy.py(5001)，服务器上有 Big Manga（60 MB cbz）和 Big Novel（15 MB EPUB）。
+下载结果在 /sdcard/Books/KavitaInk/<书库名>/<服务器上的相对路径>，与服务器原文件逐字节比较。
 用法：python3 e2e_pause.py <apk>
 """
 import os
@@ -19,10 +20,16 @@ APK = sys.argv[1] if len(sys.argv) > 1 else "/home/ubuntu/KavitaInk/app/build/ou
 PKG = "com.manus.kavitaink"
 BASE = "http://10.0.2.2:5001"
 SK = hashlib.sha1(BASE.lower().encode()).hexdigest()[:10]
-LIB = f"/sdcard/Android/data/{PKG}/files/library/{SK}"
-MANGA = f"{LIB}/s7/c8"
-NOVEL = f"{LIB}/s6/c7"
+IDX = f"/sdcard/Android/data/{PKG}/files/index/{SK}"   # 私有索引
+MANGA = f"{IDX}/s7/c8"
+NOVEL = f"{IDX}/s6/c7"
+CONTENT = "/sdcard/Books/KavitaInk"                      # 公共下载目录
+MANGA_FILE = f"{CONTENT}/漫画/Big Manga/Big Manga v01.cbz"
+MANGA_PART = f"{CONTENT}/漫画/Big Manga/.Big Manga v01.cbz.part"
+NOVEL_FILE = f"{CONTENT}/小说/Big Novel/Big Novel.epub"
+NOVEL_PART = f"{CONTENT}/小说/Big Novel/.Big Novel.epub.part"
 ORIG_EPUB = "/home/ubuntu/library/books/Big Novel/Big Novel.epub"
+ORIG_CBZ = "/home/ubuntu/library/manga/Big Manga/Big Manga v01.cbz"
 R = {}  # 结果
 
 
@@ -45,9 +52,14 @@ def wakelock_held():
     return "KavitaInk:download" in shell("dumpsys power")
 
 
-def pages_on_disk():
-    out = shell(f"ls {MANGA}/pages 2>/dev/null")
-    return len([x for x in out.split() if x and not x.endswith(".part")])
+def sha_of(p):
+    return hashlib.sha256(open(p, "rb").read()).hexdigest()
+
+
+def pull_sha(remote):
+    local = "/tmp/pulled_" + os.path.basename(remote)
+    subprocess.run([ADB, "pull", remote, local], capture_output=True)
+    return sha_of(local) if os.path.exists(local) else None
 
 
 def size_of(path):
@@ -129,6 +141,8 @@ def step0():
     proxy("ok", 300_000)
     print(sh("install", "-r", APK, timeout=600).decode().strip())
     shell("pm clear " + PKG)
+    shell(f"rm -rf {CONTENT}")
+    grant_storage()
     set_app_lang("zh-CN")  # 模拟器系统语言是英文，脚本按中文文字查找控件
     shell("logcat -c")
     shell(f"am start -W -n {PKG}/.ui.MainActivity", timeout=300)
@@ -149,7 +163,7 @@ def step1():
     step("1. 漫画下载进度与暂停")
     open_series("漫画", "Big Manga")
     tap(*wait_row(lambda t: t.endswith("未下载"))[1:])
-    r = wait_row(lambda t: "下载中" in t and pct_pages(t) >= 6, 400)
+    r = wait_row(lambda t: "下载中" in t and mb_done(t) >= 3.0, 400)
     print("  进度显示：", r[0])
     R["manga_progress_text"] = r[0]
     shot("p01_series_downloading")
@@ -163,13 +177,16 @@ def step1():
     print(f"  暂停后下载服务停止用时：{t_pause:.1f}s")
     R["manga_pause_service_stop_s"] = round(t_pause, 1)
     R["manga_wakelock_after_pause"] = wakelock_held()
-    n1 = pages_on_disk()
+    n1 = size_of(MANGA_PART)
     time.sleep(10)
-    n2 = pages_on_disk()
+    n2 = size_of(MANGA_PART)
     reqs_after = [l for l in log_lines()[mark:] if "chapterId=8" in l and "REQ" in l]
-    print(f"  暂停时磁盘页数 {n1}，10 秒后 {n2}；暂停后仍发出的页面请求 {len(reqs_after)} 个")
-    R["manga_pages_at_pause"] = n1
-    R["manga_pages_stable_after_pause"] = n1 == n2
+    later = [l for l in reqs_after if "Download" in l]
+    print(f"  暂停时临时文件 {n1} 字节，10 秒后 {n2}；暂停后新发出的下载请求 {len(later)} 个")
+    R["manga_part_at_pause"] = n1
+    R["manga_part_is_hidden_in_content_dir"] = n1 > 0
+    R["manga_part_stable_after_pause"] = n1 == n2
+    R["manga_no_request_after_pause"] = len(later) == 0
     r = wait_row(lambda t: "已暂停" in t, 60)
     print("  暂停后显示：", r[0])
     R["manga_paused_text"] = r[0]
@@ -186,7 +203,7 @@ def step2():
     wait_text("书架")
     time.sleep(8)
     R["restart_service_running"] = service_running()
-    R["restart_pages_unchanged"] = pages_on_disk() == n1
+    R["restart_part_unchanged"] = size_of(MANGA_PART) == n1
     tap_text("下载(", wait=30)
     wait_text("下载队列")
     r = wait_row(lambda t: "已暂停" in t, 60)
@@ -206,11 +223,11 @@ def step3():
     assert wait_until(service_running, 30) is not None, "继续后服务未启动"
     done = wait_until(lambda: exists(f"{MANGA}/chapter.json"), 900, 3)
     assert done is not None, "漫画续传未完成"
-    page_reqs = [int(m.group(1)) for l in log_lines()[mark:] for m in [re.search(r"chapterId=8&page=(\d+)", l)] if m]
-    print(f"  续传请求了 {len(page_reqs)} 页，第一页序号 {min(page_reqs) if page_reqs else None}（暂停时已有 {n1} 页）")
-    R["manga_resume_first_page"] = min(page_reqs) if page_reqs else None
-    R["manga_resume_requests"] = len(page_reqs)
-    R["manga_total_pages"] = pages_on_disk()
+    first = [l for l in log_lines()[mark:] if "chapterId=8" in l and "Download" in l]
+    print("  续传请求：", first[:2], f"（暂停时已有 {n1} 字节）")
+    R["manga_resume_range_ok"] = any(f"range={n1}-" in l for l in first)
+    R["manga_part_removed"] = not exists(MANGA_PART)
+    R["manga_sha_match"] = pull_sha(MANGA_FILE) == sha_of(ORIG_CBZ)
     wait_text("没有进行中的下载", 60)
     shot("p05_queue_empty")
     back()
@@ -232,9 +249,9 @@ def step4():
     shot("p06_novel_downloading")
     proxy("stall")
     time.sleep(4)
-    s1 = size_of(f"{NOVEL}/book.epub.part")
+    s1 = size_of(NOVEL_PART)
     time.sleep(3)
-    s2 = size_of(f"{NOVEL}/book.epub.part")
+    s2 = size_of(NOVEL_PART)
     R["stall_no_progress"] = s1 == s2
     r = row(lambda t: "下载中" in t)
     tap(*r[1:])
@@ -245,7 +262,7 @@ def step4():
     print(f"  网络卡死时暂停，下载服务停止用时：{t_stall:.1f}s（读取超时 60s）")
     R["stall_pause_service_stop_s"] = round(t_stall, 1)
     R["stall_wakelock_after_pause"] = wakelock_held()
-    kept = size_of(f"{NOVEL}/book.epub.part")
+    kept = size_of(NOVEL_PART)
     R["novel_part_kept_bytes"] = kept
     proxy("ok", 400_000)
     r = wait_row(lambda t: "已暂停" in t, 60)
@@ -267,13 +284,13 @@ def step5():
     first = [l for l in log_lines()[mark:] if "chapterId=7" in l and "Download" in l]
     print("  继续后的下载请求：", first[:2])
     R["novel_resume_range_ok"] = any(f"range={kept}-" in l for l in first)
-    wait_until(lambda: size_of(f"{NOVEL}/book.epub.part") > kept + 800_000, 120, 1)
+    wait_until(lambda: size_of(NOVEL_PART) > kept + 800_000, 120, 1)
     proxy("drop")
     r = wait_row(lambda t: "自动重试" in t, 120, 1)
     print("  断网后显示：", r[0])
     R["retry_text"] = r[0]
     shot("p08_auto_retry")
-    part_at_drop = size_of(f"{NOVEL}/book.epub.part")
+    part_at_drop = size_of(NOVEL_PART)
     mark = len(log_lines())
     proxy("ok", 30_000_000)
     done = wait_until(lambda: exists(f"{NOVEL}/chapter.json"), 300, 2)
@@ -281,9 +298,8 @@ def step5():
     retry_reqs = [l for l in log_lines()[mark:] if "chapterId=7" in l and "Download" in l]
     print("  恢复后的请求：", retry_reqs[:2], " 断网时已有", part_at_drop)
     R["retry_range_ok"] = any(re.search(r"range=(\d+)-", l) and int(re.search(r"range=(\d+)-", l).group(1)) >= part_at_drop - 600_000 for l in retry_reqs)
-    subprocess.run([ADB, "pull", f"{NOVEL}/book.epub", "/tmp/pulled.epub"], capture_output=True)
-    sha = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
-    R["novel_sha_match"] = sha("/tmp/pulled.epub") == sha(ORIG_EPUB)
+    R["novel_sha_match"] = pull_sha(NOVEL_FILE) == sha_of(ORIG_EPUB)
+    R["novel_part_removed"] = not exists(NOVEL_PART)
     r = wait_row(lambda t: "已下载" in t, 60)
     shot("p09_novel_done")
 
@@ -293,7 +309,7 @@ def step6():
     global attempt, btns, crash, done, f, first, kept, l, m, mark, n, n1, n2, p, page_reqs, part_at_drop, r, reqs_after, retry_reqs, s1, s2, sha, t, t0, t_np, t_pause, t_stall, x, y
     step("6. 通知栏按钮")
     # 删除小说离线内容，重新下载
-    shell(f"rm -rf {NOVEL}")
+    shell(f"rm -rf {NOVEL} '{NOVEL_FILE}'")
     back(); time.sleep(1)
     time.sleep(3)
     tap_text("Big Novel", exact=True)
@@ -343,9 +359,77 @@ def step7():
     tap(*btns[-1])
     R["cancel_service_stopped"] = wait_until(lambda: not service_running(), 30) is not None
     time.sleep(3)
-    R["cancel_partial_deleted"] = not exists(NOVEL)
+    R["cancel_partial_deleted"] = not exists(NOVEL) and not exists(NOVEL_PART) and not exists(NOVEL_FILE)
+    # 取消后不留空文件夹
+    R["cancel_no_empty_dir"] = not exists(f"{CONTENT}/小说/Big Novel")
     wait_row(lambda t: t.endswith("未下载"), 60)
     shot("p12_cancelled")
+
+
+# ---------------------------------------------------------------- 8. 两章同时下载，单独暂停其中一个
+def step7b():
+    global attempt, btns, crash, done, f, first, kept, l, m, mark, n, n1, n2, p, page_reqs, part_at_drop, r, reqs_after, retry_reqs, s1, s2, sha, t, t0, t_np, t_pause, t_stall, x, y
+    step("8. 两章同时下载（默认同时 2 个），暂停一个不影响另一个")
+    shell(f"rm -rf {MANGA} '{MANGA_FILE}'")
+    # 限速要足够低：这台模拟器从小说页导航到漫画页要一分多钟，小说不能在这之前就下完
+    proxy("ok", 60_000)
+    # 当前在 Big Novel 系列页；之前的步骤可能已把小说下载完，先在应用里删掉
+    t, x, y = wait_row(lambda t: t.endswith("未下载") or t.endswith("已下载"))
+    if t.endswith("已下载"):
+        shell(f"input swipe {x} {y} {x} {y} 1500"); time.sleep(3)
+        wait_text("已选", 60)
+        tap_text("删除所选")
+        wait_text("将释放", 60)
+        tap_text("删除", exact=True)
+    tap(*wait_row(lambda t: t.endswith("未下载"), 60)[1:])
+    wait_row(lambda t: "下载中" in t, 120)
+    back(); time.sleep(1)
+    back(); time.sleep(1)
+    wait_text("个书库")
+    open_series("漫画", "Big Manga")
+    tap(*wait_row(lambda t: t.endswith("未下载"))[1:])
+    wait_row(lambda t: "下载中" in t and mb_done(t) >= 0.5, 300)
+    a0, b0 = size_of(NOVEL_PART), size_of(MANGA_PART)
+    time.sleep(10)
+    a1, b1 = size_of(NOVEL_PART), size_of(MANGA_PART)
+    print(f"  10 秒内：小说 {a0}→{a1}（+{a1 - a0}），漫画 {b0}→{b1}（+{b1 - b0}）；-1 表示临时文件不存在")
+    R["parallel_both_growing"] = a0 > 0 and a1 - a0 > 150_000 and b1 - b0 > 150_000
+    # 模拟器从书架点到队列再点进小说要一两分钟，降低限速，保证小说在暂停前还没下完
+    proxy("ok", 25_000)
+    for _ in range(4):  # 系列页 → 系列列表 → 书库 → 书架
+        if find("书架", exact=True):
+            break
+        back(); time.sleep(2)
+    wait_text("书架")
+    tap_text("下载(", wait=30)
+    wait_text("下载队列")
+    shot("p13_queue_two_running")
+    rows = [t for t, x, y, n in nodes() if "下载中" in t]
+    print("  队列：", rows)
+    R["queue_two_running"] = len(rows) >= 2
+    tap_text("Big Novel", wait=30)
+    wait_text("暂停")
+    tap_text("暂停", exact=True)
+    time.sleep(4)
+    a2, b2 = size_of(NOVEL_PART), size_of(MANGA_PART)
+    time.sleep(10)
+    a3, b3 = size_of(NOVEL_PART), size_of(MANGA_PART)
+    print(f"  暂停小说后 10 秒：小说 +{a3 - a2}，漫画 +{b3 - b2}")
+    R["parallel_pause_one"] = a2 > 0 and a3 == a2 and b3 - b2 > 100_000
+    shot("p14_queue_one_paused")
+    proxy("ok", 30_000_000)
+    # 还有在下载的项时顶栏是「全部暂停」，暂停的那一项要单独点「继续」
+    tap_text("Big Novel", wait=30)
+    tap_text("继续", exact=True, wait=30)
+    done = wait_until(lambda: exists(f"{NOVEL}/chapter.json") and exists(f"{MANGA}/chapter.json"), 600, 3)
+    R["parallel_both_done"] = done is not None
+    R["parallel_sha_match"] = pull_sha(NOVEL_FILE) == sha_of(ORIG_EPUB) and pull_sha(MANGA_FILE) == sha_of(ORIG_CBZ)
+    # 下载目录：只有原文件，按 书库名/系列文件夹/原文件名 排列
+    listing = sorted(x.strip() for x in shell(f"cd {CONTENT} && find . -type f").splitlines() if x.strip())
+    print("  下载目录：", listing)
+    R["content_listing"] = listing
+    wait_text("没有进行中的下载", 120)
+    shot("p15_queue_done")
 
 
 # ---------------------------------------------------------------- 收尾
@@ -359,7 +443,8 @@ def step8():
         json.dump(R, f, ensure_ascii=False, indent=1)
 
 
-for i, fn in enumerate([step0, step1, step2, step3, step4, step5, step6, step7, step8]):
-    if i >= FROM or i == 8:
+STEPS = [step0, step1, step2, step3, step4, step5, step6, step7, step7b, step8]
+for i, fn in enumerate(STEPS):
+    if i >= FROM or fn is step8:
         fn()
         print("  当前结果：", json.dumps(R, ensure_ascii=False), flush=True)

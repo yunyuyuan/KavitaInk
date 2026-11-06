@@ -51,4 +51,7 @@
     <string name="err_epub_corrupt">Файл EPUB повреждён: %1$s</string>
     <string name="err_epub_no_opf">Некорректный EPUB: файл OPF не найден</string>
     <string name="err_epub_read_opf">Не удалось прочитать файл OPF</string>
+    <string name="err_mkdir_content">Не удалось создать папку %1$s. Проверьте разрешение на доступ к хранилищу и свободное место</string>
+    <string name="err_storage_permission">Нет разрешения на доступ к хранилищу. Разрешите KavitaInk «Доступ ко всем файлам» в системных настройках</string>
+    <string name="err_storage_permission_legacy">Нет доступа к хранилищу. Разрешите KavitaInk доступ к «Хранилищу» в настройках системы → Приложения → Разрешения</string>
 </resources>

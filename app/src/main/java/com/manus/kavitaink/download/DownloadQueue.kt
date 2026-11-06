@@ -331,6 +331,8 @@ class DownloadQueue(private val app: App) {
 
     // ---------- 持久化 ----------
 
+    /** 多个下载线程会同时调用：加锁保证后生成的快照一定后写入 */
+    @Synchronized
     private fun persist() {
         val arr = JSONArray()
         for (e in snapshot()) {

@@ -32,6 +32,19 @@ class PauseResumeLiveTest {
     private fun sha(f: File): String =
         MessageDigest.getInstance("SHA-256").digest(f.readBytes()).joinToString("") { "%02x".format(it) }
 
+    private fun newStorage(): Storage {
+        val d = Files.createTempDirectory("kpause").toFile()
+        return Storage(File(d, "index"), File(d, "Books/KavitaInk"))
+    }
+
+    private fun Storage.cleanup() {
+        root.parentFile.deleteRecursively()
+    }
+
+    /** 原文件在下载目录里的位置（下载开始后才确定） */
+    private fun Storage.dest(t: DownloadTask): File =
+        contentFile(readTarget(chapterDir(t.serverKey, t.seriesId, t.chapterId))!!)
+
     private fun task(name: String): DownloadTask {
         val s = api.search(name).first { it.name == name }
         val c = api.chapters(s.id, s.format).first()
@@ -48,8 +61,8 @@ class PauseResumeLiveTest {
         lateinit var thread: Thread
     }
 
-    private fun start(storage: Storage, t: DownloadTask): Run {
-        val r = Run(Downloader(api, storage))
+    private fun start(storage: Storage, t: DownloadTask, pageWorkers: Int = 1): Run {
+        val r = Run(Downloader(api, storage, LibraryCache(api), pageWorkers))
         r.thread = Thread {
             try {
                 r.dl.download(t, { d, tot, _ ->
@@ -91,7 +104,7 @@ class PauseResumeLiveTest {
 
     @Test
     fun epubPauseThenResumeFromBreakpoint() {
-        val storage = Storage(Files.createTempDirectory("kpause").toFile())
+        val storage = newStorage()
         val t = task("Big Novel")
         proxy("ok", 400_000)
         val r = start(storage, t)
@@ -101,11 +114,14 @@ class PauseResumeLiveTest {
         assertTrue("暂停应在 1.5 秒内生效，实际 ${ms}ms", ms < 1500)
         assertTrue("应以 Cancelled 结束：${r.error}", r.error is Downloader.Cancelled)
         val dir = storage.chapterDir(t.serverKey, t.seriesId, t.chapterId)
-        val part = File(dir, Storage.EPUB_FILE + ".part")
-        assertTrue("未完成文件应保留", part.exists())
+        val dest = storage.dest(t)
+        assertEquals("文件名保持服务器原名", File(t.filePath).name, dest.name)
+        val part = storage.partFile(dest)
+        assertTrue("未完成文件应保留：$part", part.exists())
+        assertTrue("临时文件是隐藏文件", part.name.startsWith("."))
         val kept = part.length()
         assertTrue("已下载部分 $kept", kept in 2_000_000 until t.bytes)
-        assertFalse(File(dir, Storage.EPUB_FILE).exists())
+        assertFalse(dest.exists())
         assertFalse(storage.isComplete(t.serverKey, t.seriesId, t.chapterId))
         // 磁盘进度估算（暂停项 / 重启后显示）
         val est = Downloader.partialProgress(storage, t)
@@ -127,16 +143,17 @@ class PauseResumeLiveTest {
         EpubBook(local.epubFile).use { assertEquals(12, it.spine.size) }
         val log = File("/tmp/proxy.log").readText()
         assertTrue("代理日志中应有 Range: bytes=$kept-", log.contains("chapterId=${t.chapterId} range=$kept-"))
-        storage.root.deleteRecursively()
+        storage.cleanup()
     }
 
     @Test
     fun mangaPauseKeepsPagesAndResumeSkipsThem() {
-        val storage = Storage(Files.createTempDirectory("kpause").toFile())
-        val t = task("Big Manga")
+        val storage = newStorage()
+        // Big Manga 是 cbz，平时下载原文件；这里强制逐页下载（同 cbr / 多文件章节），并且 3 页同时下载
+        val t = task("Big Manga").copy(fileCount = 2)
         assertEquals(80, t.pages)
         proxy("ok", 1_500_000)
-        val r = start(storage, t)
+        val r = start(storage, t, pageWorkers = 3)
         waitFor(120_000) { r.done >= 8 }
         val ms = pause(r)
         assertTrue("暂停应在 1.5 秒内生效，实际 ${ms}ms", ms < 1500)
@@ -153,7 +170,7 @@ class PauseResumeLiveTest {
 
         Thread.sleep(1100) // 确保若被重新下载，修改时间一定不同
         proxy("ok", 20_000_000)
-        val r2 = start(storage, t)
+        val r2 = start(storage, t, pageWorkers = 3)
         r2.thread.join(300_000)
         assertEquals(null, r2.error)
         assertEquals("续传首次进度应等于已有页数", kept.size.toLong(), r2.firstReport.first())
@@ -161,12 +178,12 @@ class PauseResumeLiveTest {
         assertEquals(80, all.size)
         for ((name, m) in mtimes) assertEquals("第 $name 页不应被重新下载", m, File(pagesDir, name).lastModified())
         assertTrue(storage.isComplete(t.serverKey, t.seriesId, t.chapterId))
-        storage.root.deleteRecursively()
+        storage.cleanup()
     }
 
     @Test
     fun pauseWorksImmediatelyEvenWhenNetworkStalls() {
-        val storage = Storage(Files.createTempDirectory("kpause").toFile())
+        val storage = newStorage()
         val t = task("Big Novel")
         proxy("ok", 400_000)
         val r = start(storage, t)
@@ -187,12 +204,12 @@ class PauseResumeLiveTest {
         assertFalse(r.thread.isAlive)
         assertTrue("网络卡死后暂停，结果应是“已停止”而不是失败：${r.error}", r.error is Downloader.Cancelled)
         proxy("ok", 400_000)
-        storage.root.deleteRecursively()
+        storage.cleanup()
     }
 
     @Test
     fun networkDropIsTransientAndKeepsPartialData() {
-        val storage = Storage(Files.createTempDirectory("kpause").toFile())
+        val storage = newStorage()
         val t = task("Big Novel")
         proxy("ok", 400_000)
         val r = start(storage, t)
@@ -204,7 +221,7 @@ class PauseResumeLiveTest {
         assertTrue("断网应抛出 IO 异常而不是被当作完成：$err", err is IOException)
         assertTrue("应判定为可自动重试", KavitaApi.isTransient(err))
         assertFalse(storage.isComplete(t.serverKey, t.seriesId, t.chapterId))
-        val part = File(storage.chapterDir(t.serverKey, t.seriesId, t.chapterId), Storage.EPUB_FILE + ".part")
+        val part = storage.partFile(storage.dest(t))
         assertTrue("断网后已下载部分应保留：${part.length()}", part.length() >= 900_000)
         // 断网期间重试仍然失败，且同样可重试
         val r1 = start(storage, t)
@@ -224,6 +241,40 @@ class PauseResumeLiveTest {
         assertFalse(KavitaApi.isTransient(ApiException(403, R.string.err_http_403)))
         assertFalse(KavitaApi.isTransient(StorageException(R.string.err_no_space)))
         assertTrue(KavitaApi.isTransient(ApiException(503, R.string.err_http_5xx, "", 503)))
-        storage.root.deleteRecursively()
+        storage.cleanup()
+    }
+
+    /** 两章同时下载：都在推进；暂停其中一个不影响另一个 */
+    @Test
+    fun twoChaptersDownloadAtTheSameTimeAndPauseIndependently() {
+        val storage = newStorage()
+        val novel = task("Big Novel")
+        val manga = task("Big Manga")
+        proxy("ok", 400_000)
+        val a = start(storage, novel)
+        val b = start(storage, manga)
+        waitFor(60_000) { a.done >= 600_000 && b.done >= 600_000 }
+        // 同一段时间里两个都有进展（真正并行，不是一个下完再下另一个）
+        val a0 = a.done
+        val b0 = b.done
+        Thread.sleep(2000)
+        println("并发 2 秒内：novel +${a.done - a0}，manga +${b.done - b0}")
+        assertTrue(a.done - a0 > 200_000)
+        assertTrue(b.done - b0 > 200_000)
+        // 暂停 novel，manga 继续
+        val ms = pause(a)
+        assertTrue(a.error is Downloader.Cancelled)
+        assertTrue("暂停应在 1.5 秒内生效，实际 ${ms}ms", ms < 1500)
+        val b1 = b.done
+        Thread.sleep(2000)
+        assertTrue("暂停一个不影响另一个：manga +${b.done - b1}", b.done - b1 > 200_000)
+        assertTrue(b.thread.isAlive)
+        proxy("ok", 20_000_000)
+        b.thread.join(120_000)
+        assertEquals(null, b.error)
+        assertTrue(storage.isComplete(manga.serverKey, manga.seriesId, manga.chapterId))
+        assertFalse(storage.isComplete(novel.serverKey, novel.seriesId, novel.chapterId))
+        assertTrue(storage.partFile(storage.dest(novel)).length() >= 600_000)
+        storage.cleanup()
     }
 }

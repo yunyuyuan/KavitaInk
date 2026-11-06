@@ -69,6 +69,8 @@ def download_series(lib, series, expect_items):
 def phase_online():
     print(sh("install", "-r", APK, timeout=600).decode())
     shell("pm clear " + PKG)
+    shell(f"rm -rf {CONTENT_DIR}")
+    grant_storage()        # 下载目录在公共存储（/sdcard/Books/KavitaInk）
     set_app_lang("zh-CN")  # 模拟器系统语言是英文，脚本按中文文字查找控件
     shell("logcat -c")
     shell(f"am start -W -n {PKG}/.ui.MainActivity", timeout=300)

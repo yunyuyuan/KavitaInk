@@ -41,4 +41,6 @@
     <string name="sel_not_downloaded">Apenas não baixados</string>
     <string name="sel_downloaded">Apenas baixados</string>
     <string name="list_sep">", "</string>
+    <string name="perm_step_all_files">Na próxima tela, ative “Permitir acesso para gerenciar todos os arquivos” para o KavitaInk e volte.</string>
+    <string name="perm_step_legacy">Na próxima caixa de diálogo do sistema, selecione “Permitir”.</string>
 </resources>

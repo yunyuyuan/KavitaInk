@@ -23,12 +23,17 @@ import com.manus.kavitaink.App
 import com.manus.kavitaink.R
 import com.manus.kavitaink.core.Downloader
 import com.manus.kavitaink.core.KavitaApi
+import com.manus.kavitaink.core.LibraryCache
+import com.manus.kavitaink.StorageAccess
 import com.manus.kavitaink.ui.DownloadsActivity
 import java.io.File
 
 /**
  * 前台下载服务：只在有排队任务时运行；全部完成或全部暂停后立即停止并释放唤醒锁 / Wi-Fi 锁。
  * 应用没有任何其他后台任务（无同步、无定时器、无推送）。
+ *
+ * 并发：最多 [Prefs.downloadConcurrency] 个工作线程，各自从队列里取下一项，所有格式都一样；
+ * 逐页下载的章节在章节内部也会同时下载几页。
  */
 class DownloadService : Service() {
 
@@ -49,9 +54,15 @@ class DownloadService : Service() {
     }
 
     private val lock = Any()
-    private var running = false
+    /** 正在运行的工作线程数（受 lock 保护） */
+    private var workers = 0
+    private var workerSeq = 0
     @Volatile private var lastStartId = 0
     private var lastNotifAt = 0L
+    private var wake: PowerManager.WakeLock? = null
+    private var wifi: WifiManager.WifiLock? = null
+    /** 本次下载会话共用的书库缓存（所有工作线程共用，换服务器 / 重新登录后重建） */
+    private var libs: Pair<KavitaApi, LibraryCache>? = null
 
     private val app get() = application as App
     private val nm get() = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -67,12 +78,45 @@ class DownloadService : Service() {
             lastStartId = startId
             nm.cancel(NOTIF_STATUS)
             goForeground(build(getString(R.string.notif_preparing), "", -1))
-            if (!running) {
-                running = true
-                Thread({ loop() }, "kavita-download").start()
+            if (workers == 0) acquireLocks()
+            // 设置里调大了同时下载数，或有新任务：补足工作线程（多出来的线程取不到任务会自己退出）。
+            // 按「正在下载 + 排队中」计算：已有一项在下载时再加一项，也要马上开第二个线程
+            val active = app.queue.count(DownloadQueue.State.RUNNING) + app.queue.count(DownloadQueue.State.QUEUED)
+            val want = app.prefs.downloadConcurrency.coerceAtMost(maxOf(1, active))
+            while (workers < want) {
+                workers++
+                val n = ++workerSeq
+                Thread({ loop() }, "kavita-download-$n").start()
             }
         }
         return START_NOT_STICKY
+    }
+
+    @Suppress("DEPRECATION")
+    private fun acquireLocks() {
+        val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+        wake = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KavitaInk:download").apply {
+            setReferenceCounted(false)
+            acquire(6 * 60 * 60 * 1000L)
+        }
+        val wm = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        wifi = wm.createWifiLock(WifiManager.WIFI_MODE_FULL, "KavitaInk:download").apply {
+            setReferenceCounted(false)
+            runCatching { acquire() }
+        }
+    }
+
+    private fun releaseLocks() {
+        wake?.let { runCatching { it.release() } }
+        wifi?.let { runCatching { it.release() } }
+        wake = null
+        wifi = null
+    }
+
+    private fun libraryCache(api: KavitaApi): LibraryCache = synchronized(lock) {
+        val cur = libs
+        if (cur != null && cur.first.base == api.base && cur.first.apiKey == api.apiKey) return cur.second
+        LibraryCache(api).also { libs = api to it }
     }
 
     private fun goForeground(n: Notification) {
@@ -83,52 +127,48 @@ class DownloadService : Service() {
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun loop() {
-        val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-        val wake = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KavitaInk:download").apply {
-            setReferenceCounted(false)
-            acquire(6 * 60 * 60 * 1000L)
-        }
-        val wm = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        val wifi = wm.createWifiLock(WifiManager.WIFI_MODE_FULL, "KavitaInk:download").apply {
-            setReferenceCounted(false)
-            runCatching { acquire() }
-        }
-        try {
-            while (true) {
-                val e = synchronized(lock) {
-                    val n = app.queue.takeNext()
-                    if (n == null) running = false
-                    n
-                } ?: break
-                val api: KavitaApi? = app.prefs.api()
-                if (api == null) {
-                    app.queue.markFailed(e, getString(R.string.err_not_logged_in))
-                    continue
+        while (true) {
+            val e = synchronized(lock) {
+                // 设置里调小了同时下载数：多出来的线程做完手上的就退出
+                val n = if (workers > app.prefs.downloadConcurrency) null else app.queue.takeNext()
+                if (n == null) {
+                    workers--
+                    if (workers == 0) finishSession()
                 }
-                notifyProgress(e, force = true)
-                runEntry(api, e)
+                n
+            } ?: return
+            val api: KavitaApi? = app.prefs.api()
+            if (api == null) {
+                app.queue.markFailed(e, getString(R.string.err_not_logged_in))
+                continue
             }
-        } finally {
-            runCatching { wake.release() }
-            runCatching { wifi.release() }
-            synchronized(lock) {
-                if (!running) {
-                    @Suppress("DEPRECATION")
-                    stopForeground(true)
-                    stopSelf(lastStartId)
-                    postStatus()
-                }
+            if (!StorageAccess.granted(this)) {
+                app.queue.markFailed(e, getString(com.manus.kavitaink.StorageAccess.deniedText()))
+                continue
             }
+            notifyProgress(force = true)
+            runEntry(api, e)
+            notifyProgress(force = true)
         }
+    }
+
+    /** 最后一个工作线程退出时调用（持有 lock） */
+    private fun finishSession() {
+        releaseLocks()
+        libs = null
+        @Suppress("DEPRECATION")
+        stopForeground(true)
+        stopSelf(lastStartId)
+        postStatus()
     }
 
     /** 下载一项；网络类错误自动重试几次（每次都从断点继续） */
     private fun runEntry(api: KavitaApi, e: DownloadQueue.Entry) {
         var attempt = 0
+        var mkdirRetry = 0
         while (true) {
-            val dl = Downloader(api, app.storage)
+            val dl = Downloader(api, app.storage, libraryCache(api), app.prefs.downloadConcurrency)
             e.abort = { dl.abort() }
             // 设置 abort 之前用户可能已经点了暂停
             if (e.stop != DownloadQueue.Stop.NONE) dl.abort()
@@ -137,7 +177,7 @@ class DownloadService : Service() {
                     e.task,
                     { done, total, pages ->
                         app.queue.progress(e, done, total, pages)
-                        notifyProgress(e, force = false)
+                        notifyProgress(force = false)
                     },
                     { e.stop != DownloadQueue.Stop.NONE },
                     ::pdfRenderable,
@@ -152,10 +192,21 @@ class DownloadService : Service() {
                     app.queue.finishStopped(e)
                     return
                 }
+                if (t is com.manus.kavitaink.core.StorageException && t.res == R.string.err_mkdir_content &&
+                    mkdirRetry < 3 && StorageAccess.granted(this)
+                ) {
+                    // 刚授予存储权限时，系统要过一会儿才把本进程的存储重新挂载为可写（个别系统较慢）：稍等再试
+                    mkdirRetry++
+                    if (!sleepUnlessStopped(e, 2_000L * mkdirRetry)) {
+                        app.queue.finishStopped(e)
+                        return
+                    }
+                    continue
+                }
                 if (attempt < RETRY_DELAYS.size && KavitaApi.isTransient(t)) {
                     val delay = RETRY_DELAYS[attempt++]
                     app.queue.note(e, getString(R.string.dl_retry_note, texts().error(t), (delay / 1000).toInt(), attempt))
-                    notifyProgress(e, force = true)
+                    notifyProgress(force = true)
                     if (!sleepUnlessStopped(e, delay)) {
                         app.queue.finishStopped(e)
                         return
@@ -201,22 +252,36 @@ class DownloadService : Service() {
         nm.notify(NOTIF_STATUS, n)
     }
 
-    private fun notifyProgress(e: DownloadQueue.Entry, force: Boolean) {
+    /** 通知栏：同时下载几项时每项一行，进度条显示它们的平均进度 */
+    private fun notifyProgress(force: Boolean) {
         val now = SystemClock.uptimeMillis()
-        if (!force && now - lastNotifAt < 2500) return
-        lastNotifAt = now
+        synchronized(lock) {
+            if (!force && now - lastNotifAt < 2500) return
+            if (workers == 0) return
+            lastNotifAt = now
+        }
+        val running = app.queue.snapshot().filter { it.state == DownloadQueue.State.RUNNING }
+        if (running.isEmpty()) return
         val left = app.queue.pendingCount()
         val x = texts()
-        val detail = DownloadQueue.formatProgress(e, x)
-        val text = buildString {
-            append(e.task.seriesName).append(" · ").append(e.task.title(x))
-            if (detail.isNotBlank()) append(" · ").append(detail)
-            if (e.note.isNotBlank()) append(" · ").append(e.note)
+        val lines = running.map { e ->
+            buildString {
+                append(e.task.seriesName).append(" · ").append(e.task.title(x))
+                val detail = DownloadQueue.formatProgress(e, x)
+                if (detail.isNotBlank()) append(" · ").append(detail)
+                if (e.note.isNotBlank()) append(" · ").append(e.note)
+            }
         }
-        nm.notify(
-            NOTIF_ID,
-            build(x.p(R.plurals.notif_downloading_left, left), text, if (e.total > 0) e.percent else -1, action = x.s(R.string.action_pause_all) to DownloadActionReceiver.PAUSE_ALL)
+        val known = running.filter { it.total > 0 }
+        val percent = if (known.isEmpty()) -1 else known.sumOf { it.percent } / known.size
+        val n = build(
+            x.p(R.plurals.notif_downloading_left, left), lines.joinToString("\n"), percent,
+            action = x.s(R.string.action_pause_all) to DownloadActionReceiver.PAUSE_ALL,
         )
+        synchronized(lock) {
+            // 最后一个线程可能刚结束会话：不要再把前台通知发出来
+            if (workers > 0) nm.notify(NOTIF_ID, n)
+        }
     }
 
     @Suppress("DEPRECATION")

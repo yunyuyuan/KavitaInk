@@ -92,4 +92,11 @@
     <string name="update_install_anyway">仍要安裝</string>
     <string name="update_no_installer">此裝置沒有可用的安裝程式</string>
     <string name="update_no_browser">沒有可用的瀏覽器。網址：%1$s</string>
+    <string name="perm_title">需要儲存空間權限</string>
+    <string name="perm_msg">下載的檔案會以原始格式儲存至 %1$s，並保留伺服器的資料夾結構，讓其他閱讀應用程式也能開啟。</string>
+    <string name="perm_go">允許</string>
+    <string name="set_perm_granted">儲存空間權限：已允許</string>
+    <string name="set_perm_missing">儲存空間權限：未允許（輕觸以允許）</string>
+    <string name="set_concurrency">同時下載數</string>
+    <string name="set_concurrency_note">同時下載的章節數；逐頁下載時，也會同時下載此數量的頁面。數量越少越省電</string>
 </resources>

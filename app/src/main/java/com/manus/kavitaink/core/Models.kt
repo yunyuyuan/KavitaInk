@@ -21,15 +21,21 @@ object Fmt {
 }
 
 /** 本地离线存储形式 */
-enum class Kind { IMAGES, EPUB, PDF }
+/**
+ * 本地保存方式：
+ *  EPUB / PDF / ZIP（cbz、zip）= 原文件，保存在公共下载目录，保持服务器上的目录结构
+ *  IMAGES = 逐页图片，保存在应用私有目录（cbr / cb7 等本机读不了的格式、多文件章节、本机无法渲染的 PDF）
+ */
+enum class Kind { IMAGES, EPUB, PDF, ZIP }
 
 fun kindOf(format: Int, ext: String): Kind = when {
     format == Fmt.EPUB || ext.equals(".epub", true) -> Kind.EPUB
     format == Fmt.PDF || ext.equals(".pdf", true) -> Kind.PDF
+    ext.equals(".cbz", true) || ext.equals(".zip", true) -> Kind.ZIP
     else -> Kind.IMAGES
 }
 
-data class Library(val id: Int, val name: String, val type: Int) {
+data class Library(val id: Int, val name: String, val type: Int, val folders: List<String> = emptyList()) {
     fun typeLabel(x: Texts): String = when (type) {
         0 -> x.s(R.string.lib_type_manga)
         1 -> x.s(R.string.lib_type_comic)
@@ -74,6 +80,8 @@ data class ChapterItem(
     val ext: String,
     val bytes: Long,
     val fileCount: Int,
+    /** 服务器上的完整路径（第一个文件），用于生成本地目录结构 */
+    val filePath: String = "",
 ) {
     val kind: Kind get() = kindOf(format, ext)
 
@@ -98,6 +106,8 @@ data class DownloadTask(
     val fileCount: Int,
     /** 生成标题的原始信息；1.1.0 下载的旧数据没有，只有中文的 [label] */
     val src: LabelSrc? = null,
+    /** 服务器上的完整路径（第一个文件） */
+    val filePath: String = "",
 ) {
     val kind: Kind get() = kindOf(format, ext)
 
@@ -119,6 +129,7 @@ data class DownloadTask(
         .put("ext", ext)
         .put("bytes", bytes)
         .put("fileCount", fileCount)
+        .put("filePath", filePath)
         .apply { src?.let { put("labelSrc", it.toJson()) } }
 
     companion object {
@@ -138,6 +149,7 @@ data class DownloadTask(
             bytes = o.optLong("bytes"),
             fileCount = o.optInt("fileCount", 1),
             src = LabelSrc.fromJson(o.optJSONObject("labelSrc")),
+            filePath = o.s("filePath"),
         )
 
         fun of(serverKey: String, seriesName: String, seriesFormat: Int, c: ChapterItem) = DownloadTask(
@@ -156,6 +168,7 @@ data class DownloadTask(
             bytes = c.bytes,
             fileCount = c.fileCount,
             src = c.src,
+            filePath = c.filePath,
         )
     }
 }

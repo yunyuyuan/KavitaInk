@@ -51,4 +51,7 @@
     <string name="err_epub_corrupt">EPUB 檔案已損毀：%1$s</string>
     <string name="err_epub_no_opf">EPUB 無效：找不到 OPF 檔案</string>
     <string name="err_epub_read_opf">無法讀取 OPF 檔案</string>
+    <string name="err_mkdir_content">無法建立資料夾 %1$s。請檢查儲存空間權限與可用空間</string>
+    <string name="err_storage_permission">沒有儲存空間權限。請在系統設定中允許 KavitaInk「存取所有檔案」</string>
+    <string name="err_storage_permission_legacy">沒有儲存空間權限。請前往系統設定 → 應用程式 → 權限，允許 KavitaInk 存取「儲存空間」</string>
 </resources>

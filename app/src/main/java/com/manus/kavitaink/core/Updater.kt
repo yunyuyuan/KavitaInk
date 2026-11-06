@@ -110,7 +110,7 @@ object Updater {
         }
         val dest = File(dir, r.apkName)
         // 给 GitHub 的请求不带 Kavita 的 Auth Key：apiKey 为空时不会加 x-api-key 头
-        val d = Downloader(KavitaApi("https://github.com", ""), Storage(dir))
+        val d = Downloader(KavitaApi("https://github.com", ""), Storage(dir, dir))
         abortHook(d)
         d.fetch(r.apkUrl, dest, r.apkSize, progress, stopped)
         if (r.apkSize > 0 && dest.length() != r.apkSize) {

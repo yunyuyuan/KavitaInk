@@ -3,7 +3,7 @@
 
 前提：
   - 装的是可调试构建（gradle assembleRelease -PrelDebug=true，WebView 才能远程调试）；
-  - 本地已下载过任意一本 EPUB（借用它的 chapter.json，把测试书放进临时章节目录打开）。
+  - 本地已下载过任意一本 EPUB（借用它的 chapter.json；测试书放进下载目录 vtest/，在私有索引里建临时章节打开）。
 每个组合：改 App 设置（root 下改 shared_prefs）→ 打开测试书 → verify_webview.py 逐章逐页检查
 （没有文字被截断、没有空白页、标题 / 居中 / 图片不缩进）。
 
@@ -96,17 +96,30 @@ def set_prefs(c):
 
 
 def prepare_books():
-    """把三本测试书放进临时章节目录（借用一本已下载 EPUB 的 chapter.json）"""
-    out = shell(f"find /sdcard/Android/data/{PKG}/files/library -name book.epub")
-    src = [p for p in out.split() if p.endswith("book.epub")]
-    if not src:
+    """把三本测试书放进下载目录 vtest/，并在私有索引里建临时章节（借用一本已下载 EPUB 的 chapter.json）"""
+    from adbui import INDEX_DIR, CONTENT_DIR, grant_storage
+    grant_storage()
+    meta = None
+    for p in shell(f"find {INDEX_DIR} -name chapter.json").split():
+        try:
+            j = json.loads(shell(f"cat {p}"))
+        except Exception:
+            continue
+        if j.get("kind") == "EPUB":
+            meta = j
+            break
+    if meta is None:
         raise RuntimeError("本地没有已下载的 EPUB")
-    meta = os.path.dirname(src[0]) + "/chapter.json"
+    shell(f"mkdir -p {CONTENT_DIR}/vtest")
     for name, path in BOOKS.items():
         d = f"{VT}/{name}"
-        shell(f"mkdir -p {d}; cp {meta} {d}/chapter.json; rm -f {d}/progress.json")
-        sh("push", path, f"{d}/book.epub")
-
+        m = dict(meta, path=f"vtest/{name}.epub")
+        tmp = f"/tmp/vl_meta_{name}.json"
+        with open(tmp, "w") as f:
+            json.dump(m, f, ensure_ascii=False)
+        shell(f"mkdir -p {d}; rm -f {d}/progress.json")
+        sh("push", tmp, f"{d}/chapter.json")
+        sh("push", path, f"{CONTENT_DIR}/vtest/{name}.epub")
 
 def run(combo, book):
     set_prefs(combo)

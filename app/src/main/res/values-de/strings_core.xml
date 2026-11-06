@@ -51,4 +51,7 @@
     <string name="err_epub_corrupt">Die EPUB-Datei ist beschädigt: %1$s</string>
     <string name="err_epub_no_opf">Kein gültiges EPUB: OPF-Datei nicht gefunden</string>
     <string name="err_epub_read_opf">OPF-Datei kann nicht gelesen werden</string>
+    <string name="err_mkdir_content">Ordner %1$s kann nicht erstellt werden. Speicherberechtigung und freien Speicherplatz prüfen</string>
+    <string name="err_storage_permission">Keine Speicherberechtigung. In den Systemeinstellungen „Zugriff auf alle Dateien“ für KavitaInk erlauben</string>
+    <string name="err_storage_permission_legacy">Keine Speicherberechtigung. Erlauben Sie „Speicher“ für KavitaInk unter Systemeinstellungen → Apps → Berechtigungen</string>
 </resources>

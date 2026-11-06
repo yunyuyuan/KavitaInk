@@ -94,4 +94,11 @@
     <string name="update_install_anyway">Instalar de todos modos</string>
     <string name="update_no_installer">No hay ningún instalador disponible en este dispositivo</string>
     <string name="update_no_browser">No hay ningún navegador disponible. Dirección: %1$s</string>
+    <string name="perm_title">Se necesita permiso de almacenamiento</string>
+    <string name="perm_msg">Los archivos descargados se guardan en su formato original en %1$s, manteniendo la estructura de carpetas del servidor para que otras apps de lectura también puedan abrirlos.</string>
+    <string name="perm_go">Permitir</string>
+    <string name="set_perm_granted">Permiso de almacenamiento: concedido</string>
+    <string name="set_perm_missing">Permiso de almacenamiento: no concedido (toca para permitir)</string>
+    <string name="set_concurrency">Descargas simultáneas</string>
+    <string name="set_concurrency_note">Capítulos que se descargan a la vez; al descargar página por página, también se descarga esta cantidad de páginas a la vez. Menos descargas consumen menos energía</string>
 </resources>

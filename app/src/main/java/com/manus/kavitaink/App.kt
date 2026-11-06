@@ -31,20 +31,19 @@ class App : Application() {
         super.onCreate()
         I = this
         prefs = Prefs(this)
-        storage = Storage(rootDir())
+        storage = Storage(indexDir(), contentDir())
         queue = DownloadQueue(this)
     }
 
-    /** 下载目录只在首次启动时决定一次，之后固定，避免存储卡插拔导致“书没了” */
-    private fun rootDir(): File {
-        val saved = prefs.rootPath
-        if (saved.isNotBlank()) return File(saved)
+    /** 私有索引（下载记录、封面、逐页下载的图片）；1.2.0 及以前的 library 目录不再使用，也不会删除 */
+    private fun indexDir(): File {
         val base = runCatching { getExternalFilesDir(null) }.getOrNull() ?: filesDir
-        val dir = File(base, "library")
-        dir.mkdirs()
-        prefs.rootPath = dir.absolutePath
-        return dir
+        return File(base, "index").also { it.mkdirs() }
     }
+
+    /** 公共下载目录：内部存储/Books/KavitaInk，其他阅读器也能打开 */
+    @Suppress("DEPRECATION")
+    private fun contentDir(): File = File(File(android.os.Environment.getExternalStorageDirectory(), "Books"), "KavitaInk")
 
     fun api(): KavitaApi? = prefs.api()
 

@@ -94,4 +94,11 @@
     <string name="update_install_anyway">Installer quand même</string>
     <string name="update_no_installer">Aucun programme d’installation disponible sur cet appareil</string>
     <string name="update_no_browser">Aucun navigateur disponible. Adresse : %1$s</string>
+    <string name="perm_title">Autorisation de stockage requise</string>
+    <string name="perm_msg">Les fichiers téléchargés sont enregistrés dans leur format d’origine dans %1$s, en conservant l’arborescence du serveur, pour que d’autres applications de lecture puissent aussi les ouvrir.</string>
+    <string name="perm_go">Autoriser</string>
+    <string name="set_perm_granted">Accès au stockage : autorisé</string>
+    <string name="set_perm_missing">Accès au stockage : non autorisé (appuyez pour autoriser)</string>
+    <string name="set_concurrency">Téléchargements simultanés</string>
+    <string name="set_concurrency_note">Nombre de chapitres téléchargés en même temps ; le téléchargement page par page récupère aussi ce nombre de pages à la fois. Moins de téléchargements simultanés consomment moins d’énergie</string>
 </resources>

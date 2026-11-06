@@ -58,4 +58,7 @@
     <string name="err_epub_corrupt">The EPUB file is damaged: %1$s</string>
     <string name="err_epub_no_opf">Not a valid EPUB: OPF file not found</string>
     <string name="err_epub_read_opf">Can’t read the OPF file</string>
+    <string name="err_mkdir_content">Can’t create folder %1$s. Check the storage permission and free space</string>
+    <string name="err_storage_permission">No storage permission. Allow “All files access” for KavitaInk in system settings</string>
+    <string name="err_storage_permission_legacy">No storage permission. Allow “Storage” for KavitaInk in system settings → Apps → Permissions</string>
 </resources>

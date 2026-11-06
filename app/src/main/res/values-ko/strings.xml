@@ -39,4 +39,6 @@
     <string name="sel_not_downloaded">미다운로드 항목만</string>
     <string name="sel_downloaded">다운로드한 항목만</string>
     <string name="list_sep">", "</string>
+    <string name="perm_step_all_files">다음 화면에서 KavitaInk의 “모든 파일 관리 허용”을 켠 후 돌아오세요.</string>
+    <string name="perm_step_legacy">다음 시스템 대화상자에서 “허용”을 선택하세요.</string>
 </resources>

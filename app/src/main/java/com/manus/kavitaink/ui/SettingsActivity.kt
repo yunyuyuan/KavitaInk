@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import android.widget.ListView
+import com.manus.kavitaink.StorageAccess
 import com.manus.kavitaink.Lang
 import com.manus.kavitaink.Prefs
 import com.manus.kavitaink.R
@@ -163,7 +164,19 @@ class SettingsActivity : BaseActivity() {
 
             // ---------- 下载与存储 ----------
             group(R.string.grp_storage),
-            item(R.string.set_location, { app.storage.root.absolutePath }),
+            item(R.string.set_location, {
+                app.storage.contentRoot.absolutePath + "\n" +
+                    getString(if (StorageAccess.granted(this)) R.string.set_perm_granted else R.string.set_perm_missing)
+            }) {
+                if (!StorageAccess.granted(this)) withStorageAccess { refreshList() }
+            },
+            item(R.string.set_concurrency, { withNote(p.downloadConcurrency.toString(), R.string.set_concurrency_note) }) {
+                val labels = (1..Prefs.MAX_CONCURRENCY).map { it.toString() }.toTypedArray()
+                choose(getString(R.string.set_concurrency), labels, p.downloadConcurrency - 1) {
+                    p.downloadConcurrency = it + 1
+                    refreshList()
+                }
+            },
             item(R.string.set_used, { usedText }),
             item(R.string.set_covers, { withNote(onOff(p.showCovers), R.string.set_covers_note) }) { p.showCovers = !p.showCovers },
             item(R.string.set_clear_cache, { withNote(cacheText, R.string.set_clear_cache_note) }) {

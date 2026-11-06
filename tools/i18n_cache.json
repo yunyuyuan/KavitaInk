@@ -310,6 +310,10 @@
    "src": "f0bf8e9e77c6",
    "t": "Downloadordner kann nicht erstellt werden. Bitte Speicherplatz prüfen"
   },
+  "err_mkdir_content": {
+   "src": "e6991af041e0",
+   "t": "Ordner %1$s kann nicht erstellt werden. Speicherberechtigung und freien Speicherplatz prüfen"
+  },
   "err_multi_file_epub": {
    "src": "22eb360ae25c",
    "t": "EPUB-Kapitel aus mehreren Dateien werden noch nicht unterstützt"
@@ -353,6 +357,14 @@
   "err_ssl": {
    "src": "1700e5d918e5",
    "t": "HTTPS-Zertifikatsprüfung fehlgeschlagen (selbstsignierte Zertifikate zuerst im System installieren)"
+  },
+  "err_storage_permission": {
+   "src": "229a4fd0f062",
+   "t": "Keine Speicherberechtigung. In den Systemeinstellungen „Zugriff auf alle Dateien“ für KavitaInk erlauben"
+  },
+  "err_storage_permission_legacy": {
+   "src": "53f6199f8dad",
+   "t": "Keine Speicherberechtigung. Erlauben Sie „Speicher“ für KavitaInk unter Systemeinstellungen → Apps → Berechtigungen"
   },
   "err_timeout": {
    "src": "4ffc1585993d",
@@ -981,6 +993,26 @@
    "src": "e0066a4bd46f",
    "t": "%1$d%%"
   },
+  "perm_go": {
+   "src": "56f76c072939",
+   "t": "Erlauben"
+  },
+  "perm_msg": {
+   "src": "1278e150483c",
+   "t": "Heruntergeladene Dateien werden im Originalformat unter %1$s gespeichert. Die Ordnerstruktur des Servers bleibt erhalten, sodass auch andere Lese-Apps sie öffnen können."
+  },
+  "perm_step_all_files": {
+   "src": "4b5f9512f792",
+   "t": "Aktiviere auf dem nächsten Bildschirm „Zugriff zum Verwalten aller Dateien zulassen“ für KavitaInk und kehre dann zurück."
+  },
+  "perm_step_legacy": {
+   "src": "d315eedee069",
+   "t": "Wähle im nächsten Systemdialog „Zulassen“."
+  },
+  "perm_title": {
+   "src": "bb54e92976d5",
+   "t": "Speicherberechtigung erforderlich"
+  },
   "px_n": {
    "src": "b070072f1f14",
    "t": "%1$d px"
@@ -1296,6 +1328,14 @@
    "src": "bec4cccd55bf",
    "t": "Heruntergeladene Inhalte sind nicht betroffen"
   },
+  "set_concurrency": {
+   "src": "3f6629093331",
+   "t": "Gleichzeitige Downloads"
+  },
+  "set_concurrency_note": {
+   "src": "8dacd7c5bf7f",
+   "t": "Anzahl gleichzeitig heruntergeladener Kapitel; beim seitenweisen Download werden ebenso viele Seiten gleichzeitig geladen. Weniger spart Strom"
+  },
   "set_contrast": {
    "src": "d5460be488b5",
    "t": "Kontrast verstärken (Graustufen)"
@@ -1399,6 +1439,14 @@
   "set_orientation": {
    "src": "8889b3d4045c",
    "t": "Bildschirmausrichtung"
+  },
+  "set_perm_granted": {
+   "src": "fff9593f24b1",
+   "t": "Speicherberechtigung: erteilt"
+  },
+  "set_perm_missing": {
+   "src": "f5f3202a7c5f",
+   "t": "Speicherberechtigung: nicht erteilt (zum Erteilen tippen)"
   },
   "set_refresh_every": {
    "src": "001078cd2cf8",
@@ -2050,6 +2098,10 @@
    "src": "f0bf8e9e77c6",
    "t": "No se puede crear la carpeta de descargas. Revise el espacio de almacenamiento"
   },
+  "err_mkdir_content": {
+   "src": "e6991af041e0",
+   "t": "No se puede crear la carpeta %1$s. Revisa el permiso de almacenamiento y el espacio libre"
+  },
   "err_multi_file_epub": {
    "src": "22eb360ae25c",
    "t": "Aún no se admiten capítulos EPUB compuestos por varios archivos"
@@ -2093,6 +2145,14 @@
   "err_ssl": {
    "src": "1700e5d918e5",
    "t": "Error al verificar el certificado HTTPS (instale primero los certificados autofirmados en el sistema)"
+  },
+  "err_storage_permission": {
+   "src": "229a4fd0f062",
+   "t": "Sin permiso de almacenamiento. Permite el “Acceso a todos los archivos” para KavitaInk en los ajustes del sistema"
+  },
+  "err_storage_permission_legacy": {
+   "src": "53f6199f8dad",
+   "t": "Sin permiso de almacenamiento. Permite el acceso a “Almacenamiento” para KavitaInk en Ajustes del sistema → Aplicaciones → Permisos"
   },
   "err_timeout": {
    "src": "4ffc1585993d",
@@ -2730,6 +2790,26 @@
    "src": "e0066a4bd46f",
    "t": "%1$d%%"
   },
+  "perm_go": {
+   "src": "56f76c072939",
+   "t": "Permitir"
+  },
+  "perm_msg": {
+   "src": "1278e150483c",
+   "t": "Los archivos descargados se guardan en su formato original en %1$s, manteniendo la estructura de carpetas del servidor para que otras apps de lectura también puedan abrirlos."
+  },
+  "perm_step_all_files": {
+   "src": "4b5f9512f792",
+   "t": "En la siguiente pantalla, activa “Permitir acceso para administrar todos los archivos” para KavitaInk y luego regresa."
+  },
+  "perm_step_legacy": {
+   "src": "d315eedee069",
+   "t": "En el siguiente diálogo del sistema, selecciona “Permitir”."
+  },
+  "perm_title": {
+   "src": "bb54e92976d5",
+   "t": "Se necesita permiso de almacenamiento"
+  },
   "px_n": {
    "src": "b070072f1f14",
    "t": "%1$d px"
@@ -3054,6 +3134,14 @@
    "src": "bec4cccd55bf",
    "t": "No afecta al contenido descargado"
   },
+  "set_concurrency": {
+   "src": "3f6629093331",
+   "t": "Descargas simultáneas"
+  },
+  "set_concurrency_note": {
+   "src": "8dacd7c5bf7f",
+   "t": "Capítulos que se descargan a la vez; al descargar página por página, también se descarga esta cantidad de páginas a la vez. Menos descargas consumen menos energía"
+  },
   "set_contrast": {
    "src": "d5460be488b5",
    "t": "Mejorar contraste (escala de grises)"
@@ -3157,6 +3245,14 @@
   "set_orientation": {
    "src": "8889b3d4045c",
    "t": "Orientación de pantalla"
+  },
+  "set_perm_granted": {
+   "src": "fff9593f24b1",
+   "t": "Permiso de almacenamiento: concedido"
+  },
+  "set_perm_missing": {
+   "src": "f5f3202a7c5f",
+   "t": "Permiso de almacenamiento: no concedido (toca para permitir)"
   },
   "set_refresh_every": {
    "src": "001078cd2cf8",
@@ -3812,6 +3908,10 @@
    "src": "f0bf8e9e77c6",
    "t": "Impossible de créer le dossier de téléchargement. Vérifiez l’espace de stockage"
   },
+  "err_mkdir_content": {
+   "src": "e6991af041e0",
+   "t": "Impossible de créer le dossier %1$s. Vérifiez l’autorisation de stockage et l’espace libre"
+  },
   "err_multi_file_epub": {
    "src": "22eb360ae25c",
    "t": "Les chapitres EPUB composés de plusieurs fichiers ne sont pas encore pris en charge"
@@ -3855,6 +3955,14 @@
   "err_ssl": {
    "src": "1700e5d918e5",
    "t": "Échec de la vérification du certificat HTTPS (installez d’abord les certificats autosignés dans le système)"
+  },
+  "err_storage_permission": {
+   "src": "229a4fd0f062",
+   "t": "Accès au stockage non autorisé. Autorisez l’« Accès à tous les fichiers » pour KavitaInk dans les paramètres système"
+  },
+  "err_storage_permission_legacy": {
+   "src": "53f6199f8dad",
+   "t": "Accès au stockage non autorisé. Autorisez « Stockage » pour KavitaInk dans les paramètres système → Applications → Autorisations"
   },
   "err_timeout": {
    "src": "4ffc1585993d",
@@ -4492,6 +4600,26 @@
    "src": "e0066a4bd46f",
    "t": "%1$d%%"
   },
+  "perm_go": {
+   "src": "56f76c072939",
+   "t": "Autoriser"
+  },
+  "perm_msg": {
+   "src": "1278e150483c",
+   "t": "Les fichiers téléchargés sont enregistrés dans leur format d’origine dans %1$s, en conservant l’arborescence du serveur, pour que d’autres applications de lecture puissent aussi les ouvrir."
+  },
+  "perm_step_all_files": {
+   "src": "4b5f9512f792",
+   "t": "Sur l’écran suivant, activez « Autoriser la gestion de tous les fichiers » pour KavitaInk, puis revenez."
+  },
+  "perm_step_legacy": {
+   "src": "d315eedee069",
+   "t": "Dans la prochaine boîte de dialogue système, choisissez « Autoriser »."
+  },
+  "perm_title": {
+   "src": "bb54e92976d5",
+   "t": "Autorisation de stockage requise"
+  },
   "px_n": {
    "src": "b070072f1f14",
    "t": "%1$d px"
@@ -4816,6 +4944,14 @@
    "src": "bec4cccd55bf",
    "t": "Le contenu téléchargé n’est pas affecté"
   },
+  "set_concurrency": {
+   "src": "3f6629093331",
+   "t": "Téléchargements simultanés"
+  },
+  "set_concurrency_note": {
+   "src": "8dacd7c5bf7f",
+   "t": "Nombre de chapitres téléchargés en même temps ; le téléchargement page par page récupère aussi ce nombre de pages à la fois. Moins de téléchargements simultanés consomment moins d’énergie"
+  },
   "set_contrast": {
    "src": "d5460be488b5",
    "t": "Renforcer le contraste (niveaux de gris)"
@@ -4919,6 +5055,14 @@
   "set_orientation": {
    "src": "8889b3d4045c",
    "t": "Orientation de l’écran"
+  },
+  "set_perm_granted": {
+   "src": "fff9593f24b1",
+   "t": "Accès au stockage : autorisé"
+  },
+  "set_perm_missing": {
+   "src": "f5f3202a7c5f",
+   "t": "Accès au stockage : non autorisé (appuyez pour autoriser)"
   },
   "set_refresh_every": {
    "src": "001078cd2cf8",
@@ -5570,6 +5714,10 @@
    "src": "f0bf8e9e77c6",
    "t": "ダウンロードフォルダを作成できません。ストレージの空き容量を確認してください"
   },
+  "err_mkdir_content": {
+   "src": "e6991af041e0",
+   "t": "フォルダ %1$s を作成できません。ストレージの権限と空き容量を確認してください"
+  },
   "err_multi_file_epub": {
    "src": "22eb360ae25c",
    "t": "複数のファイルで構成された EPUB の章にはまだ対応していません"
@@ -5613,6 +5761,14 @@
   "err_ssl": {
    "src": "1700e5d918e5",
    "t": "HTTPS 証明書の検証に失敗しました（自己署名証明書は先にシステムにインストールしてください）"
+  },
+  "err_storage_permission": {
+   "src": "229a4fd0f062",
+   "t": "ストレージの権限がありません。システム設定で KavitaInk に「すべてのファイルへのアクセス」を許可してください"
+  },
+  "err_storage_permission_legacy": {
+   "src": "53f6199f8dad",
+   "t": "ストレージの権限がありません。システム設定 → アプリ → 権限で、KavitaInkの「ストレージ」を許可してください"
   },
   "err_timeout": {
    "src": "4ffc1585993d",
@@ -6232,6 +6388,26 @@
    "src": "e0066a4bd46f",
    "t": "%1$d%%"
   },
+  "perm_go": {
+   "src": "56f76c072939",
+   "t": "許可"
+  },
+  "perm_msg": {
+   "src": "1278e150483c",
+   "t": "ダウンロードしたファイルは、サーバーのフォルダ構成を保ったまま元の形式で %1$s に保存されるため、他の読書アプリでも開けます。"
+  },
+  "perm_step_all_files": {
+   "src": "4b5f9512f792",
+   "t": "次の画面で KavitaInk の「すべてのファイルの管理を許可」をオンにしてから戻ってください。"
+  },
+  "perm_step_legacy": {
+   "src": "d315eedee069",
+   "t": "次のシステムダイアログで「許可」を選んでください。"
+  },
+  "perm_title": {
+   "src": "bb54e92976d5",
+   "t": "ストレージ権限が必要です"
+  },
   "px_n": {
    "src": "b070072f1f14",
    "t": "%1$d px"
@@ -6538,6 +6714,14 @@
    "src": "bec4cccd55bf",
    "t": "ダウンロード済みコンテンツには影響しません"
   },
+  "set_concurrency": {
+   "src": "3f6629093331",
+   "t": "同時ダウンロード数"
+  },
+  "set_concurrency_note": {
+   "src": "8dacd7c5bf7f",
+   "t": "同時にダウンロードする章の数。ページ単位のダウンロードでも、同じ数のページを同時に取得します。少ないほど省電力です"
+  },
   "set_contrast": {
    "src": "d5460be488b5",
    "t": "コントラストを強調（グレースケール）"
@@ -6641,6 +6825,14 @@
   "set_orientation": {
    "src": "8889b3d4045c",
    "t": "画面の向き"
+  },
+  "set_perm_granted": {
+   "src": "fff9593f24b1",
+   "t": "ストレージ権限：許可済み"
+  },
+  "set_perm_missing": {
+   "src": "f5f3202a7c5f",
+   "t": "ストレージ権限：未許可（タップして許可）"
   },
   "set_refresh_every": {
    "src": "001078cd2cf8",
@@ -7284,6 +7476,10 @@
    "src": "f0bf8e9e77c6",
    "t": "다운로드 폴더를 만들 수 없습니다. 저장 공간을 확인해 주세요"
   },
+  "err_mkdir_content": {
+   "src": "e6991af041e0",
+   "t": "%1$s 폴더를 만들 수 없습니다. 저장소 권한과 여유 공간을 확인하세요"
+  },
   "err_multi_file_epub": {
    "src": "22eb360ae25c",
    "t": "여러 파일로 구성된 EPUB 챕터는 아직 지원하지 않습니다"
@@ -7327,6 +7523,14 @@
   "err_ssl": {
    "src": "1700e5d918e5",
    "t": "HTTPS 인증서 확인 실패 (자체 서명 인증서를 먼저 시스템에 설치해 주세요)"
+  },
+  "err_storage_permission": {
+   "src": "229a4fd0f062",
+   "t": "저장소 권한이 없습니다. 시스템 설정에서 KavitaInk의 “모든 파일 액세스”를 허용하세요"
+  },
+  "err_storage_permission_legacy": {
+   "src": "53f6199f8dad",
+   "t": "저장공간 권한이 없습니다. 시스템 설정 → 앱 → 권한에서 KavitaInk의 ‘저장공간’ 권한을 허용하세요"
   },
   "err_timeout": {
    "src": "4ffc1585993d",
@@ -7946,6 +8150,26 @@
    "src": "e0066a4bd46f",
    "t": "%1$d%%"
   },
+  "perm_go": {
+   "src": "56f76c072939",
+   "t": "허용"
+  },
+  "perm_msg": {
+   "src": "1278e150483c",
+   "t": "다운로드한 파일은 서버의 폴더 구조를 유지한 채 원본 형식으로 %1$s에 저장되므로 다른 리더 앱에서도 열 수 있습니다."
+  },
+  "perm_step_all_files": {
+   "src": "4b5f9512f792",
+   "t": "다음 화면에서 KavitaInk의 “모든 파일 관리 허용”을 켠 후 돌아오세요."
+  },
+  "perm_step_legacy": {
+   "src": "d315eedee069",
+   "t": "다음 시스템 대화상자에서 “허용”을 선택하세요."
+  },
+  "perm_title": {
+   "src": "bb54e92976d5",
+   "t": "저장소 권한 필요"
+  },
   "px_n": {
    "src": "b070072f1f14",
    "t": "%1$d px"
@@ -8252,6 +8476,14 @@
    "src": "bec4cccd55bf",
    "t": "다운로드한 콘텐츠에는 영향을 주지 않습니다"
   },
+  "set_concurrency": {
+   "src": "3f6629093331",
+   "t": "동시 다운로드 수"
+  },
+  "set_concurrency_note": {
+   "src": "8dacd7c5bf7f",
+   "t": "동시에 다운로드할 챕터 수입니다. 페이지별 다운로드 시에도 이 수만큼 페이지를 동시에 받습니다. 수가 적을수록 전력 소모가 줄어듭니다"
+  },
   "set_contrast": {
    "src": "d5460be488b5",
    "t": "대비 강화 (회색조)"
@@ -8355,6 +8587,14 @@
   "set_orientation": {
    "src": "8889b3d4045c",
    "t": "화면 방향"
+  },
+  "set_perm_granted": {
+   "src": "fff9593f24b1",
+   "t": "저장소 권한: 허용됨"
+  },
+  "set_perm_missing": {
+   "src": "f5f3202a7c5f",
+   "t": "저장소 권한: 허용되지 않음 (탭하여 허용)"
   },
   "set_refresh_every": {
    "src": "001078cd2cf8",
@@ -9002,6 +9242,10 @@
    "src": "f0bf8e9e77c6",
    "t": "Não foi possível criar a pasta de downloads. Verifique o espaço de armazenamento"
   },
+  "err_mkdir_content": {
+   "src": "e6991af041e0",
+   "t": "Não foi possível criar a pasta %1$s. Verifique a permissão de armazenamento e o espaço livre"
+  },
   "err_multi_file_epub": {
    "src": "22eb360ae25c",
    "t": "Capítulos EPUB com vários arquivos ainda não são compatíveis"
@@ -9045,6 +9289,14 @@
   "err_ssl": {
    "src": "1700e5d918e5",
    "t": "Falha na verificação do certificado HTTPS (instale primeiro os certificados autoassinados no sistema)"
+  },
+  "err_storage_permission": {
+   "src": "229a4fd0f062",
+   "t": "Sem permissão de armazenamento. Permita o “Acesso a todos os arquivos” para o KavitaInk nas configurações do sistema"
+  },
+  "err_storage_permission_legacy": {
+   "src": "53f6199f8dad",
+   "t": "Sem permissão de armazenamento. Permita “Armazenamento” para KavitaInk em Configurações do sistema → Apps → Permissões"
   },
   "err_timeout": {
    "src": "4ffc1585993d",
@@ -9682,6 +9934,26 @@
    "src": "e0066a4bd46f",
    "t": "%1$d%%"
   },
+  "perm_go": {
+   "src": "56f76c072939",
+   "t": "Permitir"
+  },
+  "perm_msg": {
+   "src": "1278e150483c",
+   "t": "Os arquivos baixados são salvos no formato original em %1$s, mantendo a estrutura de pastas do servidor, para que outros apps de leitura também possam abri-los."
+  },
+  "perm_step_all_files": {
+   "src": "4b5f9512f792",
+   "t": "Na próxima tela, ative “Permitir acesso para gerenciar todos os arquivos” para o KavitaInk e volte."
+  },
+  "perm_step_legacy": {
+   "src": "d315eedee069",
+   "t": "Na próxima caixa de diálogo do sistema, selecione “Permitir”."
+  },
+  "perm_title": {
+   "src": "bb54e92976d5",
+   "t": "Permissão de armazenamento necessária"
+  },
   "px_n": {
    "src": "b070072f1f14",
    "t": "%1$d px"
@@ -10006,6 +10278,14 @@
    "src": "bec4cccd55bf",
    "t": "O conteúdo baixado não é afetado"
   },
+  "set_concurrency": {
+   "src": "3f6629093331",
+   "t": "Downloads simultâneos"
+  },
+  "set_concurrency_note": {
+   "src": "8dacd7c5bf7f",
+   "t": "capítulos baixados ao mesmo tempo; downloads página por página também baixam essa quantidade de páginas de uma vez. Menos downloads simultâneos economizam energia"
+  },
   "set_contrast": {
    "src": "d5460be488b5",
    "t": "Aumentar contraste (tons de cinza)"
@@ -10109,6 +10389,14 @@
   "set_orientation": {
    "src": "8889b3d4045c",
    "t": "Orientação da tela"
+  },
+  "set_perm_granted": {
+   "src": "fff9593f24b1",
+   "t": "Permissão de armazenamento: concedida"
+  },
+  "set_perm_missing": {
+   "src": "f5f3202a7c5f",
+   "t": "Permissão de armazenamento: não concedida (toque para permitir)"
   },
   "set_refresh_every": {
    "src": "001078cd2cf8",
@@ -10766,6 +11054,10 @@
    "src": "f0bf8e9e77c6",
    "t": "Не удалось создать папку загрузок. Проверьте свободное место"
   },
+  "err_mkdir_content": {
+   "src": "e6991af041e0",
+   "t": "Не удалось создать папку %1$s. Проверьте разрешение на доступ к хранилищу и свободное место"
+  },
   "err_multi_file_epub": {
    "src": "22eb360ae25c",
    "t": "Главы EPUB из нескольких файлов пока не поддерживаются"
@@ -10809,6 +11101,14 @@
   "err_ssl": {
    "src": "1700e5d918e5",
    "t": "Ошибка проверки сертификата HTTPS (сначала установите самоподписанные сертификаты в систему)"
+  },
+  "err_storage_permission": {
+   "src": "229a4fd0f062",
+   "t": "Нет разрешения на доступ к хранилищу. Разрешите KavitaInk «Доступ ко всем файлам» в системных настройках"
+  },
+  "err_storage_permission_legacy": {
+   "src": "53f6199f8dad",
+   "t": "Нет доступа к хранилищу. Разрешите KavitaInk доступ к «Хранилищу» в настройках системы → Приложения → Разрешения"
   },
   "err_timeout": {
    "src": "4ffc1585993d",
@@ -11455,6 +11755,26 @@
    "src": "e0066a4bd46f",
    "t": "%1$d%%"
   },
+  "perm_go": {
+   "src": "56f76c072939",
+   "t": "Разрешить"
+  },
+  "perm_msg": {
+   "src": "1278e150483c",
+   "t": "Скачанные файлы сохраняются в исходном формате в %1$s со структурой папок сервера, поэтому их можно открыть и в других приложениях для чтения."
+  },
+  "perm_step_all_files": {
+   "src": "4b5f9512f792",
+   "t": "На следующем экране включите «Разрешить управление всеми файлами» для KavitaInk, затем вернитесь."
+  },
+  "perm_step_legacy": {
+   "src": "d315eedee069",
+   "t": "В следующем системном диалоге выберите «Разрешить»."
+  },
+  "perm_title": {
+   "src": "bb54e92976d5",
+   "t": "Нужен доступ к хранилищу"
+  },
   "px_n": {
    "src": "b070072f1f14",
    "t": "%1$d пкс"
@@ -11788,6 +12108,14 @@
    "src": "bec4cccd55bf",
    "t": "Загруженный контент не затрагивается"
   },
+  "set_concurrency": {
+   "src": "3f6629093331",
+   "t": "Одновременные загрузки"
+  },
+  "set_concurrency_note": {
+   "src": "8dacd7c5bf7f",
+   "t": "число глав, загружаемых одновременно; при постраничной загрузке столько же страниц загружается за раз. Чем меньше, тем ниже расход энергии"
+  },
   "set_contrast": {
    "src": "d5460be488b5",
    "t": "Повысить контраст (оттенки серого)"
@@ -11891,6 +12219,14 @@
   "set_orientation": {
    "src": "8889b3d4045c",
    "t": "Ориентация экрана"
+  },
+  "set_perm_granted": {
+   "src": "fff9593f24b1",
+   "t": "Доступ к хранилищу: разрешён"
+  },
+  "set_perm_missing": {
+   "src": "f5f3202a7c5f",
+   "t": "Доступ к хранилищу: не разрешён (нажмите, чтобы разрешить)"
   },
   "set_refresh_every": {
    "src": "001078cd2cf8",
@@ -12546,6 +12882,10 @@
    "src": "f0bf8e9e77c6",
    "t": "無法建立下載資料夾。請檢查儲存空間"
   },
+  "err_mkdir_content": {
+   "src": "e6991af041e0",
+   "t": "無法建立資料夾 %1$s。請檢查儲存空間權限與可用空間"
+  },
   "err_multi_file_epub": {
    "src": "22eb360ae25c",
    "t": "尚不支援由多個檔案組成的 EPUB 章節"
@@ -12589,6 +12929,14 @@
   "err_ssl": {
    "src": "1700e5d918e5",
    "t": "HTTPS 憑證驗證失敗（請先將自簽憑證安裝至系統）"
+  },
+  "err_storage_permission": {
+   "src": "229a4fd0f062",
+   "t": "沒有儲存空間權限。請在系統設定中允許 KavitaInk「存取所有檔案」"
+  },
+  "err_storage_permission_legacy": {
+   "src": "53f6199f8dad",
+   "t": "沒有儲存空間權限。請前往系統設定 → 應用程式 → 權限，允許 KavitaInk 存取「儲存空間」"
   },
   "err_timeout": {
    "src": "4ffc1585993d",
@@ -13208,6 +13556,26 @@
    "src": "e0066a4bd46f",
    "t": "%1$d%%"
   },
+  "perm_go": {
+   "src": "56f76c072939",
+   "t": "允許"
+  },
+  "perm_msg": {
+   "src": "1278e150483c",
+   "t": "下載的檔案會以原始格式儲存至 %1$s，並保留伺服器的資料夾結構，讓其他閱讀應用程式也能開啟。"
+  },
+  "perm_step_all_files": {
+   "src": "4b5f9512f792",
+   "t": "在下一個畫面中，為 KavitaInk 開啟「允許管理所有檔案」，然後返回。"
+  },
+  "perm_step_legacy": {
+   "src": "d315eedee069",
+   "t": "在接下來的系統對話框中，選擇「允許」。"
+  },
+  "perm_title": {
+   "src": "bb54e92976d5",
+   "t": "需要儲存空間權限"
+  },
   "px_n": {
    "src": "b070072f1f14",
    "t": "%1$d px"
@@ -13514,6 +13882,14 @@
    "src": "bec4cccd55bf",
    "t": "不影響已下載的內容"
   },
+  "set_concurrency": {
+   "src": "3f6629093331",
+   "t": "同時下載數"
+  },
+  "set_concurrency_note": {
+   "src": "8dacd7c5bf7f",
+   "t": "同時下載的章節數；逐頁下載時，也會同時下載此數量的頁面。數量越少越省電"
+  },
   "set_contrast": {
    "src": "d5460be488b5",
    "t": "增強對比（灰階）"
@@ -13617,6 +13993,14 @@
   "set_orientation": {
    "src": "8889b3d4045c",
    "t": "螢幕方向"
+  },
+  "set_perm_granted": {
+   "src": "fff9593f24b1",
+   "t": "儲存空間權限：已允許"
+  },
+  "set_perm_missing": {
+   "src": "f5f3202a7c5f",
+   "t": "儲存空間權限：未允許（輕觸以允許）"
   },
   "set_refresh_every": {
    "src": "001078cd2cf8",

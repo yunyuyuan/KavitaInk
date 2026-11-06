@@ -92,4 +92,11 @@
     <string name="update_install_anyway">Install anyway</string>
     <string name="update_no_installer">There is no installer available on this device</string>
     <string name="update_no_browser">There is no browser available. Address: %1$s</string>
+    <string name="perm_title">Storage permission needed</string>
+    <string name="perm_msg">Downloaded files are saved in their original format to %1$s, keeping the folder layout of the server, so other reading apps can open them too.</string>
+    <string name="perm_go">Allow</string>
+    <string name="set_perm_granted">Storage permission: allowed</string>
+    <string name="set_perm_missing">Storage permission: not allowed (tap to allow)</string>
+    <string name="set_concurrency">Simultaneous downloads</string>
+    <string name="set_concurrency_note">chapters downloaded at the same time; page-by-page downloads also fetch this many pages at once. Fewer uses less power</string>
 </resources>

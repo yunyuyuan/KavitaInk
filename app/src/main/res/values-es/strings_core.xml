@@ -51,4 +51,7 @@
     <string name="err_epub_corrupt">El archivo EPUB está dañado: %1$s</string>
     <string name="err_epub_no_opf">EPUB no válido: no se encontró el archivo OPF</string>
     <string name="err_epub_read_opf">No se puede leer el archivo OPF</string>
+    <string name="err_mkdir_content">No se puede crear la carpeta %1$s. Revisa el permiso de almacenamiento y el espacio libre</string>
+    <string name="err_storage_permission">Sin permiso de almacenamiento. Permite el “Acceso a todos los archivos” para KavitaInk en los ajustes del sistema</string>
+    <string name="err_storage_permission_legacy">Sin permiso de almacenamiento. Permite el acceso a “Almacenamiento” para KavitaInk en Ajustes del sistema → Aplicaciones → Permisos</string>
 </resources>

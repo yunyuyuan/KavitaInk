@@ -7,10 +7,10 @@
 
 | 项目 | 说明 |
 | --- | --- |
-| 安装包 | Release 约 120 KB，零第三方依赖 |
-| 系统要求 | Android 5.0 及以上（minSdk 21），面向安卓墨水屏阅读器（已在 Android 9 + 老版 WebView 66 模拟器上实测，尚未在实体墨水屏设备上测试） |
+| 安装包 | Release 约 570 KB（大部分是 10 种界面语言的文案），零第三方依赖 |
+| 系统要求 | Android 10 及以上（minSdk 29），面向安卓墨水屏阅读器（已在 Android 10 模拟器上实测；Android 11+ 的「所有文件访问」授权路径按系统文档实现，模拟器无法启动未能实测；尚未在实体墨水屏设备上测试） |
 | 服务器 | Kavita v0.9 系列（已在 v0.9.1.4 上实测）。依赖 v0.9 引入的 Auth Key 认证，v0.8 及更早版本不保证可用 |
-| 支持格式 | 漫画：cbz（已实测）；cbr / cb7 / zip / rar / 7z / 图片文件夹由服务器解压，理论上同样支持；小说：EPUB；文档：PDF |
+| 支持格式 | 漫画：cbz / zip（下载原文件，已实测）；cbr / cb7 / rar / 7z / 图片文件夹由服务器解压后逐页下载（未实测）；小说：EPUB；文档：PDF |
 
 ## 功能
 
@@ -18,12 +18,15 @@
 
 **书库（在线）**：浏览各书库、按名称搜索、分页加载（每页 50 个，点按钮加载下一页，不做无限滚动）。进入系列后可单项下载、「全部下载」，或长按进入多选（全选 / 反选 / 只选未下载 / 只选已下载），再批量下载或删除。
 
-**下载**：前台服务下载，可离开页面、锁屏继续。下载中显示百分比和具体进度（小说 / PDF 显示「3.2 MB / 14.4 MB」，漫画显示「23 / 80 页」）。
+**下载**：前台服务下载，可离开页面、锁屏继续。下载中显示百分比和具体进度（下载原文件时显示「3.2 MB / 14.4 MB」，逐页下载时显示「23 / 80 页」）。
 
-- **暂停 / 继续**：在下载队列或系列页点某一项即可暂停、继续或取消；下载队列顶部有「全部暂停 / 全部继续」，通知栏也有「全部暂停」按钮。暂停会**立即断开连接**，已下载的部分全部保留；继续时 EPUB / PDF 用 HTTP Range 从断点续传，漫画从下一页接着下，已有的页不会重复下载。
+- **下载目录**：EPUB、PDF、cbz、zip 都**原样保存服务器上的文件**，不改名、不解压、不重新打包，放在 `/sdcard/Books/KavitaInk/<书库名>/` 下，书库里面的文件夹结构和文件名与服务器完全一致（见下方[下载目录](#下载目录)）。其他阅读器或文件管理器可以直接打开。第一次下载时会请求「所有文件访问」权限（Android 11+；Android 10 为存储权限）。
+- **同时下载**：默认同时下载 2 项（设置里可改为 1–4），所有格式都一样；逐页下载的章节在章节内部也会同时下载几页。每一项都可以单独暂停，不影响其他正在下载的项。
+
+- **暂停 / 继续**：在下载队列或系列页点某一项即可暂停、继续或取消；下载队列顶部有「全部暂停 / 全部继续」，通知栏也有「全部暂停」按钮。暂停会**立即断开连接**，已下载的部分全部保留；继续时原文件用 HTTP Range 从断点续传，逐页下载的从缺的页接着下，已有的页不会重复下载。
 - **暂停后不耗电**：所有任务都暂停后，下载服务立即停止，并释放唤醒锁和 Wi-Fi 锁。暂停状态会保存下来，应用被杀或重启后**不会自动继续**，需要手动点「继续」。
 - **断网自动重试**：遇到断网、超时、服务器 5xx 时，会在 5 秒、15 秒、45 秒后自动重试，每次都从断点继续；认证失败、没有权限、404 这类错误不会重试，而是直接标记为失败。失败的项可以手动「重试」，同样接着下载。
-- **取消**：从队列移除并删除未完成的文件。
+- **取消**：从队列移除并删除未完成的文件（未完成的文件是同目录下以 `.` 开头的 `.part` 隐藏文件，下载完成后才改成正式文件名），不留空文件夹。
 - **其他**：队列持久化，应用被杀时正在下载的项下次打开会自动继续；会校验文件长度，连接中途被断开时不会把半截文件当成下载完成。
 
 **漫画 / PDF 阅读**：适应屏幕或适应宽度（长图分段翻页）、左→右 / 右→左（日漫）、灰度增强对比度、跳页。
@@ -65,11 +68,11 @@
 
 ## 使用
 
-1. 从 [Releases](https://github.com/yunyuyuan/KavitaInk/releases/latest) 下载最新的 `KavitaInk-x.y.z.apk` 并安装（升级时直接覆盖安装，已下载的内容会保留）。
+1. 从 [Releases](https://github.com/yunyuyuan/KavitaInk/releases/latest) 下载最新的 `KavitaInk-x.y.z.apk` 并安装（直接覆盖安装即可。注意 1.3.0 改了下载目录，之前版本下载的内容不会迁移，需要重新下载；旧文件在 `Android/data/com.manus.kavitaink/files/library/`，可以手动删掉）。
 2. 打开后点右上角「书库」，填写服务器地址（如 `http://192.168.1.10:5000`），然后任选一种方式：
    - **用户名 + 密码**：只用于换取 Auth Key，密码不保存；
    - **Auth Key 或 OPDS 链接**：在 Kavita 网页「设置 → 账户 → Auth Keys / OPDS」复制，直接粘贴整个 OPDS 链接也可以。
-3. 进入书库 → 系列 → 点击章节即开始下载（或点「全部下载」）。下载中再点该章节可暂停 / 继续 / 取消；主页「下载」按钮进入下载队列。
+3. 进入书库 → 系列 → 点击章节即开始下载（或点「全部下载」）。第一次下载会先说明需要存储权限：Android 11 及以上会跳到系统设置页，打开「允许访问所有文件」后返回；Android 10 会弹出系统权限窗口，选「允许」即可（如果之前选过「拒绝且不再询问」，会跳到应用详情页，在「权限 → 存储」里打开）。授权后下载会自动开始。下载中再点该章节可暂停 / 继续 / 取消；主页「下载」按钮进入下载队列。
 4. 下载完成后回到「书架」，即可离线阅读。
 
 > **注意**：Kavita 中该账号需要拥有 **Download** 角色才能下载（管理员默认拥有；普通用户需要在「服务器设置 → 用户」中勾选）。
@@ -97,7 +100,7 @@ Kavita API 对接（均在 v0.9.1.4 上实测）：
 | EPUB / PDF 原文件 | `GET /api/Download/chapter?chapterId=`（支持 Range） | `x-api-key`，需 Download 角色 |
 | 漫画单页 | `GET /api/Reader/image?chapterId=&page=&apiKey=` | **必须**用 `apiKey` 查询参数 |
 
-为什么漫画按页下载而不是下载压缩包：服务器负责解压 cbr / cb7 / rar，客户端无需内置任何解压库；已下载的页可断点跳过；本地直接是图片，阅读时零解压开销。
+漫画的下载方式：cbz / zip 直接下载原文件，阅读时用系统自带的 `java.util.zip` 按需读取单页（文件名按自然顺序排序，兼容 GBK 编码的中文文件名）；下载后会检查文件确实能打开，扩展名是 cbz 但实际是 rar / 7z 的会自动改为逐页下载。cbr / cb7 / rar / 7z / 图片文件夹由服务器解压，客户端逐页下载，不需要内置任何解压库。
 
 EPUB 的处理方式：直接从 zip 中按需读取资源交给 WebView（不解压到磁盘），在章节 HTML 的 `</head>` 前注入分页样式（首帧即为分页效果），再由注入脚本计算页数。翻页用 `transform` 平移整屏，而不是滚动（滚动会被最后一栏的右边界截住导致末页错位，这个问题已在测试中发现并修复）。
 
@@ -112,15 +115,23 @@ EPUB 的处理方式：直接从 zip 中按需读取资源交给 WebView（不�
 
 PDF 的处理方式：使用系统自带的 `PdfRenderer` 渲染；若本机无法打开（加密或损坏），自动改为下载服务器渲染好的页面图片。
 
-离线目录结构（自描述，不依赖数据库，可直接拷贝备份）：
+### 下载目录
+
+原文件和应用自己的记录分开存放：
 
 ```
-Android/data/com.manus.kavitaink/files/library/<服务器>/s<系列ID>/
+/sdcard/Books/KavitaInk/                      ← 下载目录（公共存储，只放原文件）
+    <书库名>/<书库里的原路径>                   例：漫画/Big Manga/Big Manga v01.cbz
+                                                    小说/Big Novel/Big Novel.epub
+    <书库名>/<系列文件夹>/.<文件名>.part        ← 下载中的临时文件，完成后改名
+
+Android/data/com.manus.kavitaink/files/index/<服务器>/s<系列ID>/   ← 私有索引
     series.json  cover
-    c<章节ID>/chapter.json        ← 只有下载完成才写入
-    c<章节ID>/pages/00000.jpg …   （漫画）
-    c<章节ID>/book.epub | book.pdf（小说 / 文档）
+    c<章节ID>/chapter.json        ← 下载完成才写入，记录原文件在下载目录里的相对路径
+    c<章节ID>/pages/00000.jpg …   （只有逐页下载的章节才有：cbr / rar / 7z / 图片文件夹、本机打不开的 PDF）
 ```
+
+书库名和书库根目录通过 `GET /api/Library/libraries` 获取，原路径来自章节文件的 `filePath`，减去书库根目录后得到相对路径（Windows 服务器的路径不区分大小写）。文件名里 Android 不允许的字符会替换成 `_`。没有权限读取书库信息时，退回为「书库名 / 系列文件夹 / 原文件名」。原文件被其他应用删掉或移走后，对应章节自动显示为未下载。在应用里删除章节会删除对应的原文件，并清理变空的文件夹。
 
 代码结构：
 
@@ -129,14 +140,15 @@ app/src/main/java/com/manus/kavitaink/
   core/      纯 Kotlin，不依赖 Android，可在电脑上直接单元测试
     KavitaApi.kt   接口客户端（HttpURLConnection + org.json）
     Parsers.kt     卷 / 章节解析；Texts.kt 按当前语言生成标题（Volume 1 / 第1卷 / 第3话…）
-    Downloader.kt  下载引擎（续传、按页、PDF 回退）
-    Storage.kt     离线目录管理
+    Downloader.kt  下载引擎（原文件续传、逐页并发、PDF / 伪 cbz 回退为逐页）
+    Storage.kt     下载目录 + 私有索引；Paths.kt 服务器路径 → 本地相对路径
+    ZipPages.kt    读取 cbz / zip 中的页面
     EpubBook.kt    EPUB 解析（OPF、书脊、EPUB3 nav / EPUB2 NCX 目录）
     Paginator.kt   EPUB 分页 CSS / JS
     Trim.kt        裁白边检测、双页分组
     FontStore.kt   字体库（fonts.json 索引）；KavitaFonts.kt 从 Kavita 下载字体
     Updater.kt     检查更新（GitHub Releases）
-  download/  下载队列 + 前台服务
+  download/  下载队列 + 前台服务（多个工作线程同时下载）
   ui/        书架、登录、书库、系列、下载队列、设置、字体、检查更新
   reader/    阅读器基类、状态栏、漫画 / PDF 阅读器、EPUB 阅读器
   update/    把下载好的安装包交给系统安装器的 ContentProvider
@@ -204,7 +216,7 @@ KAVITA_URL=http://localhost:5000 KAVITA_USER=admin KAVITA_PASS=xxx ./gradlew tes
 python3 tools/throttle_proxy.py 5001 &
 KAVITA_PROXY_URL=http://localhost:5001 KAVITA_USER=admin KAVITA_PASS=xxx BIG_EPUB_PATH=<服务器上的原文件> \
   ./gradlew testDebugUnitTest --tests '*PauseResumeLiveTest*'
-# 模拟器上的暂停 / 继续 / 重启保持暂停 / 断网自动重试 / 通知栏按钮 / 取消
+# 模拟器上的暂停 / 继续 / 重启保持暂停 / 断网自动重试 / 通知栏按钮 / 取消、两章同时下载（单独暂停其中一章），并与服务器原文件逐字节比较
 KAVITA_PASS=xxx python3 tools/e2e_pause.py app/build/outputs/apk/release/app-release.apk
 
 # EPUB 分页在 Chromium 中的验证（需要 playwright）
@@ -213,6 +225,10 @@ python3 tools/verify_pagination.py /tmp/pdump /tmp/shots
 
 # 模拟器端到端测试（登录 → 下载三种格式 → 断网 → 离线阅读 → 检查崩溃日志）
 KAVITA_PASS=xxx python3 tools/e2e.py app/build/outputs/apk/release/app-release.apk all
+
+# 存储权限与下载目录（Android 10 / 11+ 分别走不同授权路径）：未授权先说明 → 拒绝不下载 →
+# 「拒绝且不再询问」后在应用详情页打开存储权限 → 返回自动下载；下载目录与服务器文件逐个比对 MD5；断网读 cbz；删除后空文件夹一并清理
+KAVITA_PASS=xxx python3 tools/e2e_storage.py app/build/outputs/apk/release/app-release.apk
 
 # 在设备真实 WebView 中逐页校验分页（需可调试构建：assembleRelease -PrelDebug=true）
 python3 tools/verify_webview.py <书.epub> /tmp/pdump <CSS宽|auto> <CSS高|auto>
@@ -241,4 +257,5 @@ python3 tools/e2e_update.py <低版本号的 apk>
 - 漫画中的 AVIF 图片需要 Android 12+ 才能解码；JXL 图片 Android 系统目前无法解码（Kavita 默认保留原图格式，JPG / PNG / WebP 不受影响）。
 - 跨页大图不会自动拆分；双页模式下会单独显示，单页模式下可切到「适应宽度」查看。
 - 包含多个文件的 EPUB 章节暂不支持（极少见）。
+- cbr / cb7 / rar / 7z 和图片文件夹不会保存原文件，而是由服务器解压后逐页下载到应用私有目录，其他阅读器看不到。
 - 已下载的内容不会自动跟随服务器更新；需要更新时删除后重新下载即可。

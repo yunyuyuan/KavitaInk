@@ -17,6 +17,7 @@ import android.os.ParcelFileDescriptor
 import android.view.View
 import com.manus.kavitaink.core.LumSource
 import com.manus.kavitaink.core.RawLum
+import com.manus.kavitaink.core.ZipPages
 import com.manus.kavitaink.core.Trim
 import java.io.Closeable
 import java.io.File
@@ -182,20 +183,76 @@ private fun decodedRect(region: Rect, bw: Int, bh: Int, fw: Int, fh: Int): IntAr
     return intArrayOf(l, t, w, h)
 }
 
-/** 已下载的漫画页图片 */
-class ImageFolderSource(dir: File) : PageSource {
+/** 一页图片的来源：逐页下载的图片文件，或 CBZ / ZIP 原文件里的条目 */
+interface PageInput : Closeable {
+    val count: Int
+    fun decode(index: Int, o: BitmapFactory.Options): Bitmap?
+    fun regionDecoder(index: Int): BitmapRegionDecoder?
+}
+
+/** 逐页下载的图片文件夹 */
+class FolderInput(dir: File) : PageInput {
     private val files: List<File> = (dir.listFiles() ?: emptyArray())
         .filter { it.isFile && !it.name.endsWith(".part") }
         .sortedBy { it.name }
-    private val crops = CropCache()
 
     override val count: Int get() = files.size
 
-    override fun aspect(index: Int): Float {
-        val f = files.getOrNull(index) ?: return 0.7f
+    override fun decode(index: Int, o: BitmapFactory.Options): Bitmap? =
+        files.getOrNull(index)?.let { BitmapFactory.decodeFile(it.path, o) }
+
+    @Suppress("DEPRECATION")
+    override fun regionDecoder(index: Int): BitmapRegionDecoder? =
+        files.getOrNull(index)?.let { BitmapRegionDecoder.newInstance(it.path, false) }
+
+    override fun close() {}
+}
+
+/** CBZ / ZIP 原文件：不解压到磁盘，按需读出一页的字节（最近读过的两页留在内存，先读尺寸再解码不必读两次） */
+class ZipInput(file: File) : PageInput {
+    private val zip = ZipPages.open(file)
+    private val recent = object : LinkedHashMap<Int, ByteArray>(4, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Int, ByteArray>?) = size > 2
+    }
+
+    override val count: Int get() = zip.count
+
+    private fun bytes(i: Int): ByteArray? {
+        if (i !in 0 until zip.count) return null
+        synchronized(recent) { recent[i]?.let { return it } }
+        val b = zip.bytes(i)
+        synchronized(recent) { recent[i] = b }
+        return b
+    }
+
+    override fun decode(index: Int, o: BitmapFactory.Options): Bitmap? =
+        bytes(index)?.let { BitmapFactory.decodeByteArray(it, 0, it.size, o) }
+
+    @Suppress("DEPRECATION")
+    override fun regionDecoder(index: Int): BitmapRegionDecoder? =
+        bytes(index)?.let { BitmapRegionDecoder.newInstance(it, 0, it.size, false) }
+
+    override fun close() {
+        synchronized(recent) { recent.clear() }
+        zip.close()
+    }
+}
+
+/** 位图页面（漫画）：解码、按需裁白边 */
+class RasterSource(private val input: PageInput) : PageSource {
+    private val crops = CropCache()
+
+    override val count: Int get() = input.count
+
+    private fun bounds(index: Int): BitmapFactory.Options? {
         val o = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeFile(f.path, o)
-        return if (o.outWidth > 0 && o.outHeight > 0) o.outWidth.toFloat() / o.outHeight else 0.7f
+        input.decode(index, o)
+        return o.takeIf { it.outWidth > 0 && it.outHeight > 0 }
+    }
+
+    override fun aspect(index: Int): Float {
+        val o = bounds(index) ?: return 0.7f
+        return o.outWidth.toFloat() / o.outHeight
     }
 
     override fun clearCrop() = crops.clear()
@@ -204,10 +261,9 @@ class ImageFolderSource(dir: File) : PageSource {
         timedDecode(index, crop) { decodeImpl(index, reqW, reqH, fitWidth, crop) }
 
     private fun decodeImpl(index: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt?): Bitmap? {
-        val f = files.getOrNull(index) ?: return null
-        val o = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeFile(f.path, o)
-        if (o.outWidth <= 0 || o.outHeight <= 0) return null
+        if (index !in 0 until count) return null
+        val f = index
+        val o = bounds(index) ?: return null
         val fw = o.outWidth
         val fh = o.outHeight
         if (crop == null) return decodeRegion(f, fw, fh, null, reqW, reqH, fitWidth)
@@ -237,16 +293,15 @@ class ImageFolderSource(dir: File) : PageSource {
     }
 
     /** 裁切区域已知（或不裁）：只解码需要的部分，比先解码整页再裁省内存、清晰度也更好 */
-    private fun decodeRegion(f: File, fw: Int, fh: Int, region: Rect?, reqW: Int, reqH: Int, fitWidth: Boolean): Bitmap? {
+    private fun decodeRegion(f: Int, fw: Int, fh: Int, region: Rect?, reqW: Int, reqH: Int, fitWidth: Boolean): Bitmap? {
         val o = opts(sampleSize(region?.width() ?: fw, region?.height() ?: fh, reqW, reqH, fitWidth))
-        if (region == null) return BitmapFactory.decodeFile(f.path, o)
+        if (region == null) return input.decode(f, o)
         val partial = runCatching {
-            @Suppress("DEPRECATION")
-            val d = BitmapRegionDecoder.newInstance(f.path, false)
+            val d = input.regionDecoder(f) ?: return@runCatching null
             try { d.decodeRegion(region, o) } finally { d.recycle() }
         }.getOrNull()
         if (partial != null) return partial
-        val full = BitmapFactory.decodeFile(f.path, o) ?: return null
+        val full = input.decode(f, o) ?: return null
         return cropBitmap(full, region, fw, fh)
     }
 
@@ -264,10 +319,10 @@ class ImageFolderSource(dir: File) : PageSource {
      * 只有裁掉的部分多到截出来的分辨率不够时，才改为只解码内容区域（大图、裁得多时才会发生）。
      */
     private fun decodeAndDetect(
-        index: Int, f: File, fw: Int, fh: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt,
+        index: Int, f: Int, fw: Int, fh: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt,
     ): Bitmap? {
         val s = sampleSize(fw, fh, reqW, reqH, fitWidth)
-        val full = BitmapFactory.decodeFile(f.path, opts(s)) ?: return null
+        val full = input.decode(f, opts(s)) ?: return null
         val bw = full.width
         val bh = full.height
         val t0 = System.nanoTime()
@@ -306,7 +361,7 @@ class ImageFolderSource(dir: File) : PageSource {
         return out
     }
 
-    override fun close() {}
+    override fun close() = input.close()
 }
 
 /** 系统自带 PdfRenderer，无需第三方库 */

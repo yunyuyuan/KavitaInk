@@ -241,7 +241,7 @@ class SeriesActivity : BaseActivity() {
         enqueue(listOf(c))
     }
 
-    private fun enqueue(items: List<ChapterItem>) {
+    private fun enqueue(items: List<ChapterItem>) = withStorageAccess {
         ensureNotificationPermission()
         val tasks = items.map { DownloadTask.of(sk, name, format, it) }
         val n = app.queue.enqueue(tasks)
@@ -270,7 +270,7 @@ class SeriesActivity : BaseActivity() {
             status.text = getString(R.string.series_none_downloaded_selected)
             return
         }
-        bg({ todo.sumOf { app.storage.sizeOf(it.dir) } }) { bytes, _ ->
+        bg({ todo.sumOf { app.storage.sizeOf(it) } }) { bytes, _ ->
             val n = todo.size
             val msg = resources.getQuantityString(R.plurals.series_delete_msg, n, n, formatBytes(bytes ?: 0).ifBlank { "0 KB" })
             confirm(getString(R.string.shelf_delete_title), msg, getString(R.string.delete)) {

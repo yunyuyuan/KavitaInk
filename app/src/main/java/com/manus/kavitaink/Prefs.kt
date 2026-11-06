@@ -59,6 +59,10 @@ class Prefs(ctx: Context) {
     /** 0 = 左右三分（中间呼出菜单），1 = 左右两分（长按呼出菜单） */
     var tapMode: Int get() = int("tapMode", 0); set(v) = putInt("tapMode", v)
     var swipe: Boolean get() = bool("swipe", true); set(v) = putBool("swipe", v)
+    /** 同时下载的章节数；逐页下载时也是一章内同时下载的页数（1–4，默认 2） */
+    var downloadConcurrency: Int
+        get() = int("downloadConcurrency", 2).coerceIn(1, MAX_CONCURRENCY)
+        set(v) = putInt("downloadConcurrency", v.coerceIn(1, MAX_CONCURRENCY))
 
     // ---------- 漫画 / PDF ----------
     var mangaRtl: Boolean get() = bool("mangaRtl", false); set(v) = putBool("mangaRtl", v)
@@ -164,6 +168,7 @@ class Prefs(ctx: Context) {
     }
 
     companion object {
+        const val MAX_CONCURRENCY = 4
         const val SB_PAGE = 1
         const val SB_PERCENT = 2
         const val SB_CHAPTER = 4

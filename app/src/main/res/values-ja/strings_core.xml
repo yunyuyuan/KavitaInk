@@ -51,4 +51,7 @@
     <string name="err_epub_corrupt">EPUB ファイルが破損しています: %1$s</string>
     <string name="err_epub_no_opf">無効な EPUB です: OPF ファイルが見つかりません</string>
     <string name="err_epub_read_opf">OPF ファイルを読み取れません</string>
+    <string name="err_mkdir_content">フォルダ %1$s を作成できません。ストレージの権限と空き容量を確認してください</string>
+    <string name="err_storage_permission">ストレージの権限がありません。システム設定で KavitaInk に「すべてのファイルへのアクセス」を許可してください</string>
+    <string name="err_storage_permission_legacy">ストレージの権限がありません。システム設定 → アプリ → 権限で、KavitaInkの「ストレージ」を許可してください</string>
 </resources>

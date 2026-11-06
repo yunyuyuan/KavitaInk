@@ -17,12 +17,30 @@ def shell(cmd, timeout=120):
     return sh("shell", cmd, timeout=timeout).decode("utf-8", "replace")
 
 
+def _dismiss_anr(root):
+    """模拟器很慢时系统会弹「xxx isn't responding」（多为 System UI），挡住界面：点「Wait」继续等"""
+    if not any("isn't responding" in (n.get("text") or "") for n in root.iter("node")):
+        return False
+    for n in root.iter("node"):
+        if (n.get("text") or "").strip().lower() == "wait":
+            b = list(map(int, re.findall(r"\d+", n.get("bounds", ""))))
+            if len(b) == 4:
+                print("  （系统无响应对话框 → Wait）")
+                shell(f"input tap {(b[0] + b[2]) // 2} {(b[1] + b[3]) // 2}")
+                time.sleep(3)
+                return True
+    return False
+
+
 def dump():
     for _ in range(10):  # 进度刷新时界面可能一时达不到空闲，多试几次
         # 先删掉旧文件：dump 失败时不能读到上一次留下的界面
         out = shell("rm -f /sdcard/ui.xml; uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; cat /sdcard/ui.xml 2>/dev/null", timeout=180)
         if "<hierarchy" in out:
-            return ET.fromstring(out[out.index("<?xml"):] if "<?xml" in out else out[out.index("<hierarchy"):])
+            root = ET.fromstring(out[out.index("<?xml"):] if "<?xml" in out else out[out.index("<hierarchy"):])
+            if _dismiss_anr(root):
+                continue
+            return root
         time.sleep(5)
     raise RuntimeError("uiautomator dump failed")
 
@@ -157,3 +175,17 @@ def set_app_lang(tag):
 
 if __name__ == "__main__":
     print(texts())
+
+
+INDEX_DIR = f"/sdcard/Android/data/{PKG}/files/index"   # 私有索引（chapter.json 等）
+CONTENT_DIR = "/sdcard/Books/KavitaInk"                  # 公共下载目录（原文件）
+
+
+def grant_storage():
+    """授予下载目录所需的存储权限（Android 11+ 所有文件访问；Android 10 存储写权限）"""
+    shell(f"appops set {PKG} MANAGE_EXTERNAL_STORAGE allow")
+    shell(f"pm grant {PKG} android.permission.WRITE_EXTERNAL_STORAGE")
+    shell(f"pm grant {PKG} android.permission.READ_EXTERNAL_STORAGE")
+    # Android 10：pm grant 不会恢复被「拒绝」设成 ignore 的 app op，系统会按只读视图挂载存储
+    for op in ("READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"):
+        shell(f"appops set --uid {PKG} {op} allow")

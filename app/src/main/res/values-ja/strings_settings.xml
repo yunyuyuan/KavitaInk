@@ -92,4 +92,11 @@
     <string name="update_install_anyway">インストールを続行</string>
     <string name="update_no_installer">この端末には利用可能なインストーラーがありません</string>
     <string name="update_no_browser">利用可能なブラウザがありません。アドレス：%1$s</string>
+    <string name="perm_title">ストレージ権限が必要です</string>
+    <string name="perm_msg">ダウンロードしたファイルは、サーバーのフォルダ構成を保ったまま元の形式で %1$s に保存されるため、他の読書アプリでも開けます。</string>
+    <string name="perm_go">許可</string>
+    <string name="set_perm_granted">ストレージ権限：許可済み</string>
+    <string name="set_perm_missing">ストレージ権限：未許可（タップして許可）</string>
+    <string name="set_concurrency">同時ダウンロード数</string>
+    <string name="set_concurrency_note">同時にダウンロードする章の数。ページ単位のダウンロードでも、同じ数のページを同時に取得します。少ないほど省電力です</string>
 </resources>

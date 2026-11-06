@@ -31,7 +31,9 @@ class KavitaApi(baseUrl: String, val apiKey: String) {
     fun libraries(): List<Library> {
         val arr = JSONArray(text("GET", "/api/Library/libraries"))
         return (0 until arr.length()).mapNotNull { arr.optJSONObject(it) }.map {
-            Library(it.optInt("id"), it.s("name"), it.optInt("type"))
+            val fa = it.optJSONArray("folders")
+            val folders = if (fa == null) emptyList() else (0 until fa.length()).map { i -> fa.optString(i) }.filter { f -> f.isNotBlank() }
+            Library(it.optInt("id"), it.s("name"), it.optInt("type"), folders)
         }.sortedBy { it.name }
     }
 

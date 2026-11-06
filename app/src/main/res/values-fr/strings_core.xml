@@ -51,4 +51,7 @@
     <string name="err_epub_corrupt">Le fichier EPUB est endommagé : %1$s</string>
     <string name="err_epub_no_opf">EPUB invalide : fichier OPF introuvable</string>
     <string name="err_epub_read_opf">Impossible de lire le fichier OPF</string>
+    <string name="err_mkdir_content">Impossible de créer le dossier %1$s. Vérifiez l’autorisation de stockage et l’espace libre</string>
+    <string name="err_storage_permission">Accès au stockage non autorisé. Autorisez l’« Accès à tous les fichiers » pour KavitaInk dans les paramètres système</string>
+    <string name="err_storage_permission_legacy">Accès au stockage non autorisé. Autorisez « Stockage » pour KavitaInk dans les paramètres système → Applications → Autorisations</string>
 </resources>

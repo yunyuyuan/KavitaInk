@@ -71,7 +71,11 @@ class ImageReaderActivity : ReaderActivity() {
         frame.addView(view, FrameLayout.LayoutParams(MATCH, MATCH))
 
         source = try {
-            if (chapter.kind == Kind.PDF) PdfSource(chapter.pdfFile) else ImageFolderSource(chapter.pagesDir)
+            when (chapter.kind) {
+                Kind.PDF -> PdfSource(chapter.pdfFile)
+                Kind.ZIP -> RasterSource(ZipInput(chapter.zipFile))
+                else -> RasterSource(FolderInput(chapter.pagesDir))
+            }
         } catch (t: Throwable) {
             null
         }

@@ -41,4 +41,6 @@
     <string name="sel_not_downloaded">Only not downloaded</string>
     <string name="sel_downloaded">Only downloaded</string>
     <string name="list_sep">", "</string>
+    <string name="perm_step_all_files">On the next screen, turn on “Allow access to manage all files” for KavitaInk, then come back.</string>
+    <string name="perm_step_legacy">In the next system dialog, choose “Allow”.</string>
 </resources>

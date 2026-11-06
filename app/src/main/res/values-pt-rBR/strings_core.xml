@@ -51,4 +51,7 @@
     <string name="err_epub_corrupt">O arquivo EPUB está danificado: %1$s</string>
     <string name="err_epub_no_opf">EPUB inválido: arquivo OPF não encontrado</string>
     <string name="err_epub_read_opf">Não foi possível ler o arquivo OPF</string>
+    <string name="err_mkdir_content">Não foi possível criar a pasta %1$s. Verifique a permissão de armazenamento e o espaço livre</string>
+    <string name="err_storage_permission">Sem permissão de armazenamento. Permita o “Acesso a todos os arquivos” para o KavitaInk nas configurações do sistema</string>
+    <string name="err_storage_permission_legacy">Sem permissão de armazenamento. Permita “Armazenamento” para KavitaInk em Configurações do sistema → Apps → Permissões</string>
 </resources>

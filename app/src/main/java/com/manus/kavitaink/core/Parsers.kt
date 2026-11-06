@@ -40,14 +40,17 @@ object Parsers {
                 var bytes = 0L
                 var ext = ""
                 var fileFormat = -1
+                var filePath = ""
                 if (files != null) {
                     for (k in 0 until files.length()) {
                         val f = files.optJSONObject(k) ?: continue
                         bytes += f.optLong("bytes")
+                        if (filePath.isEmpty()) filePath = f.s("filePath")
                         if (ext.isEmpty()) ext = f.s("extension")
                         if (fileFormat < 0) fileFormat = f.optInt("format", -1)
                     }
                 }
+                if (ext.isEmpty() && filePath.contains('.')) ext = "." + filePath.substringAfterLast('.')
                 val format = when {
                     c.has("format") && !c.isNull("format") -> c.optInt("format", seriesFormat)
                     fileFormat >= 0 -> fileFormat
@@ -66,6 +69,7 @@ object Parsers {
                     ext = ext,
                     bytes = bytes,
                     fileCount = files?.length() ?: 1,
+                    filePath = filePath,
                 )
             }
         }

@@ -39,4 +39,6 @@
     <string name="sel_not_downloaded">未ダウンロードのみ</string>
     <string name="sel_downloaded">ダウンロード済みのみ</string>
     <string name="list_sep">、</string>
+    <string name="perm_step_all_files">次の画面で KavitaInk の「すべてのファイルの管理を許可」をオンにしてから戻ってください。</string>
+    <string name="perm_step_legacy">次のシステムダイアログで「許可」を選んでください。</string>
 </resources>

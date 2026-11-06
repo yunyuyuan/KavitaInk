@@ -17,8 +17,10 @@ class CoreTest {
         assertEquals(2, list.size)
         assertEquals("第1卷", list[0].title(ZH))
         assertEquals("第2卷", list[1].title(ZH))
-        assertEquals(Kind.IMAGES, list[0].kind)
+        // cbz 直接下载原文件，阅读时从压缩包里读页
+        assertEquals(Kind.ZIP, list[0].kind)
         assertEquals(".cbz", list[0].ext)
+        assertEquals("/home/ubuntu/library/manga/Test Manga/Test Manga v01.cbz", list[0].filePath)
         assertEquals(5, list[0].pages)
         assertTrue(list[0].bytes > 0)
     }
