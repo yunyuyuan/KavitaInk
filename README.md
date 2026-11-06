@@ -226,9 +226,13 @@ python3 tools/translate.py --check
 python3 tools/translate.py
 
 # 1.2.0 新功能的模拟器测试：状态栏、屏幕方向、双页、双页连续翻页内存、裁白边（含耗时）、
-# 字体下载 / 导入 / 删除、批量操作、停留 10 分钟无闹钟无刷新、10 种语言截图巡检
+# 字体下载 / 导入 / 删除、批量操作、停留 10 分钟无闹钟无刷新、中英文界面截图巡检（V120_ALL_LANGS=1 时巡检全部 10 种语言）
 python3 tools/make_fixtures_v120.py <Kavita 漫画库目录>    # 生成测试漫画后在 Kavita 里扫描该库
 KAVITA_PASS=xxx python3 tools/e2e_v120.py                  # 也可只跑某几段，如 e2e_v120.py spread crop
+
+# 应用内更新：先用 -PappVersionName=1.1.9 之类的低版本号打一个正式签名包，
+# 脚本会安装它，对着 GitHub 上最新的 Release 检查更新、下载、校验签名并通过系统安装器升级
+python3 tools/e2e_update.py <低版本号的 apk>
 ```
 
 ## 已知限制
