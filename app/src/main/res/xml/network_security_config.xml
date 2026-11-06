@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  自建 Kavita 常见于局域网 http:// 或自签名证书：
+  1) 允许明文 HTTP；2) 信任用户手动安装的 CA 证书（Android 7+ 默认不信任）。
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

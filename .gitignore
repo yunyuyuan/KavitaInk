@@ -1,0 +1,17 @@
+.gradle/
+build/
+app/build/
+local.properties
+*.iml
+.idea/
+captures/
+tools/shots/
+.kotlin/
+dist/
+__pycache__/
+*.pyc
+
+# 签名密钥绝不提交（CI 通过 GitHub Secrets 注入）
+keystore/
+*.jks
+*.keystore
