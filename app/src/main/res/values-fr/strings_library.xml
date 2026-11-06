@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="login_title">Connexion à Kavita</string>
+    <string name="login_connect">Se connecter</string>
+    <string name="login_server">Adresse du serveur</string>
+    <string name="login_server_hint">Ex. : http://192.168.1.10:5000</string>
+    <string name="login_way1">Option 1 : nom d’utilisateur et mot de passe</string>
+    <string name="login_way1_note">Le mot de passe sert uniquement à obtenir une Auth Key et n’est jamais enregistré sur cet appareil</string>
+    <string name="login_user">Nom d’utilisateur</string>
+    <string name="login_pass">Mot de passe</string>
+    <string name="login_way2">Option 2 : Auth Key ou lien OPDS</string>
+    <string name="login_way2_note">Dans Kavita : Paramètres → Compte → Auth Keys / OPDS. Si vous renseignez ce champ, vous pouvez laisser le nom d’utilisateur et le mot de passe vides</string>
+    <string name="login_key_hint">Auth Key ou http://…/api/opds/…</string>
+    <string name="login_notes">Remarques :\n• Le téléchargement nécessite le rôle « Download » pour ce compte dans Kavita\n• Les adresses http locales fonctionnent directement ; pour un certificat https autosigné, installez-le d’abord dans le système\n• Cette application sert uniquement au téléchargement et à la lecture hors ligne. Elle ne transmet ni ne synchronise la progression de lecture</string>
+    <string name="login_need_server">Veuillez saisir l’adresse du serveur</string>
+    <string name="login_connecting">Connexion…</string>
+    <string name="err_need_credentials">Saisissez un nom d’utilisateur et un mot de passe, ou une Auth Key</string>
+    <string name="login_failed">Échec de la connexion : %1$s</string>
+    <plurals name="login_ok">
+        <item quantity="one">Connecté : Kavita %1$s, %2$d bibliothèque</item>
+        <item quantity="many">Connecté : Kavita %1$s, %2$d bibliothèques</item>
+        <item quantity="other">Connecté : Kavita %1$s, %2$d bibliothèques</item>
+    </plurals>
+    <string name="libs_title">Bibliothèques</string>
+    <string name="libs_search_hint">Rechercher une série</string>
+    <string name="libs_loading">Chargement des bibliothèques…</string>
+    <string name="libs_none">Ce compte n’a accès à aucune bibliothèque</string>
+    <plurals name="libs_count">
+        <item quantity="one">%1$d bibliothèque · %2$s</item>
+        <item quantity="many">%1$d bibliothèques · %2$s</item>
+        <item quantity="other">%1$d bibliothèques · %2$s</item>
+    </plurals>
+    <string name="series_title">Séries</string>
+    <string name="series_search_title">Recherche : %1$s</string>
+    <plurals name="series_pages">
+        <item quantity="one">%1$d page</item>
+        <item quantity="many">%1$d pages</item>
+        <item quantity="other">%1$d pages</item>
+    </plurals>
+    <string name="series_more">Charger plus</string>
+    <string name="series_more_page">Charger plus (page %1$d sur %2$d)</string>
+    <string name="series_no_match">Aucune série correspondante</string>
+    <string name="series_empty_lib">Cette bibliothèque est vide</string>
+    <plurals name="series_count">
+        <item quantity="one">%1$d série · %2$d affichée</item>
+        <item quantity="many">%1$d séries · %2$d affichées</item>
+        <item quantity="other">%1$d séries · %2$d affichées</item>
+    </plurals>
+    <string name="shelf_title">Étagère</string>
+    <string name="shelf_libraries">Bibliothèques</string>
+    <string name="shelf_downloads">Téléchargements</string>
+    <string name="shelf_downloads_n">Téléchargements (%1$d)</string>
+    <string name="shelf_settings">Paramètres</string>
+    <plurals name="shelf_items">
+        <item quantity="one">%1$d élément téléchargé</item>
+        <item quantity="many">%1$d éléments téléchargés</item>
+        <item quantity="other">%1$d éléments téléchargés</item>
+    </plurals>
+    <string name="shelf_read_to">Lecture : %1$s</string>
+    <string name="shelf_read_to_pct">Lecture : %1$s %2$d%%</string>
+    <plurals name="shelf_status">
+        <item quantity="one">%1$d titre · %2$s utilisés · appui long pour sélectionner</item>
+        <item quantity="many">%1$d titres · %2$s utilisés · appui long pour sélectionner</item>
+        <item quantity="other">%1$d titres · %2$s utilisés · appui long pour sélectionner</item>
+    </plurals>
+    <string name="shelf_not_connected">Aucune connexion à un serveur. Appuyez sur « Bibliothèques » en haut à droite pour vous connecter à Kavita, puis téléchargez ce que vous souhaitez lire.</string>
+    <string name="shelf_empty">Aucun contenu hors ligne. Appuyez sur « Bibliothèques » pour parcourir et télécharger du contenu. Les téléchargements sont lisibles sans connexion réseau.</string>
+    <string name="shelf_delete_title">Supprimer le contenu hors ligne</string>
+    <string name="shelf_delete_one_msg">Supprimer le contenu téléchargé de « %1$s » ? Cela libère %2$s.\n(Les fichiers sur le serveur ne sont pas affectés.)</string>
+    <plurals name="shelf_delete_msg">
+        <item quantity="one">Supprimer le contenu téléchargé de %1$d titre ? Cela libère %2$s.\n(Les fichiers sur le serveur ne sont pas affectés.)</item>
+        <item quantity="many">Supprimer le contenu téléchargé de %1$d titres ? Cela libère %2$s.\n(Les fichiers sur le serveur ne sont pas affectés.)</item>
+        <item quantity="other">Supprimer le contenu téléchargé de %1$d titres ? Cela libère %2$s.\n(Les fichiers sur le serveur ne sont pas affectés.)</item>
+    </plurals>
+    <string name="series_resume">Reprendre la lecture</string>
+    <string name="series_download_all">Tout télécharger</string>
+    <string name="series_online">En ligne</string>
+    <string name="series_loading_chapters">Chargement des chapitres…</string>
+    <string name="series_local_only">%1$s (en local uniquement)</string>
+    <plurals name="series_status">
+        <item quantity="one">%1$d élément · %2$d téléchargé</item>
+        <item quantity="many">%1$d éléments · %2$d téléchargés</item>
+        <item quantity="other">%1$d éléments · %2$d téléchargés</item>
+    </plurals>
+    <string name="series_in_queue">%1$d en file d’attente</string>
+    <string name="series_offline_mode">Hors ligne</string>
+    <string name="series_tap_to_download">Appuyez sur un élément pour le télécharger</string>
+    <string name="series_online_failed">Impossible de charger les chapitres depuis le serveur : %1$s</string>
+    <string name="series_downloaded">Téléchargé</string>
+    <string name="series_downloaded_pct">Téléchargé · lu à %1$d%%</string>
+    <string name="series_not_downloaded">Non téléchargé</string>
+    <plurals name="series_enqueued">
+        <item quantity="one">%1$d élément ajouté à la file de téléchargement (vous pouvez quitter cette page ; le téléchargement continue en arrière-plan)</item>
+        <item quantity="many">%1$d éléments ajoutés à la file de téléchargement (vous pouvez quitter cette page ; le téléchargement continue en arrière-plan)</item>
+        <item quantity="other">%1$d éléments ajoutés à la file de téléchargement (vous pouvez quitter cette page ; le téléchargement continue en arrière-plan)</item>
+    </plurals>
+    <string name="series_already_queued">Déjà téléchargé ou en file d’attente</string>
+    <plurals name="series_skipped">
+        <item quantity="one">%1$d élément ignoré (déjà téléchargé ou en file d’attente)</item>
+        <item quantity="many">%1$d éléments ignorés (déjà téléchargés ou en file d’attente)</item>
+        <item quantity="other">%1$d éléments ignorés (déjà téléchargés ou en file d’attente)</item>
+    </plurals>
+    <string name="series_none_downloaded_selected">Aucun des éléments sélectionnés n’est téléchargé</string>
+    <plurals name="series_delete_msg">
+        <item quantity="one">Supprimer %1$d élément téléchargé ? Cela libère %2$s.\n(Les fichiers sur le serveur ne sont pas affectés.)</item>
+        <item quantity="many">Supprimer %1$d éléments téléchargés ? Cela libère %2$s.\n(Les fichiers sur le serveur ne sont pas affectés.)</item>
+        <item quantity="other">Supprimer %1$d éléments téléchargés ? Cela libère %2$s.\n(Les fichiers sur le serveur ne sont pas affectés.)</item>
+    </plurals>
+    <string name="series_list_not_loaded">La liste des chapitres n’est pas encore chargée</string>
+    <string name="series_all_done">Tout est téléchargé ou déjà en file d’attente</string>
+    <plurals name="series_download_all_size">
+        <item quantity="one">Télécharger %1$d élément, soit environ %2$s ?</item>
+        <item quantity="many">Télécharger %1$d éléments, soit environ %2$s ?</item>
+        <item quantity="other">Télécharger %1$d éléments, soit environ %2$s ?</item>
+    </plurals>
+    <plurals name="series_download_all_msg">
+        <item quantity="one">Télécharger %1$d élément ?</item>
+        <item quantity="many">Télécharger %1$d éléments ?</item>
+        <item quantity="other">Télécharger %1$d éléments ?</item>
+    </plurals>
+    <string name="series_nothing_downloaded">Rien n’est encore téléchargé. Appuyez d’abord sur un chapitre pour le télécharger.</string>
+</resources>

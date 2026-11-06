@@ -1,4 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Kavita墨读</string>
+    <string name="app_name" translatable="false">KavitaInk</string>
+    <string name="back">‹ Back</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="close">Close</string>
+    <string name="delete">Delete</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <!-- 设置项名称 + 当前值 -->
+    <string name="label_value">%1$s: %2$s</string>
+    <string name="value_default">Default</string>
+    <string name="value_none">None</string>
+    <string name="value_small">Small</string>
+    <string name="value_medium">Medium</string>
+    <string name="value_large">Large</string>
+    <string name="list_prev_page">▲ Previous</string>
+    <string name="list_next_page">▼ Next</string>
+    <string name="px_n">%1$d px</string>
+    <string name="loading">Loading…</string>
+    <string name="refresh">Refresh</string>
+    <string name="search">Search</string>
+    <string name="retry">Retry</string>
+    <string name="load_failed">Could not load: %1$s</string>
+    <string name="more">More</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="title_dot">%1$s · %2$s</string>
+    <string name="sel_select">Select</string>
+    <string name="sel_choose">Select…</string>
+    <string name="sel_all">Select all</string>
+    <string name="sel_invert">Invert selection</string>
+    <plurals name="sel_count">
+        <item quantity="one">%1$d selected</item>
+        <item quantity="other">%1$d selected</item>
+    </plurals>
+    <string name="sel_delete_n">Delete selected (%1$d)</string>
+    <string name="sel_download_n">Download selected (%1$d)</string>
+    <string name="sel_not_downloaded">Only not downloaded</string>
+    <string name="sel_downloaded">Only downloaded</string>
+    <string name="list_sep">", "</string>
 </resources>

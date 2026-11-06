@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="fmt_image">圖片</string>
+    <string name="fmt_archive">壓縮檔</string>
+    <string name="fmt_unknown">未知</string>
+    <string name="lib_type_manga">日式漫畫</string>
+    <string name="lib_type_comic">漫畫</string>
+    <string name="lib_type_book">書籍</string>
+    <string name="lib_type_image">圖片</string>
+    <string name="lib_type_light_novel">輕小說</string>
+    <string name="lib_type_other">其他</string>
+    <string name="label_special">特別篇</string>
+    <string name="label_chapter_generic">章節</string>
+    <string name="label_single_volume">單卷</string>
+    <string name="label_volume_n">第 %1$s 卷</string>
+    <string name="label_chapter_book_n">第 %1$s 章</string>
+    <string name="label_chapter_manga_n">第 %1$s 話</string>
+    <string name="label_vol_chapter">%1$s，%2$s</string>
+    <string name="toc_section_n">第 %1$d 節</string>
+    <string name="toc_untitled">（未命名）</string>
+    <string name="err_unknown">未知錯誤</string>
+    <string name="err_with_detail">%1$s：%2$s</string>
+    <string name="err_http_400">請求遭拒 (400)</string>
+    <string name="err_http_401">驗證失敗：使用者名稱、密碼或 Auth Key 不正確，或已過期</string>
+    <string name="err_http_403">權限不足（下載需要此帳號在 Kavita 中具備下載角色）</string>
+    <string name="err_http_404">伺服器上找不到內容 (404)</string>
+    <string name="err_http_5xx">伺服器錯誤 (%1$d)</string>
+    <string name="err_http_other">請求失敗 (%1$d)</string>
+    <string name="err_no_auth_key">已登入，但伺服器未傳回 Auth Key。請改用 Auth Key 連線</string>
+    <string name="err_unknown_host">無法解析伺服器位址。請檢查網址或網路</string>
+    <string name="err_connect">無法連線至伺服器。請檢查位址、連接埠和網路</string>
+    <string name="err_timeout">連線逾時。請檢查網路</string>
+    <string name="err_ssl">HTTPS 憑證驗證失敗（請先將自簽憑證安裝至系統）</string>
+    <string name="err_bad_url">伺服器位址無效</string>
+    <string name="err_bad_json">無法讀取伺服器回應（此位址是 Kavita 伺服器嗎？）</string>
+    <string name="err_connection_lost">網路連線中斷</string>
+    <string name="err_not_logged_in">尚未登入伺服器</string>
+    <string name="err_other_server">此下載屬於另一台伺服器。請重新登入該伺服器</string>
+    <string name="err_mkdir">無法建立下載資料夾。請檢查儲存空間</string>
+    <string name="err_multi_file_epub">尚不支援由多個檔案組成的 EPUB 章節</string>
+    <string name="err_incomplete">連線中斷（已下載 %1$d / %2$d 位元組）</string>
+    <string name="err_save_file">無法儲存檔案：%1$s</string>
+    <string name="err_write_space">無法寫入檔案。請檢查儲存空間：%1$s</string>
+    <string name="err_no_space">儲存空間不足</string>
+    <string name="err_write_failed">寫入檔案失敗：%1$s</string>
+    <string name="err_no_pages">此章節沒有可下載的頁面</string>
+    <string name="err_page_empty">第 %1$d 頁是空白的</string>
+    <string name="err_save_page">無法儲存第 %1$d 頁</string>
+    <string name="err_epub_no_container">下載的 EPUB 缺少 container.xml</string>
+    <string name="err_epub_corrupt">EPUB 檔案已損毀：%1$s</string>
+    <string name="err_epub_no_opf">EPUB 無效：找不到 OPF 檔案</string>
+    <string name="err_epub_read_opf">無法讀取 OPF 檔案</string>
+</resources>

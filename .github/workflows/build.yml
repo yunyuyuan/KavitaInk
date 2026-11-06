@@ -77,6 +77,14 @@ jobs:
             echo "::warning::未配置签名 Secrets，APK 将使用调试签名（不能覆盖安装正式版）"
           fi
 
+      - name: i18n checks
+        run: |
+          # 英文原文改了但还没重新翻译时只提醒；键缺失、占位符不一致由 lint 和单元测试拦截
+          python3 tools/translate.py --check > /tmp/i18n-pending.txt || {
+            echo "::warning::$(wc -l < /tmp/i18n-pending.txt) 条文案在英文修改后还没重新翻译，运行 python3 tools/translate.py 更新"
+            head -20 /tmp/i18n-pending.txt
+          }
+          ./gradlew lintDebug --console=plain
       - name: Unit tests
         run: ./gradlew testDebugUnitTest --console=plain
 

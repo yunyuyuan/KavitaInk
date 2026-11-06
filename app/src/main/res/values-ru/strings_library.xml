@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="login_title">Подключение к Kavita</string>
+    <string name="login_connect">Подключиться</string>
+    <string name="login_server">Адрес сервера</string>
+    <string name="login_server_hint">Например, http://192.168.1.10:5000</string>
+    <string name="login_way1">Способ 1: имя пользователя и пароль</string>
+    <string name="login_way1_note">Пароль используется только для получения Auth Key и не сохраняется на устройстве</string>
+    <string name="login_user">Имя пользователя</string>
+    <string name="login_pass">Пароль</string>
+    <string name="login_way2">Способ 2: Auth Key или ссылка OPDS</string>
+    <string name="login_way2_note">В Kavita: Настройки → Аккаунт → Auth Keys / OPDS. Если заполнить это поле, имя пользователя и пароль можно не вводить</string>
+    <string name="login_key_hint">Auth Key или http://…/api/opds/…</string>
+    <string name="login_notes">Примечания:\n• Для скачивания аккаунту в Kavita нужна роль «Download»\n• Локальные адреса http работают без настройки; самоподписанный сертификат https нужно сначала установить в систему\n• Приложение только скачивает контент и позволяет читать офлайн. Прогресс чтения не отправляется на сервер и не синхронизируется</string>
+    <string name="login_need_server">Введите адрес сервера</string>
+    <string name="login_connecting">Подключение…</string>
+    <string name="err_need_credentials">Введите имя пользователя и пароль или Auth Key</string>
+    <string name="login_failed">Не удалось подключиться: %1$s</string>
+    <plurals name="login_ok">
+        <item quantity="one">Подключено: Kavita %1$s, %2$d библиотека</item>
+        <item quantity="few">Подключено: Kavita %1$s, %2$d библиотеки</item>
+        <item quantity="many">Подключено: Kavita %1$s, %2$d библиотек</item>
+        <item quantity="other">Подключено: Kavita %1$s, %2$d библиотеки</item>
+    </plurals>
+    <string name="libs_title">Библиотеки</string>
+    <string name="libs_search_hint">Поиск серий</string>
+    <string name="libs_loading">Загрузка библиотек…</string>
+    <string name="libs_none">У этого аккаунта нет доступных библиотек</string>
+    <plurals name="libs_count">
+        <item quantity="one">%1$d библиотека · %2$s</item>
+        <item quantity="few">%1$d библиотеки · %2$s</item>
+        <item quantity="many">%1$d библиотек · %2$s</item>
+        <item quantity="other">%1$d библиотеки · %2$s</item>
+    </plurals>
+    <string name="series_title">Серии</string>
+    <string name="series_search_title">Поиск: %1$s</string>
+    <plurals name="series_pages">
+        <item quantity="one">%1$d страница</item>
+        <item quantity="few">%1$d страницы</item>
+        <item quantity="many">%1$d страниц</item>
+        <item quantity="other">%1$d страницы</item>
+    </plurals>
+    <string name="series_more">Загрузить ещё</string>
+    <string name="series_more_page">Загрузить ещё (страница %1$d из %2$d)</string>
+    <string name="series_no_match">Подходящие серии не найдены</string>
+    <string name="series_empty_lib">Эта библиотека пуста</string>
+    <plurals name="series_count">
+        <item quantity="one">%1$d серия · показано %2$d</item>
+        <item quantity="few">%1$d серии · показано %2$d</item>
+        <item quantity="many">%1$d серий · показано %2$d</item>
+        <item quantity="other">%1$d серии · показано %2$d</item>
+    </plurals>
+    <string name="shelf_title">Книжная полка</string>
+    <string name="shelf_libraries">Библиотеки</string>
+    <string name="shelf_downloads">Загрузки</string>
+    <string name="shelf_downloads_n">Загрузки (%1$d)</string>
+    <string name="shelf_settings">Настройки</string>
+    <plurals name="shelf_items">
+        <item quantity="one">Скачан %1$d элемент</item>
+        <item quantity="few">Скачано %1$d элемента</item>
+        <item quantity="many">Скачано %1$d элементов</item>
+        <item quantity="other">Скачано %1$d элемента</item>
+    </plurals>
+    <string name="shelf_read_to">Чтение: %1$s</string>
+    <string name="shelf_read_to_pct">Чтение: %1$s %2$d%%</string>
+    <plurals name="shelf_status">
+        <item quantity="one">%1$d произведение · занято %2$s · удерживайте для выбора</item>
+        <item quantity="few">%1$d произведения · занято %2$s · удерживайте для выбора</item>
+        <item quantity="many">%1$d произведений · занято %2$s · удерживайте для выбора</item>
+        <item quantity="other">%1$d произведения · занято %2$s · удерживайте для выбора</item>
+    </plurals>
+    <string name="shelf_not_connected">Подключения к серверу пока нет. Нажмите «Библиотеки» вверху справа, чтобы войти в Kavita, затем скачайте то, что хотите прочитать.</string>
+    <string name="shelf_empty">Офлайн-контента пока нет. Нажмите «Библиотеки», чтобы выбрать и скачать контент. Скачанное можно читать без подключения к сети.</string>
+    <string name="shelf_delete_title">Удалить офлайн-контент</string>
+    <string name="shelf_delete_one_msg">Удалить скачанный контент «%1$s»? Освободится %2$s.\n(Файлы на сервере не будут затронуты.)</string>
+    <plurals name="shelf_delete_msg">
+        <item quantity="one">Удалить скачанный контент %1$d произведения? Освободится %2$s.\n(Файлы на сервере не будут затронуты.)</item>
+        <item quantity="few">Удалить скачанный контент %1$d произведений? Освободится %2$s.\n(Файлы на сервере не будут затронуты.)</item>
+        <item quantity="many">Удалить скачанный контент %1$d произведений? Освободится %2$s.\n(Файлы на сервере не будут затронуты.)</item>
+        <item quantity="other">Удалить скачанный контент %1$d произведения? Освободится %2$s.\n(Файлы на сервере не будут затронуты.)</item>
+    </plurals>
+    <string name="series_resume">Продолжить чтение</string>
+    <string name="series_download_all">Скачать всё</string>
+    <string name="series_online">Онлайн</string>
+    <string name="series_loading_chapters">Загрузка глав…</string>
+    <string name="series_local_only">%1$s (только на устройстве)</string>
+    <plurals name="series_status">
+        <item quantity="one">%1$d элемент · скачано %2$d</item>
+        <item quantity="few">%1$d элемента · скачано %2$d</item>
+        <item quantity="many">%1$d элементов · скачано %2$d</item>
+        <item quantity="other">%1$d элемента · скачано %2$d</item>
+    </plurals>
+    <string name="series_in_queue">В очереди: %1$d</string>
+    <string name="series_offline_mode">Офлайн</string>
+    <string name="series_tap_to_download">Нажмите на элемент, чтобы скачать</string>
+    <string name="series_online_failed">Не удалось загрузить главы с сервера: %1$s</string>
+    <string name="series_downloaded">Скачано</string>
+    <string name="series_downloaded_pct">Скачано · прочитано %1$d%%</string>
+    <string name="series_not_downloaded">Не скачано</string>
+    <plurals name="series_enqueued">
+        <item quantity="one">В очередь загрузки добавлен %1$d элемент (можно уйти с этой страницы; скачивание продолжится в фоне)</item>
+        <item quantity="few">В очередь загрузки добавлено %1$d элемента (можно уйти с этой страницы; скачивание продолжится в фоне)</item>
+        <item quantity="many">В очередь загрузки добавлено %1$d элементов (можно уйти с этой страницы; скачивание продолжится в фоне)</item>
+        <item quantity="other">В очередь загрузки добавлено %1$d элемента (можно уйти с этой страницы; скачивание продолжится в фоне)</item>
+    </plurals>
+    <string name="series_already_queued">Уже скачано или в очереди</string>
+    <plurals name="series_skipped">
+        <item quantity="one">Пропущен %1$d элемент (уже скачан или в очереди)</item>
+        <item quantity="few">Пропущено %1$d элемента (уже скачаны или в очереди)</item>
+        <item quantity="many">Пропущено %1$d элементов (уже скачаны или в очереди)</item>
+        <item quantity="other">Пропущено %1$d элемента (уже скачаны или в очереди)</item>
+    </plurals>
+    <string name="series_none_downloaded_selected">Ни один из выбранных элементов не скачан</string>
+    <plurals name="series_delete_msg">
+        <item quantity="one">Удалить %1$d скачанный элемент? Освободится %2$s.\n(Файлы на сервере не будут затронуты.)</item>
+        <item quantity="few">Удалить %1$d скачанных элемента? Освободится %2$s.\n(Файлы на сервере не будут затронуты.)</item>
+        <item quantity="many">Удалить %1$d скачанных элементов? Освободится %2$s.\n(Файлы на сервере не будут затронуты.)</item>
+        <item quantity="other">Удалить %1$d скачанного элемента? Освободится %2$s.\n(Файлы на сервере не будут затронуты.)</item>
+    </plurals>
+    <string name="series_list_not_loaded">Список глав ещё не загружен</string>
+    <string name="series_all_done">Всё уже скачано или в очереди</string>
+    <plurals name="series_download_all_size">
+        <item quantity="one">Скачать %1$d элемент, примерно %2$s?</item>
+        <item quantity="few">Скачать %1$d элемента, примерно %2$s?</item>
+        <item quantity="many">Скачать %1$d элементов, примерно %2$s?</item>
+        <item quantity="other">Скачать %1$d элемента, примерно %2$s?</item>
+    </plurals>
+    <plurals name="series_download_all_msg">
+        <item quantity="one">Скачать %1$d элемент?</item>
+        <item quantity="few">Скачать %1$d элемента?</item>
+        <item quantity="many">Скачать %1$d элементов?</item>
+        <item quantity="other">Скачать %1$d элемента?</item>
+    </plurals>
+    <string name="series_nothing_downloaded">Пока ничего не скачано. Сначала нажмите на главу, чтобы скачать её.</string>
+</resources>

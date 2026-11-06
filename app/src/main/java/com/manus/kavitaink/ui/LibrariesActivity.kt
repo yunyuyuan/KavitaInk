@@ -8,6 +8,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
+import com.manus.kavitaink.R
+import com.manus.kavitaink.core.error
 import com.manus.kavitaink.core.KavitaApi
 import com.manus.kavitaink.core.Library
 
@@ -22,7 +24,7 @@ class LibrariesActivity : BaseActivity() {
         { v, lib, _ ->
             val r = TwoLineRow.of(v)
             r.title.text = lib.name
-            r.sub.text = lib.typeLabel
+            r.sub.text = lib.typeLabel(x)
         },
     )
 
@@ -34,11 +36,11 @@ class LibrariesActivity : BaseActivity() {
             return
         }
         val root = root()
-        root.addView(header("书库", back = true, actions = listOf("刷新" to ::load)).first)
+        root.addView(header(getString(R.string.libs_title), back = true, actions = listOf(getString(R.string.refresh) to ::load)).first)
 
         val search = hbox().apply { setPadding(dp(8), dp(6), dp(8), dp(6)) }
         query = EditText(this).apply {
-            hint = "搜索系列名"
+            hint = getString(R.string.libs_search_hint)
             isSingleLine = true
             inputType = InputType.TYPE_CLASS_TEXT
             imeOptions = EditorInfo.IME_ACTION_SEARCH
@@ -48,7 +50,7 @@ class LibrariesActivity : BaseActivity() {
             setOnEditorActionListener { _, _, _ -> doSearch(); true }
         }
         search.addView(query, lp(0, WRAP, 1f).apply { rightMargin = dp(6) })
-        search.addView(button("搜索") { doSearch() })
+        search.addView(button(getString(R.string.search)) { doSearch() })
         root.addView(search)
         root.addView(hline())
 
@@ -70,14 +72,15 @@ class LibrariesActivity : BaseActivity() {
 
     private fun load() {
         val api = app.api() ?: return
-        status.text = "正在加载书库…"
+        status.text = getString(R.string.libs_loading)
         bg({ api.libraries() }) { libs, err ->
             if (libs == null) {
-                status.text = "加载失败：" + KavitaApi.friendlyError(err)
+                status.text = getString(R.string.load_failed, x.error(err))
                 return@bg
             }
             adapter.update(libs)
-            status.text = if (libs.isEmpty()) "该账号没有可访问的书库" else "共 ${libs.size} 个书库 · ${api.base}"
+            status.text = if (libs.isEmpty()) getString(R.string.libs_none)
+            else resources.getQuantityString(R.plurals.libs_count, libs.size, libs.size, api.base)
         }
     }
 

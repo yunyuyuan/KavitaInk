@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="percent_n">%1$d%%</string>
+    <plurals name="dl_pages_progress">
+        <item quantity="one">%1$d / %2$d страница</item>
+        <item quantity="few">%1$d / %2$d страницы</item>
+        <item quantity="many">%1$d / %2$d страниц</item>
+        <item quantity="other">%1$d / %2$d страницы</item>
+    </plurals>
+    <string name="dl_state_pausing">Приостановка…</string>
+    <string name="dl_state_cancelling">Отмена…</string>
+    <string name="dl_state_running">Загрузка</string>
+    <string name="dl_state_queued">В очереди</string>
+    <string name="dl_state_queued_partial">В очереди · загружено %1$s</string>
+    <string name="dl_state_paused">Приостановлено</string>
+    <string name="dl_state_paused_detail">Приостановлено · %1$s</string>
+    <string name="dl_state_failed">Ошибка: %1$s</string>
+    <string name="dl_state_failed_partial">Ошибка: %1$s (загружено %2$s, повтор продолжит загрузку с этого места)</string>
+    <string name="dl_retry_note">%1$s. Повтор через %2$d с (попытка %3$d)</string>
+    <string name="notif_channel_downloads">Загрузки</string>
+    <string name="notif_preparing">Подготовка загрузки…</string>
+    <plurals name="notif_failed_n">
+        <item quantity="one">%d загрузка завершилась ошибкой</item>
+        <item quantity="few">%d загрузки завершились ошибкой</item>
+        <item quantity="many">%d загрузок завершились ошибкой</item>
+        <item quantity="other">%d загрузки завершились ошибкой</item>
+    </plurals>
+    <plurals name="notif_paused_n">
+        <item quantity="one">%d загрузка приостановлена</item>
+        <item quantity="few">%d загрузки приостановлены</item>
+        <item quantity="many">%d загрузок приостановлены</item>
+        <item quantity="other">%d загрузки приостановлены</item>
+    </plurals>
+    <string name="notif_join">%1$s, %2$s</string>
+    <string name="notif_tap_retry">Нажмите для просмотра и повтора. Загруженные части сохранены</string>
+    <string name="notif_tap_resume">Загруженные части сохранены. Нажмите «Возобновить все» для продолжения</string>
+    <plurals name="notif_downloading_left">
+        <item quantity="one">Загрузка (осталось %d)</item>
+        <item quantity="few">Загрузка (осталось %d)</item>
+        <item quantity="many">Загрузка (осталось %d)</item>
+        <item quantity="other">Загрузка (осталось %d)</item>
+    </plurals>
+    <string name="action_resume_all">Возобновить все</string>
+    <string name="action_pause_all">Приостановить все</string>
+    <string name="dlq_title">Очередь загрузок</string>
+    <string name="dlq_retry_failed">Повторить все с ошибками</string>
+    <string name="dlq_clear_failed">Убрать загрузки с ошибками</string>
+    <string name="dlq_cancel_all">Отменить все (удалить незавершённые файлы)</string>
+    <string name="dlq_cancel_all_title">Отменить все</string>
+    <string name="dlq_cancel_all_msg">Отменить все загрузки в очереди и удалить уже загруженные части?</string>
+    <string name="dlq_retry_one">Повторить (продолжить загрузку)</string>
+    <string name="dlq_cancel_one">Отменить загрузку</string>
+    <string name="dlq_cancel_one_msg">%1$s\n\nУже загруженные части будут удалены.</string>
+    <string name="dlq_empty">Нет текущих загрузок. Завершённые загрузки находятся на книжной полке.</string>
+    <string name="dlq_n_running">Загружается: %1$d</string>
+    <string name="dlq_n_queued">В очереди: %1$d</string>
+    <string name="dlq_n_paused">Приостановлено: %1$d</string>
+    <string name="dlq_n_failed">С ошибками: %1$d</string>
+    <plurals name="dlq_total">
+        <item quantity="one">%1$d элемент</item>
+        <item quantity="few">%1$d элемента</item>
+        <item quantity="many">%1$d элементов</item>
+        <item quantity="other">%1$d элемента</item>
+    </plurals>
+    <string name="dlq_hint">Нажмите на элемент, чтобы приостановить, возобновить или отменить загрузку. При приостановке загруженные части сохраняются.</string>
+</resources>

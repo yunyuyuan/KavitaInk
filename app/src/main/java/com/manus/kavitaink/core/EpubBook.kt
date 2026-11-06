@@ -1,5 +1,6 @@
 package com.manus.kavitaink.core
 
+import com.manus.kavitaink.R
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.Node
@@ -19,7 +20,14 @@ import javax.xml.parsers.DocumentBuilderFactory
  */
 class EpubBook(file: File) : Closeable {
 
-    data class TocEntry(val title: String, val path: String, val fragment: String?, val level: Int)
+    /** title 为空时显示「无标题」；section >= 0 表示书里没有目录、按书脊生成的第 N 节 */
+    data class TocEntry(val title: String, val path: String, val fragment: String?, val level: Int, val section: Int = -1) {
+        fun display(x: Texts): String = when {
+            title.isNotBlank() -> title
+            section >= 0 -> x.s(R.string.toc_section_n, section + 1)
+            else -> x.s(R.string.toc_untitled)
+        }
+    }
 
     private val zip = ZipFile(file)
     private val names: Map<String, String>
@@ -49,9 +57,9 @@ class EpubBook(file: File) : Closeable {
             }
         }
         if (opf == null || !exists(opf!!)) opf = names.values.firstOrNull { it.endsWith(".opf", true) }
-        opfPath = opf ?: throw IOException("不是有效的 EPUB：找不到 OPF 文件")
+        opfPath = opf ?: throw LocalizedIOException(R.string.err_epub_no_opf)
         val opfDir = opfPath.substringBeforeLast('/', "")
-        val doc = Xml.parse(readText(opfPath) ?: throw IOException("无法读取 OPF"))
+        val doc = Xml.parse(readText(opfPath) ?: throw LocalizedIOException(R.string.err_epub_read_opf))
 
         title = Xml.elements(doc, "title").firstOrNull()?.textContent?.trim().orEmpty()
 
@@ -82,7 +90,7 @@ class EpubBook(file: File) : Closeable {
         var t: List<TocEntry> = emptyList()
         navPath?.let { p -> runCatching { t = parseNav(p) } }
         if (t.isEmpty()) ncxPath?.let { p -> runCatching { t = parseNcx(p) } }
-        if (t.isEmpty()) t = spine.mapIndexed { i, p -> TocEntry("第 ${i + 1} 节", p, null, 0) }
+        if (t.isEmpty()) t = spine.mapIndexed { i, p -> TocEntry("", p, null, 0, section = i) }
         toc = t
     }
 
@@ -155,7 +163,7 @@ class EpubBook(file: File) : Closeable {
                 ?.textContent?.replace(Regex("\\s+"), " ")?.trim().orEmpty()
             val href = a?.getAttribute("href").orEmpty()
             if (href.isNotBlank()) {
-                out += TocEntry(label.ifBlank { "（无标题）" }, resolve(dir, href), fragmentOf(href), level)
+                out += TocEntry(label, resolve(dir, href), fragmentOf(href), level)
             }
             kids.firstOrNull { it.localNameSafe() == "ol" }?.let { walkOl(it, dir, level + 1, out) }
         }
@@ -177,7 +185,7 @@ class EpubBook(file: File) : Closeable {
             val label = kids.firstOrNull { it.localNameSafe() == "navLabel" }
                 ?.textContent?.replace(Regex("\\s+"), " ")?.trim().orEmpty()
             val src = kids.firstOrNull { it.localNameSafe() == "content" }?.getAttribute("src").orEmpty()
-            if (src.isNotBlank()) out += TocEntry(label.ifBlank { "（无标题）" }, resolve(dir, src), fragmentOf(src), level)
+            if (src.isNotBlank()) out += TocEntry(label, resolve(dir, src), fragmentOf(src), level)
             walkNavPoints(np, dir, level + 1, out)
         }
     }

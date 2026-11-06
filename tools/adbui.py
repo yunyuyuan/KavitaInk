@@ -18,11 +18,12 @@ def shell(cmd, timeout=120):
 
 
 def dump():
-    for _ in range(5):
-        out = shell("uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; cat /sdcard/ui.xml", timeout=180)
+    for _ in range(10):  # 进度刷新时界面可能一时达不到空闲，多试几次
+        # 先删掉旧文件：dump 失败时不能读到上一次留下的界面
+        out = shell("rm -f /sdcard/ui.xml; uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; cat /sdcard/ui.xml 2>/dev/null", timeout=180)
         if "<hierarchy" in out:
             return ET.fromstring(out[out.index("<?xml"):] if "<?xml" in out else out[out.index("<hierarchy"):])
-        time.sleep(3)
+        time.sleep(5)
     raise RuntimeError("uiautomator dump failed")
 
 
@@ -102,6 +103,56 @@ def shot(name):
     with open(f"{SHOTS}/{name}.png", "wb") as f:
         f.write(data)
     print("shot", name, len(data))
+
+
+
+PKG = "com.manus.kavitaink"
+
+
+def stop_app():
+    """确保应用进程已退出。返回栈较深时 force-stop 后系统会在 1~2 秒内为栈里的下一个 Activity
+    重新拉起进程，所以先回到桌面，再停止并确认 pidof 为空。"""
+    shell("input keyevent 3")
+    time.sleep(1)
+    for _ in range(10):
+        shell(f"am force-stop {PKG}")
+        time.sleep(3)
+        if not shell(f"pidof {PKG}").strip():
+            return
+    raise RuntimeError("应用进程停不下来")
+
+
+def edit_prefs(name, fn):
+    """改应用的 SharedPreferences 文件（需要 adb root）。fn(旧 XML) -> 新 XML。
+    先写临时文件再 mv 原子替换：应用即使在这时被拉起，也只会读到完整的旧文件或新文件。"""
+    sh("root", timeout=60)
+    time.sleep(2)
+    sh("wait-for-device", timeout=120)
+    d = f"/data/data/{PKG}/shared_prefs"
+    f = f"{d}/{name}.xml"
+    for _ in range(3):
+        stop_app()
+        cur = shell(f"cat {f} 2>/dev/null")
+        if "<map" not in cur:
+            cur = "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n<map>\n</map>\n"
+        new = fn(cur.replace("<map />", "<map>\n</map>"))
+        uid = shell(f"stat -c %u /data/data/{PKG}").strip()
+        shell(f"mkdir -p {d}; rm -f {f}.bak")
+        subprocess.run([ADB, "shell", f"cat > {f}.e2e"], input=new.encode(), timeout=60)
+        shell(f"chown {uid}:{uid} {d} {f}.e2e; chmod 771 {d}; chmod 660 {f}.e2e; mv {f}.e2e {f}; restorecon -R {d}")
+        time.sleep(2)
+        if shell(f"cat {f}").strip() == new.strip() and not shell(f"pidof {PKG}").strip():
+            return
+    raise RuntimeError(f"写入 {name}.xml 失败")
+
+
+def set_app_lang(tag):
+    """把应用内语言写进 SharedPreferences（Android 12 及以下有效；需要 adb root）。tag 为空 = 跟随系统。
+    模拟器系统语言是英文，而 e2e 脚本按中文界面文字查找控件，所以清数据后要先固定为 zh-CN。"""
+    def fn(cur):
+        cur = re.sub(r'\s*<string name="language">[^<]*</string>', "", cur)
+        return cur.replace("<map>", f'<map>\n    <string name="language">{tag}</string>', 1)
+    edit_prefs("settings", fn)
 
 
 if __name__ == "__main__":

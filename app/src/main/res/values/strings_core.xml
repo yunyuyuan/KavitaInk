@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 格式与书库类型 -->
+    <string name="fmt_image">Images</string>
+    <string name="fmt_archive">Archive</string>
+    <string name="fmt_unknown">Unknown</string>
+    <string name="lib_type_manga">Manga</string>
+    <string name="lib_type_comic">Comic</string>
+    <string name="lib_type_book">Book</string>
+    <string name="lib_type_image">Images</string>
+    <string name="lib_type_light_novel">Light novel</string>
+    <string name="lib_type_other">Other</string>
+
+    <!-- 卷 / 章节命名 -->
+    <string name="label_special">Special</string>
+    <string name="label_chapter_generic">Chapter</string>
+    <string name="label_single_volume">Single volume</string>
+    <string name="label_volume_n">Volume %1$s</string>
+    <!-- 小说的「章」 -->
+    <string name="label_chapter_book_n">Chapter %1$s</string>
+    <!-- 漫画的「话」 -->
+    <string name="label_chapter_manga_n">Chapter %1$s</string>
+    <!-- 卷名 + 章节名，例如 Volume 1, Chapter 3 -->
+    <string name="label_vol_chapter">%1$s, %2$s</string>
+    <string name="toc_section_n">Section %1$d</string>
+    <string name="toc_untitled">(Untitled)</string>
+
+    <!-- 错误提示 -->
+    <string name="err_unknown">Unknown error</string>
+    <string name="err_with_detail">%1$s: %2$s</string>
+    <string name="err_http_400">Request rejected (400)</string>
+    <string name="err_http_401">Authentication failed: wrong username, password or Auth Key, or it has expired</string>
+    <string name="err_http_403">Permission denied (downloading requires the Download role for this account in Kavita)</string>
+    <string name="err_http_404">Not found on the server (404)</string>
+    <string name="err_http_5xx">Server error (%1$d)</string>
+    <string name="err_http_other">Request failed (%1$d)</string>
+    <string name="err_no_auth_key">Signed in, but the server returned no Auth Key. Please connect with an Auth Key instead</string>
+    <string name="err_unknown_host">Can’t resolve the server address. Check the URL or your network</string>
+    <string name="err_connect">Can’t connect to the server. Check the address, port and network</string>
+    <string name="err_timeout">Connection timed out. Check your network</string>
+    <string name="err_ssl">HTTPS certificate check failed (install self-signed certificates to the system first)</string>
+    <string name="err_bad_url">Invalid server address</string>
+    <string name="err_bad_json">Can’t read the server’s response (is this address a Kavita server?)</string>
+    <string name="err_connection_lost">Network connection lost</string>
+    <string name="err_not_logged_in">Not signed in to a server</string>
+    <string name="err_other_server">This download belongs to another server. Sign in to that server again</string>
+    <string name="err_mkdir">Can’t create the download folder. Check the storage space</string>
+    <string name="err_multi_file_epub">EPUB chapters made of several files aren’t supported yet</string>
+    <string name="err_incomplete">Connection interrupted (%1$d of %2$d bytes downloaded)</string>
+    <string name="err_save_file">Can’t save file: %1$s</string>
+    <string name="err_write_space">Can’t write the file. Check the storage space: %1$s</string>
+    <string name="err_no_space">Not enough storage space</string>
+    <string name="err_write_failed">Failed to write the file: %1$s</string>
+    <string name="err_no_pages">This chapter has no pages to download</string>
+    <string name="err_page_empty">Page %1$d is empty</string>
+    <string name="err_save_page">Can’t save page %1$d</string>
+    <string name="err_epub_no_container">The downloaded EPUB is missing container.xml</string>
+    <string name="err_epub_corrupt">The EPUB file is damaged: %1$s</string>
+    <string name="err_epub_no_opf">Not a valid EPUB: OPF file not found</string>
+    <string name="err_epub_read_opf">Can’t read the OPF file</string>
+</resources>

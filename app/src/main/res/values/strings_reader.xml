@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 阅读器通用 -->
+    <string name="reader_missing">This content doesn’t exist or has been deleted</string>
+    <string name="reader_prev_chapter">◀ Prev chapter</string>
+    <string name="reader_next_chapter">Next chapter ▶</string>
+    <string name="reader_no_prev">No downloaded previous chapter</string>
+    <string name="reader_no_next">No downloaded next chapter</string>
+    <string name="reader_orientation">Screen: %1$s</string>
+    <string name="reader_status_bar">Status bar</string>
+    <string name="reader_full_refresh">Full refresh</string>
+    <string name="reader_exit">Exit</string>
+    <string name="reader_last_page">This is the last page</string>
+    <string name="reader_first_page">This is the first page</string>
+    <string name="reader_end_of_chapter">End of chapter. Turn the page again to open:\n%1$s</string>
+    <string name="reader_start_of_chapter">Start of chapter. Turn back again to open:\n%1$s</string>
+
+    <!-- 屏幕方向 -->
+    <string name="orient_system">Follow system</string>
+    <string name="orient_portrait">Portrait</string>
+    <string name="orient_landscape">Landscape</string>
+    <string name="orient_portrait_reverse">Portrait (upside down)</string>
+    <string name="orient_landscape_reverse">Landscape (reversed)</string>
+
+    <!-- 状态栏 -->
+    <string name="sb_title_novel">Status bar (novels)</string>
+    <string name="sb_title_manga">Status bar (comics)</string>
+    <string name="sb_show">Show status bar</string>
+    <string name="sb_item_page">Page in chapter</string>
+    <string name="sb_item_percent_book">Book progress</string>
+    <string name="sb_item_percent_chapter">Chapter progress</string>
+    <string name="sb_item_chapter">Chapter name</string>
+    <string name="sb_item_time">Time</string>
+    <string name="sb_item_battery">Battery</string>
+    <string name="sb_at_top">Show at the top</string>
+    <string name="sb_larger">Larger text</string>
+
+    <!-- 小说阅读器 -->
+    <string name="epub_no_webview">This device has no WebView component, so EPUB books can’t be displayed</string>
+    <string name="epub_open_failed">Can’t open the EPUB: %1$s</string>
+    <string name="epub_empty">This EPUB has no readable content</string>
+    <!-- 本节页码 / 总页数 · 第几节 / 总节数 · 全书进度 -->
+    <string name="epub_progress">%1$d/%2$d · Section %3$d/%4$d · %5$d%%</string>
+    <string name="epub_toc">Contents</string>
+    <string name="epub_font_smaller">Text −</string>
+    <string name="epub_font_larger">Text +</string>
+    <string name="epub_line_height">Spacing %1$s</string>
+    <string name="epub_font">Font: %1$s</string>
+    <string name="epub_layout">Layout…</string>
+    <string name="epub_no_toc">This book has no table of contents</string>
+    <string name="epub_toc_missing">This entry points to content that doesn’t exist</string>
+
+    <!-- 排版 -->
+    <string name="layout_title">Layout</string>
+    <string name="layout_book_style">Use the book’s layout</string>
+    <string name="layout_indent">First-line indent</string>
+    <string name="layout_para_spacing">Paragraph spacing</string>
+    <string name="layout_justify">Justify text</string>
+    <string name="layout_letter_spacing">Letter spacing</string>
+    <string name="layout_margin_x">Side margins</string>
+    <string name="layout_margin_y">Top and bottom margins</string>
+    <plurals name="indent_n">
+        <item quantity="one">%d character</item>
+        <item quantity="other">%d characters</item>
+    </plurals>
+    <string name="letter_normal">Normal</string>
+    <string name="letter_slightly_wide">Slightly wider</string>
+    <string name="letter_wide">Wider</string>
+    <string name="letter_extra_wide">Widest</string>
+
+    <!-- 字体 -->
+    <string name="font_book_default">Book default</string>
+    <string name="font_serif">Serif</string>
+    <string name="font_sans">Sans-serif</string>
+    <string name="font_manage">Manage fonts…</string>
+    <string name="font_choose">Font</string>
+    <string name="font_preview">The quick brown fox jumps over the lazy dog</string>
+    <string name="font_err_format">Not a supported font file (TTF, OTF, WOFF and WOFF2 are supported)</string>
+    <string name="fonts_title">Fonts</string>
+    <string name="fonts_import">Import</string>
+    <string name="fonts_delete_title">Delete font</string>
+    <string name="fonts_delete_msg">Delete the font “%1$s”?</string>
+    <string name="fonts_preview_failed">Preview unavailable</string>
+    <string name="fonts_builtin_default_sub">Uses the fonts specified by the book</string>
+    <string name="fonts_builtin_sub">System font</string>
+    <string name="fonts_empty_hint">Get fonts from your Kavita server or import TTF / OTF / WOFF / WOFF2 files to use them for novels. Tap an installed font to rename or delete it.</string>
+    <plurals name="fonts_count">
+        <item quantity="one">%d font imported · long-press to delete</item>
+        <item quantity="other">%d fonts imported · long-press to delete</item>
+    </plurals>
+    <string name="fonts_now_using">Now using: %1$s</string>
+    <string name="fonts_no_picker">This device has no file picker</string>
+    <string name="fonts_importing">Importing…</string>
+    <string name="fonts_import_failed">Import failed: %1$s</string>
+    <string name="fonts_imported">Imported and selected: %1$s</string>
+
+    <!-- 漫画 / PDF 阅读器 -->
+    <string name="img_open_failed">Can’t open this content (the file is missing or its format isn’t supported)</string>
+    <string name="img_page_failed">Page %1$d can’t be displayed (this device may not support its image format)</string>
+    <string name="img_jump">Go to page</string>
+    <string name="img_jump_title">Go to page</string>
+    <string name="img_jump_go">Go</string>
+    <string name="img_direction">Direction: %1$s</string>
+    <string name="dir_rtl">Right → left</string>
+    <string name="dir_ltr">Left → right</string>
+    <string name="img_zoom">Zoom: %1$s</string>
+    <string name="fit_width">Fit width</string>
+    <string name="fit_screen">Fit screen</string>
+    <string name="img_contrast">Contrast: %1$s</string>
+    <string name="contrast_high">Enhanced</string>
+    <string name="contrast_orig">Original</string>
+    <string name="img_spread">Two-page: %1$s</string>
+    <string name="img_layout_title">Two-page display</string>
+    <string name="spread_mode">Two-page mode</string>
+    <string name="spread_off">Off</string>
+    <string name="spread_auto">Auto in landscape</string>
+    <string name="spread_always">Always</string>
+    <string name="spread_order">Page order</string>
+    <string name="order_follow">Follow reading direction</string>
+    <string name="order_ltr">Left → right</string>
+    <string name="order_rtl">Right → left</string>
+    <string name="spread_gap">Gap between pages</string>
+    <string name="spread_divider">Divider line</string>
+    <string name="divider_width">Divider width</string>
+    <string name="divider_color">Divider color</string>
+    <string name="color_black">Black</string>
+    <string name="color_dark_gray">Dark gray</string>
+    <string name="color_light_gray">Light gray</string>
+    <string name="color_white">White</string>
+    <string name="spread_cover">Show the first page on its own</string>
+    <string name="spread_shift">Shift one page</string>
+    <string name="img_crop">Trim: %1$s</string>
+    <string name="crop_white">White edges</string>
+    <string name="crop_white_black">White and black edges</string>
+    <string name="fonts_from_kavita">From Kavita</string>
+    <string name="fonts_source_kavita">Kavita</string>
+    <string name="fonts_source_local">Imported</string>
+    <plurals name="fonts_variants">
+        <item quantity="one">%1$d file</item>
+        <item quantity="other">%1$d files</item>
+    </plurals>
+    <string name="fonts_preview_web">Preview shown only while reading</string>
+    <string name="fonts_use">Use this font</string>
+    <string name="fonts_rename">Rename</string>
+    <string name="kfonts_title">Fonts on Kavita</string>
+    <string name="kfonts_user">Uploaded</string>
+    <string name="kfonts_builtin">Built into Kavita</string>
+    <string name="kfonts_installed">Downloaded</string>
+    <string name="kfonts_load_failed">Could not load the font list: %1$s</string>
+    <string name="kfonts_empty">There are no fonts on the server</string>
+    <string name="kfonts_hint">Tap a font to download it</string>
+    <string name="kfonts_checking">Checking the size of %1$s…</string>
+    <string name="kfonts_failed">Download failed: %1$s</string>
+    <string name="kfonts_size_unknown">size unknown</string>
+    <plurals name="kfonts_confirm">
+        <item quantity="one">Download %1$s (%2$d file, %3$s)?</item>
+        <item quantity="other">Download %1$s (%2$d files, %3$s)?</item>
+    </plurals>
+    <string name="kfonts_download_title">Download font</string>
+    <string name="kfonts_redownload_title">Download again</string>
+    <string name="kfonts_download">Download</string>
+    <string name="kfonts_downloading">Downloading %1$s: %2$s / %3$s</string>
+    <string name="kfonts_done">Downloaded: %1$s. Choose it in Fonts or in the reader menu.</string>
+    <string name="kfonts_cancelled">Download cancelled. It will resume where it stopped next time.</string>
+</resources>

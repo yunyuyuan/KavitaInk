@@ -4,7 +4,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /**
- * 解析 /api/Series/volumes 的返回值，把“卷 → 章节”结构拍平成可下载列表并生成中文标题。
+ * 解析 /api/Series/volumes 的返回值，把“卷 → 章节”结构拍平成可下载列表。
+ * 标题不在这里生成，而是保存原始信息（[LabelSrc]），显示时按当前语言由 [Labels] 生成。
  *
  * Kavita 约定（已在 v0.9.1.4 实测）：
  *  - 卷 minNumber = -100000：无卷的散章（loose leaf）
@@ -15,7 +16,7 @@ import org.json.JSONObject
 object Parsers {
     const val LOOSE = -100000.0
     const val SPECIAL = 100000.0
-    const val DEFAULT_RANGE = "-100000"
+    const val DEFAULT_RANGE = Labels.DEFAULT_RANGE
 
     fun chapters(json: String, seriesId: Int, seriesFormat: Int): List<ChapterItem> {
         val bookish = seriesFormat == Fmt.EPUB || seriesFormat == Fmt.PDF
@@ -56,7 +57,7 @@ object Parsers {
                     id = c.optInt("id"),
                     seriesId = seriesId,
                     volumeId = v.optInt("id"),
-                    label = label(group, vName, c, bookish || format == Fmt.EPUB || format == Fmt.PDF),
+                    src = src(vName, c, bookish || format == Fmt.EPUB || format == Fmt.PDF),
                     group = group,
                     volNum = if (group == 0) vMin else 0.0,
                     sortOrder = c.optDouble("sortOrder", 0.0),
@@ -71,38 +72,11 @@ object Parsers {
         return out.sortedWith(compareBy<ChapterItem>({ it.group }, { it.volNum }, { it.sortOrder }, { it.id }))
     }
 
-    private fun label(group: Int, volName: String, c: JSONObject, bookish: Boolean): String {
-        val range = c.s("range")
-        val titleName = c.s("titleName").trim()
-        val title = c.s("title").trim()
-        val unit = if (bookish) "章" else "话"
-        return when (group) {
-            2 -> listOf(title, titleName, range)
-                .firstOrNull { it.isNotBlank() && it != DEFAULT_RANGE } ?: "特别篇"
-            1 -> if (range.isBlank() || range == DEFAULT_RANGE) {
-                listOf(title, titleName).firstOrNull { it.isNotBlank() && it != DEFAULT_RANGE } ?: "章节"
-            } else {
-                chapterLabel(range, unit) + suffix(titleName, range)
-            }
-            else -> {
-                val vol = volumeLabel(volName)
-                if (range.isBlank() || range == DEFAULT_RANGE) vol + suffix(titleName, range)
-                else vol + " " + chapterLabel(range, unit) + suffix(titleName, range)
-            }
-        }
-    }
-
-    private fun suffix(titleName: String, range: String): String =
-        if (titleName.isBlank() || titleName == range || titleName == DEFAULT_RANGE) "" else " · $titleName"
-
-    private fun isNumber(s: String) = s.isNotBlank() && s.all { it.isDigit() || it == '.' || it == '-' }
-
-    fun volumeLabel(name: String): String = when {
-        name.isBlank() -> "单卷"
-        isNumber(name) -> "第${name}卷"
-        else -> name
-    }
-
-    private fun chapterLabel(range: String, unit: String): String =
-        if (isNumber(range)) "第$range$unit" else range
+    private fun src(volName: String, c: JSONObject, bookish: Boolean) = LabelSrc(
+        volName = volName,
+        range = c.s("range"),
+        titleName = c.s("titleName").trim(),
+        title = c.s("title").trim(),
+        bookish = bookish,
+    )
 }

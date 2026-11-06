@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="percent_n">%1$d%%</string>
+    <plurals name="dl_pages_progress">
+        <item quantity="one">%1$d / %2$d página</item>
+        <item quantity="many">%1$d / %2$d páginas</item>
+        <item quantity="other">%1$d / %2$d páginas</item>
+    </plurals>
+    <string name="dl_state_pausing">Pausando…</string>
+    <string name="dl_state_cancelling">Cancelando…</string>
+    <string name="dl_state_running">Baixando</string>
+    <string name="dl_state_queued">Na fila</string>
+    <string name="dl_state_queued_partial">Na fila · %1$s baixado</string>
+    <string name="dl_state_paused">Pausado</string>
+    <string name="dl_state_paused_detail">Pausado · %1$s</string>
+    <string name="dl_state_failed">Falha: %1$s</string>
+    <string name="dl_state_failed_partial">Falha: %1$s (%2$s baixado, tentar novamente retoma desse ponto)</string>
+    <string name="dl_retry_note">%1$s. Nova tentativa em %2$d s (tentativa %3$d)</string>
+    <string name="notif_channel_downloads">Downloads</string>
+    <string name="notif_preparing">Preparando download…</string>
+    <plurals name="notif_failed_n">
+        <item quantity="one">%d download falhou</item>
+        <item quantity="many">%d downloads falharam</item>
+        <item quantity="other">%d downloads falharam</item>
+    </plurals>
+    <plurals name="notif_paused_n">
+        <item quantity="one">%d download pausado</item>
+        <item quantity="many">%d downloads pausados</item>
+        <item quantity="other">%d downloads pausados</item>
+    </plurals>
+    <string name="notif_join">%1$s, %2$s</string>
+    <string name="notif_tap_retry">Toque para ver e tentar novamente. As partes baixadas são mantidas</string>
+    <string name="notif_tap_resume">As partes baixadas são mantidas. Toque em “Retomar todos” para continuar</string>
+    <plurals name="notif_downloading_left">
+        <item quantity="one">Baixando (%d restante)</item>
+        <item quantity="many">Baixando (%d restantes)</item>
+        <item quantity="other">Baixando (%d restantes)</item>
+    </plurals>
+    <string name="action_resume_all">Retomar todos</string>
+    <string name="action_pause_all">Pausar todos</string>
+    <string name="dlq_title">Fila de downloads</string>
+    <string name="dlq_retry_failed">Tentar novamente todos com falha</string>
+    <string name="dlq_clear_failed">Limpar downloads com falha</string>
+    <string name="dlq_cancel_all">Cancelar todos (excluir arquivos incompletos)</string>
+    <string name="dlq_cancel_all_title">Cancelar todos</string>
+    <string name="dlq_cancel_all_msg">Cancelar todos os downloads na fila e excluir as partes já baixadas?</string>
+    <string name="dlq_retry_one">Tentar novamente (continuar download)</string>
+    <string name="dlq_cancel_one">Cancelar download</string>
+    <string name="dlq_cancel_one_msg">%1$s\n\nAs partes já baixadas serão excluídas.</string>
+    <string name="dlq_empty">Nenhum download em andamento. Os downloads concluídos estão na Estante.</string>
+    <string name="dlq_n_running">%1$d baixando</string>
+    <string name="dlq_n_queued">%1$d na fila</string>
+    <string name="dlq_n_paused">%1$d em pausa</string>
+    <string name="dlq_n_failed">%1$d com falha</string>
+    <plurals name="dlq_total">
+        <item quantity="one">%1$d item</item>
+        <item quantity="many">%1$d itens</item>
+        <item quantity="other">%1$d itens</item>
+    </plurals>
+    <string name="dlq_hint">Toque em um item para pausar, retomar ou cancelar. As partes baixadas são mantidas ao pausar.</string>
+</resources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="back">‹ Zurück</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="done">Fertig</string>
+    <string name="close">Schließen</string>
+    <string name="delete">Löschen</string>
+    <string name="on">Ein</string>
+    <string name="off">Aus</string>
+    <string name="label_value">%1$s: %2$s</string>
+    <string name="value_default">Standard</string>
+    <string name="value_none">Keine</string>
+    <string name="value_small">Klein</string>
+    <string name="value_medium">Mittel</string>
+    <string name="value_large">Groß</string>
+    <string name="list_prev_page">▲ Zurück</string>
+    <string name="list_next_page">▼ Weiter</string>
+    <string name="px_n">%1$d px</string>
+    <string name="loading">Wird geladen…</string>
+    <string name="refresh">Aktualisieren</string>
+    <string name="search">Suchen</string>
+    <string name="retry">Erneut versuchen</string>
+    <string name="load_failed">Laden fehlgeschlagen: %1$s</string>
+    <string name="more">Mehr</string>
+    <string name="pause">Pausieren</string>
+    <string name="resume">Fortsetzen</string>
+    <string name="title_dot">%1$s · %2$s</string>
+    <string name="sel_select">Auswählen</string>
+    <string name="sel_choose">Auswählen…</string>
+    <string name="sel_all">Alle auswählen</string>
+    <string name="sel_invert">Auswahl umkehren</string>
+    <plurals name="sel_count">
+        <item quantity="one">%1$d ausgewählt</item>
+        <item quantity="other">%1$d ausgewählt</item>
+    </plurals>
+    <string name="sel_delete_n">Ausgewählte löschen (%1$d)</string>
+    <string name="sel_download_n">Ausgewählte herunterladen (%1$d)</string>
+    <string name="sel_not_downloaded">Nur nicht heruntergeladene</string>
+    <string name="sel_downloaded">Nur heruntergeladene</string>
+    <string name="list_sep">", "</string>
+</resources>

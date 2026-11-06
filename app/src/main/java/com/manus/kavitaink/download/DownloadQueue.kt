@@ -1,5 +1,8 @@
 package com.manus.kavitaink.download
 
+import com.manus.kavitaink.core.formatBytes
+import com.manus.kavitaink.core.Texts
+import com.manus.kavitaink.R
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -378,30 +381,31 @@ class DownloadQueue(private val app: App) {
     companion object {
         const val THROTTLE_MS = 2000L
 
-        fun formatProgress(e: Entry): String {
-            if (e.total <= 0) return if (e.done > 0) com.manus.kavitaink.core.formatBytes(e.done) else ""
-            return if (e.pages) "${e.done} / ${e.total} 页"
-            else "${com.manus.kavitaink.core.formatBytes(e.done)} / ${com.manus.kavitaink.core.formatBytes(e.total)}"
+        fun formatProgress(e: Entry, x: Texts): String {
+            if (e.total <= 0) return if (e.done > 0) formatBytes(e.done) else ""
+            return if (e.pages) x.p(R.plurals.dl_pages_progress, e.total.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(), e.done, e.total)
+            else x.s(R.string.dl_bytes_progress, formatBytes(e.done), formatBytes(e.total))
         }
 
         /** 列表里显示的状态文字 */
-        fun describe(e: Entry): String {
-            val prog = formatProgress(e)
-            val pct = if (e.total > 0) "${e.percent}%" else ""
+        fun describe(e: Entry, x: Texts): String {
+            val prog = formatProgress(e, x)
+            val pct = if (e.total > 0) x.s(R.string.percent_n, e.percent) else ""
             val detail = listOf(pct, prog).filter { it.isNotBlank() }.joinToString(" · ")
+            val partial = e.done > 0 && e.total > 0
             return when (e.state) {
                 State.RUNNING -> when (e.stop) {
-                    Stop.PAUSE -> "正在暂停…"
-                    Stop.CANCEL -> "正在取消…"
+                    Stop.PAUSE -> x.s(R.string.dl_state_pausing)
+                    Stop.CANCEL -> x.s(R.string.dl_state_cancelling)
                     Stop.NONE -> buildString {
-                        append("下载中")
+                        append(x.s(R.string.dl_state_running))
                         if (detail.isNotBlank()) append(' ').append(detail)
                         if (e.note.isNotBlank()) append(" · ").append(e.note)
                     }
                 }
-                State.QUEUED -> if (e.done > 0 && e.total > 0) "排队中 · 已下载 ${e.percent}%" else "排队中"
-                State.PAUSED -> if (detail.isNotBlank()) "已暂停 · $detail" else "已暂停"
-                State.FAILED -> "失败：${e.error}" + (if (e.done > 0 && e.total > 0) "（已下载 ${e.percent}%，重试会接着下载）" else "")
+                State.QUEUED -> if (partial) x.s(R.string.dl_state_queued_partial, pct) else x.s(R.string.dl_state_queued)
+                State.PAUSED -> if (detail.isNotBlank()) x.s(R.string.dl_state_paused_detail, detail) else x.s(R.string.dl_state_paused)
+                State.FAILED -> if (partial) x.s(R.string.dl_state_failed_partial, e.error, pct) else x.s(R.string.dl_state_failed, e.error)
             }
         }
     }

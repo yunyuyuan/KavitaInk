@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_title">连接 Kavita</string>
+    <string name="login_connect">连接</string>
+    <string name="login_server">服务器地址</string>
+    <string name="login_server_hint">例如 http://192.168.1.10:5000</string>
+    <string name="login_way1">方式一：用户名 + 密码</string>
+    <string name="login_way1_note">密码只用于换取 Auth Key，不会保存在设备上</string>
+    <string name="login_user">用户名</string>
+    <string name="login_pass">密码</string>
+    <string name="login_way2">方式二：Auth Key 或 OPDS 链接</string>
+    <string name="login_way2_note">Kavita 网页 → 设置 → 账户 → Auth Keys / OPDS。填写后可不填用户名密码</string>
+    <string name="login_key_hint">Auth Key 或 http://…/api/opds/…</string>
+    <string name="login_notes">说明：\n• 下载需要该账号在 Kavita 中拥有「Download」角色\n• 局域网 http 地址可直接使用；自签名 https 证书需先在系统中安装\n• 本应用只负责下载和离线阅读，不会上传或同步阅读进度</string>
+    <string name="login_need_server">请填写服务器地址</string>
+    <string name="login_connecting">正在连接…</string>
+    <string name="err_need_credentials">请填写用户名和密码，或填写 Auth Key</string>
+    <string name="login_failed">连接失败：%1$s</string>
+    <plurals name="login_ok">
+        <item quantity="other">连接成功：Kavita %1$s，共 %2$d 个书库</item>
+    </plurals>
+    <string name="libs_title">书库</string>
+    <string name="libs_search_hint">搜索系列名</string>
+    <string name="libs_loading">正在加载书库…</string>
+    <string name="libs_none">该账号没有可访问的书库</string>
+    <plurals name="libs_count">
+        <item quantity="other">共 %1$d 个书库 · %2$s</item>
+    </plurals>
+    <string name="series_title">系列</string>
+    <string name="series_search_title">搜索：%1$s</string>
+    <plurals name="series_pages">
+        <item quantity="other">%1$d 页</item>
+    </plurals>
+    <string name="series_more">加载更多</string>
+    <string name="series_more_page">加载更多（第 %1$d/%2$d 页）</string>
+    <string name="series_no_match">没有找到匹配的系列</string>
+    <string name="series_empty_lib">该书库没有内容</string>
+    <plurals name="series_count">
+        <item quantity="other">共 %1$d 个系列 · 已显示 %2$d</item>
+    </plurals>
+    <string name="shelf_title">书架</string>
+    <string name="shelf_libraries">书库</string>
+    <string name="shelf_downloads">下载</string>
+    <string name="shelf_downloads_n">下载(%1$d)</string>
+    <string name="shelf_settings">设置</string>
+    <plurals name="shelf_items">
+        <item quantity="other">%1$d 项已下载</item>
+    </plurals>
+    <string name="shelf_read_to">读到 %1$s</string>
+    <string name="shelf_read_to_pct">读到 %1$s %2$d%%</string>
+    <plurals name="shelf_status">
+        <item quantity="other">共 %1$d 部 · 占用 %2$s · 长按可多选</item>
+    </plurals>
+    <string name="shelf_not_connected">尚未连接服务器。点击右上角「书库」登录 Kavita，然后下载要读的书。</string>
+    <string name="shelf_empty">还没有离线内容。点击「书库」浏览并下载，下载后无需联网即可阅读。</string>
+    <string name="shelf_delete_title">删除离线内容</string>
+    <string name="shelf_delete_one_msg">删除《%1$s》已下载的内容？将释放 %2$s。\n（不会影响服务器上的文件）</string>
+    <plurals name="shelf_delete_msg">
+        <item quantity="other">删除所选 %1$d 部作品已下载的内容？将释放 %2$s。\n（不会影响服务器上的文件）</item>
+    </plurals>
+    <string name="series_resume">继续阅读</string>
+    <string name="series_download_all">全部下载</string>
+    <string name="series_online">在线</string>
+    <string name="series_loading_chapters">正在获取章节列表…</string>
+    <string name="series_local_only">%1$s（仅本地）</string>
+    <plurals name="series_status">
+        <item quantity="other">共 %1$d 项 · 已下载 %2$d</item>
+    </plurals>
+    <string name="series_in_queue">队列中 %1$d</string>
+    <string name="series_offline_mode">离线模式</string>
+    <string name="series_tap_to_download">点击未下载项即可下载</string>
+    <string name="series_online_failed">获取在线章节失败：%1$s</string>
+    <string name="series_downloaded">已下载</string>
+    <string name="series_downloaded_pct">已下载 · 读到 %1$d%%</string>
+    <string name="series_not_downloaded">未下载</string>
+    <plurals name="series_enqueued">
+        <item quantity="other">已加入下载队列：%1$d 项（可离开此页面，下载在后台继续）</item>
+    </plurals>
+    <string name="series_already_queued">已在队列中或已下载</string>
+    <plurals name="series_skipped">
+        <item quantity="other">跳过 %1$d 项（已下载或已在队列中）</item>
+    </plurals>
+    <string name="series_none_downloaded_selected">所选的项都还没有下载</string>
+    <plurals name="series_delete_msg">
+        <item quantity="other">删除所选 %1$d 项已下载的内容？将释放 %2$s。\n（不会影响服务器上的文件）</item>
+    </plurals>
+    <string name="series_list_not_loaded">章节列表尚未加载</string>
+    <string name="series_all_done">全部内容已下载或已在队列中</string>
+    <plurals name="series_download_all_size">
+        <item quantity="other">将下载 %1$d 项，约 %2$s。</item>
+    </plurals>
+    <plurals name="series_download_all_msg">
+        <item quantity="other">将下载 %1$d 项。</item>
+    </plurals>
+    <string name="series_nothing_downloaded">还没有已下载的内容，请先点击章节下载</string>
+</resources>

@@ -8,7 +8,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.TextView
+import com.manus.kavitaink.R
 import com.manus.kavitaink.core.ApiException
+import com.manus.kavitaink.core.error
 import com.manus.kavitaink.core.KavitaApi
 
 class LoginActivity : BaseActivity() {
@@ -24,46 +26,41 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         val root = root()
         // 顶栏也放一个「连接」，避免软键盘弹出时挡住底部按钮
-        root.addView(header("连接 Kavita", back = true, actions = listOf("连接" to { connect() })).first)
+        root.addView(header(getString(R.string.login_title), back = true, actions = listOf(getString(R.string.login_connect) to { connect() })).first)
         val scroll = ScrollView(this).apply { isVerticalFadingEdgeEnabled = false; overScrollMode = ScrollView.OVER_SCROLL_NEVER }
         val form = vbox().apply { setPadding(dp(16), dp(12), dp(16), dp(24)) }
 
-        form.addView(label("服务器地址", 15f, bold = true))
-        url = field("例如 http://192.168.1.10:5000", InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI)
+        form.addView(label(getString(R.string.login_server), 15f, bold = true))
+        url = field(getString(R.string.login_server_hint), InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI)
         url.setText(prefs.serverUrl)
         form.addView(url)
 
         form.addView(gap())
-        form.addView(label("方式一：用户名 + 密码", 15f, bold = true))
-        form.addView(label("密码只用于换取 Auth Key，不会保存在设备上", 13f))
-        user = field("用户名", InputType.TYPE_CLASS_TEXT)
+        form.addView(label(getString(R.string.login_way1), 15f, bold = true))
+        form.addView(label(getString(R.string.login_way1_note), 13f))
+        user = field(getString(R.string.login_user), InputType.TYPE_CLASS_TEXT)
         user.setText(prefs.username)
         form.addView(user)
-        pass = field("密码", InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
+        pass = field(getString(R.string.login_pass), InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
         pass.imeOptions = EditorInfo.IME_ACTION_GO
         pass.setOnEditorActionListener { _, _, _ -> connect(); true }
         form.addView(pass)
 
         form.addView(gap())
-        form.addView(label("方式二：Auth Key 或 OPDS 链接", 15f, bold = true))
-        form.addView(label("Kavita 网页 → 设置 → 账户 → Auth Keys / OPDS。填写后可不填用户名密码", 13f))
-        key = field("Auth Key 或 http://…/api/opds/…", InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI)
+        form.addView(label(getString(R.string.login_way2), 15f, bold = true))
+        form.addView(label(getString(R.string.login_way2_note), 13f))
+        key = field(getString(R.string.login_key_hint), InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI)
         key.imeOptions = EditorInfo.IME_ACTION_GO
         key.setOnEditorActionListener { _, _, _ -> connect(); true }
         form.addView(key)
 
         form.addView(gap())
-        go = button("连接") { connect() }
+        go = button(getString(R.string.login_connect)) { connect() }
         form.addView(go, lp(MATCH, WRAP))
         status = label("", 15f).apply { setPadding(0, dp(12), 0, dp(12)) }
         form.addView(status)
         form.addView(
-            label(
-                "说明：\n• 下载需要该账号在 Kavita 中拥有「Download」角色\n" +
-                    "• 局域网 http 地址可直接使用；自签名 https 证书需先在系统中安装\n" +
-                    "• 本应用只负责下载和离线阅读，不会上传或同步阅读进度",
-                13f, color = 0xFF333333.toInt()
-            )
+            label(getString(R.string.login_notes), 13f, color = 0xFF333333.toInt())
         )
         scroll.addView(form)
         root.addView(scroll, lp(MATCH, 0, 1f))
@@ -79,7 +76,7 @@ class LoginActivity : BaseActivity() {
         isSingleLine = true
         textSize = 16f
         setTextColor(0xFF000000.toInt())
-        background = resources.getDrawable(com.manus.kavitaink.R.drawable.btn_bg, theme)
+        background = resources.getDrawable(R.drawable.btn_bg, theme)
         setPadding(dp(10), dp(10), dp(10), dp(10))
         layoutParams = lp(MATCH, WRAP).apply { topMargin = dp(6) }
     }
@@ -93,10 +90,10 @@ class LoginActivity : BaseActivity() {
         val name = user.text.toString().trim()
         val pw = pass.text.toString()
         if (u.isBlank() && KavitaApi.keyFromOpdsUrl(k) == null) {
-            status.text = "请填写服务器地址"
+            status.text = getString(R.string.login_need_server)
             return
         }
-        status.text = "正在连接…"
+        status.text = getString(R.string.login_connecting)
         go.isEnabled = false
         bg({
             val keyInKeyField = KavitaApi.keyFromOpdsUrl(k)
@@ -107,7 +104,7 @@ class LoginActivity : BaseActivity() {
                 k.isNotBlank() -> KavitaApi(base, k)
                 keyInUrlField != null -> KavitaApi(u, keyInUrlField)
                 name.isNotBlank() -> KavitaApi.login(u, name, pw)
-                else -> throw ApiException(0, "请填写用户名和密码，或填写 Auth Key")
+                else -> throw ApiException(0, R.string.err_need_credentials)
             }
             val libs = api.libraries()
             val version = runCatching { api.version() }.getOrDefault("")
@@ -115,14 +112,14 @@ class LoginActivity : BaseActivity() {
         }) { r, err ->
             go.isEnabled = true
             if (r == null) {
-                status.text = "连接失败：" + KavitaApi.friendlyError(err)
+                status.text = getString(R.string.login_failed, x.error(err))
                 return@bg
             }
             val (api, n, version) = r
             prefs.serverUrl = api.base
             prefs.apiKey = api.apiKey
             prefs.username = name
-            status.text = "连接成功：Kavita $version，共 $n 个书库"
+            status.text = resources.getQuantityString(R.plurals.login_ok, n, version, n)
             startActivity(Intent(this, LibrariesActivity::class.java))
             finish()
         }

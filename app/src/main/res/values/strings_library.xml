@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_title">Connect to Kavita</string>
+    <string name="login_connect">Connect</string>
+    <string name="login_server">Server address</string>
+    <string name="login_server_hint">e.g. http://192.168.1.10:5000</string>
+    <string name="login_way1">Option 1: username and password</string>
+    <string name="login_way1_note">The password is only used to get an Auth Key and is never stored on this device</string>
+    <string name="login_user">Username</string>
+    <string name="login_pass">Password</string>
+    <string name="login_way2">Option 2: Auth Key or OPDS link</string>
+    <string name="login_way2_note">In Kavita: Settings → Account → Auth Keys / OPDS. If you fill this in, you can leave the username and password empty</string>
+    <string name="login_key_hint">Auth Key or http://…/api/opds/…</string>
+    <string name="login_notes">Notes:\n• Downloading requires the “Download” role for this account in Kavita\n• Local http addresses work as is; for a self-signed https certificate, install it in the system first\n• This app only downloads and reads offline. It never uploads or syncs reading progress</string>
+    <string name="login_need_server">Please enter the server address</string>
+    <string name="login_connecting">Connecting…</string>
+    <string name="err_need_credentials">Enter a username and password, or an Auth Key</string>
+    <string name="login_failed">Connection failed: %1$s</string>
+    <plurals name="login_ok">
+        <item quantity="one">Connected: Kavita %1$s, %2$d library</item>
+        <item quantity="other">Connected: Kavita %1$s, %2$d libraries</item>
+    </plurals>
+    <string name="libs_title">Libraries</string>
+    <string name="libs_search_hint">Search series</string>
+    <string name="libs_loading">Loading libraries…</string>
+    <string name="libs_none">This account has no libraries it can access</string>
+    <plurals name="libs_count">
+        <item quantity="one">%1$d library · %2$s</item>
+        <item quantity="other">%1$d libraries · %2$s</item>
+    </plurals>
+    <string name="series_title">Series</string>
+    <string name="series_search_title">Search: %1$s</string>
+    <plurals name="series_pages">
+        <item quantity="one">%1$d page</item>
+        <item quantity="other">%1$d pages</item>
+    </plurals>
+    <string name="series_more">Load more</string>
+    <string name="series_more_page">Load more (page %1$d of %2$d)</string>
+    <string name="series_no_match">No matching series</string>
+    <string name="series_empty_lib">This library is empty</string>
+    <plurals name="series_count">
+        <item quantity="one">%1$d series · %2$d shown</item>
+        <item quantity="other">%1$d series · %2$d shown</item>
+    </plurals>
+    <string name="shelf_title">Bookshelf</string>
+    <string name="shelf_libraries">Libraries</string>
+    <string name="shelf_downloads">Downloads</string>
+    <string name="shelf_downloads_n">Downloads (%1$d)</string>
+    <string name="shelf_settings">Settings</string>
+    <plurals name="shelf_items">
+        <item quantity="one">%1$d item downloaded</item>
+        <item quantity="other">%1$d items downloaded</item>
+    </plurals>
+    <string name="shelf_read_to">Reading %1$s</string>
+    <string name="shelf_read_to_pct">Reading %1$s %2$d%%</string>
+    <plurals name="shelf_status">
+        <item quantity="one">%1$d title · %2$s used · long-press to select</item>
+        <item quantity="other">%1$d titles · %2$s used · long-press to select</item>
+    </plurals>
+    <string name="shelf_not_connected">Not connected to a server yet. Tap “Libraries” at the top right to sign in to Kavita, then download what you want to read.</string>
+    <string name="shelf_empty">No offline content yet. Tap “Libraries” to browse and download. Downloads can be read without a network connection.</string>
+    <string name="shelf_delete_title">Delete offline content</string>
+    <string name="shelf_delete_one_msg">Delete the downloaded content of “%1$s”? This frees %2$s.\n(Files on the server are not affected.)</string>
+    <plurals name="shelf_delete_msg">
+        <item quantity="one">Delete the downloaded content of %1$d title? This frees %2$s.\n(Files on the server are not affected.)</item>
+        <item quantity="other">Delete the downloaded content of %1$d titles? This frees %2$s.\n(Files on the server are not affected.)</item>
+    </plurals>
+    <string name="series_resume">Continue reading</string>
+    <string name="series_download_all">Download all</string>
+    <string name="series_online">Online</string>
+    <string name="series_loading_chapters">Loading chapters…</string>
+    <string name="series_local_only">%1$s (local only)</string>
+    <plurals name="series_status">
+        <item quantity="one">%1$d item · %2$d downloaded</item>
+        <item quantity="other">%1$d items · %2$d downloaded</item>
+    </plurals>
+    <string name="series_in_queue">%1$d in queue</string>
+    <string name="series_offline_mode">Offline</string>
+    <string name="series_tap_to_download">Tap an item to download it</string>
+    <string name="series_online_failed">Could not load chapters from the server: %1$s</string>
+    <string name="series_downloaded">Downloaded</string>
+    <string name="series_downloaded_pct">Downloaded · read %1$d%%</string>
+    <string name="series_not_downloaded">Not downloaded</string>
+    <plurals name="series_enqueued">
+        <item quantity="one">Added %1$d item to the download queue (you can leave this page; downloading continues in the background)</item>
+        <item quantity="other">Added %1$d items to the download queue (you can leave this page; downloading continues in the background)</item>
+    </plurals>
+    <string name="series_already_queued">Already downloaded or in the queue</string>
+    <plurals name="series_skipped">
+        <item quantity="one">Skipped %1$d item (already downloaded or in the queue)</item>
+        <item quantity="other">Skipped %1$d items (already downloaded or in the queue)</item>
+    </plurals>
+    <string name="series_none_downloaded_selected">None of the selected items are downloaded</string>
+    <plurals name="series_delete_msg">
+        <item quantity="one">Delete %1$d downloaded item? This frees %2$s.\n(Files on the server are not affected.)</item>
+        <item quantity="other">Delete %1$d downloaded items? This frees %2$s.\n(Files on the server are not affected.)</item>
+    </plurals>
+    <string name="series_list_not_loaded">The chapter list has not loaded yet</string>
+    <string name="series_all_done">Everything is downloaded or already in the queue</string>
+    <plurals name="series_download_all_size">
+        <item quantity="one">Download %1$d item, about %2$s?</item>
+        <item quantity="other">Download %1$d items, about %2$s?</item>
+    </plurals>
+    <plurals name="series_download_all_msg">
+        <item quantity="one">Download %1$d item?</item>
+        <item quantity="other">Download %1$d items?</item>
+    </plurals>
+    <string name="series_nothing_downloaded">Nothing is downloaded yet. Tap a chapter to download it first.</string>
+</resources>

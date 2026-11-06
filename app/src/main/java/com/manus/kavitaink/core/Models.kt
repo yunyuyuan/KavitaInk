@@ -1,5 +1,6 @@
 package com.manus.kavitaink.core
 
+import com.manus.kavitaink.R
 import org.json.JSONObject
 
 /** Kavita 的 MangaFormat 枚举 */
@@ -10,12 +11,12 @@ object Fmt {
     const val EPUB = 3
     const val PDF = 4
 
-    fun label(f: Int): String = when (f) {
-        IMAGE -> "图片"
-        ARCHIVE -> "压缩包"
+    fun label(f: Int, x: Texts): String = when (f) {
+        IMAGE -> x.s(R.string.fmt_image)
+        ARCHIVE -> x.s(R.string.fmt_archive)
         EPUB -> "EPUB"
         PDF -> "PDF"
-        else -> "未知"
+        else -> x.s(R.string.fmt_unknown)
     }
 }
 
@@ -29,16 +30,15 @@ fun kindOf(format: Int, ext: String): Kind = when {
 }
 
 data class Library(val id: Int, val name: String, val type: Int) {
-    val typeLabel: String
-        get() = when (type) {
-            0 -> "漫画"
-            1 -> "美漫"
-            2 -> "图书"
-            3 -> "图片"
-            4 -> "轻小说"
-            5 -> "ComicVine"
-            else -> "其他"
-        }
+    fun typeLabel(x: Texts): String = when (type) {
+        0 -> x.s(R.string.lib_type_manga)
+        1 -> x.s(R.string.lib_type_comic)
+        2 -> x.s(R.string.lib_type_book)
+        3 -> x.s(R.string.lib_type_image)
+        4 -> x.s(R.string.lib_type_light_novel)
+        5 -> "ComicVine"
+        else -> x.s(R.string.lib_type_other)
+    }
 }
 
 data class SeriesItem(
@@ -65,7 +65,7 @@ data class ChapterItem(
     val id: Int,
     val seriesId: Int,
     val volumeId: Int,
-    val label: String,
+    val src: LabelSrc,
     val group: Int,
     val volNum: Double,
     val sortOrder: Double,
@@ -76,6 +76,8 @@ data class ChapterItem(
     val fileCount: Int,
 ) {
     val kind: Kind get() = kindOf(format, ext)
+
+    fun title(x: Texts): String = Labels.of(group, src, x)
 }
 
 /** 下载任务；下载完成后同样作为 chapter.json 的元数据写入本地 */
@@ -94,8 +96,13 @@ data class DownloadTask(
     val ext: String,
     val bytes: Long,
     val fileCount: Int,
+    /** 生成标题的原始信息；1.1.0 下载的旧数据没有，只有中文的 [label] */
+    val src: LabelSrc? = null,
 ) {
     val kind: Kind get() = kindOf(format, ext)
+
+    /** 当前语言的章节标题 */
+    fun title(x: Texts): String = Labels.render(group, src, label, x)
 
     fun toJson(): JSONObject = JSONObject()
         .put("serverKey", serverKey)
@@ -112,6 +119,7 @@ data class DownloadTask(
         .put("ext", ext)
         .put("bytes", bytes)
         .put("fileCount", fileCount)
+        .apply { src?.let { put("labelSrc", it.toJson()) } }
 
     companion object {
         fun fromJson(o: JSONObject) = DownloadTask(
@@ -129,6 +137,7 @@ data class DownloadTask(
             ext = o.s("ext"),
             bytes = o.optLong("bytes"),
             fileCount = o.optInt("fileCount", 1),
+            src = LabelSrc.fromJson(o.optJSONObject("labelSrc")),
         )
 
         fun of(serverKey: String, seriesName: String, seriesFormat: Int, c: ChapterItem) = DownloadTask(
@@ -137,7 +146,7 @@ data class DownloadTask(
             seriesName = seriesName,
             seriesFormat = seriesFormat,
             chapterId = c.id,
-            label = c.label,
+            label = "",
             group = c.group,
             volNum = c.volNum,
             sortOrder = c.sortOrder,
@@ -146,6 +155,7 @@ data class DownloadTask(
             ext = c.ext,
             bytes = c.bytes,
             fileCount = c.fileCount,
+            src = c.src,
         )
     }
 }
@@ -154,9 +164,10 @@ data class DownloadTask(
 fun JSONObject.s(name: String): String =
     if (!has(name) || isNull(name)) "" else optString(name, "")
 
+/** 数字按当前语言的习惯格式化（如德语 1,5 MB），单位不翻译 */
 fun formatBytes(b: Long): String = when {
     b <= 0 -> ""
-    b < 1024 * 1024 -> String.format(java.util.Locale.US, "%.0f KB", b / 1024.0)
-    b < 1024L * 1024 * 1024 -> String.format(java.util.Locale.US, "%.1f MB", b / 1024.0 / 1024.0)
-    else -> String.format(java.util.Locale.US, "%.2f GB", b / 1024.0 / 1024.0 / 1024.0)
+    b < 1024 * 1024 -> String.format(java.util.Locale.getDefault(), "%.0f KB", b / 1024.0)
+    b < 1024L * 1024 * 1024 -> String.format(java.util.Locale.getDefault(), "%.1f MB", b / 1024.0 / 1024.0)
+    else -> String.format(java.util.Locale.getDefault(), "%.2f GB", b / 1024.0 / 1024.0 / 1024.0)
 }

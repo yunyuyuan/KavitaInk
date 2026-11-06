@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="back">‹ Retour</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="done">Terminé</string>
+    <string name="close">Fermer</string>
+    <string name="delete">Supprimer</string>
+    <string name="on">Activé</string>
+    <string name="off">Désactivé</string>
+    <string name="label_value">%1$s : %2$s</string>
+    <string name="value_default">Par défaut</string>
+    <string name="value_none">Aucun</string>
+    <string name="value_small">Petit</string>
+    <string name="value_medium">Moyen</string>
+    <string name="value_large">Grand</string>
+    <string name="list_prev_page">▲ Précédent</string>
+    <string name="list_next_page">▼ Suivant</string>
+    <string name="px_n">%1$d px</string>
+    <string name="loading">Chargement…</string>
+    <string name="refresh">Actualiser</string>
+    <string name="search">Rechercher</string>
+    <string name="retry">Réessayer</string>
+    <string name="load_failed">Impossible de charger : %1$s</string>
+    <string name="more">Plus</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Reprendre</string>
+    <string name="title_dot">%1$s · %2$s</string>
+    <string name="sel_select">Sélectionner</string>
+    <string name="sel_choose">Sélectionner…</string>
+    <string name="sel_all">Tout sélectionner</string>
+    <string name="sel_invert">Inverser la sélection</string>
+    <plurals name="sel_count">
+        <item quantity="one">%1$d sélectionné</item>
+        <item quantity="many">%1$d sélectionnés</item>
+        <item quantity="other">%1$d sélectionnés</item>
+    </plurals>
+    <string name="sel_delete_n">Supprimer la sélection (%1$d)</string>
+    <string name="sel_download_n">Télécharger la sélection (%1$d)</string>
+    <string name="sel_not_downloaded">Non téléchargés uniquement</string>
+    <string name="sel_downloaded">Téléchargés uniquement</string>
+    <string name="list_sep">", "</string>
+</resources>

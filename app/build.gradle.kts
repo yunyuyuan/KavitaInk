@@ -7,7 +7,7 @@ plugins {
 
 // ---------- 版本 ----------
 // 版本名可由 CI 覆盖：./gradlew assembleRelease -PappVersionName=1.2.0
-val baseVersionName = "1.1.0"
+val baseVersionName = "1.2.0"
 val appVersionName = (findProperty("appVersionName") as String?)?.takeIf { it.isNotBlank() } ?: baseVersionName
 
 /** 1.2.3 -> 10203；忽略 "-xxx" 后缀，同一版本的 CI 构建可以互相覆盖安装 */
@@ -84,6 +84,8 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
+        // 不生成参数 / 调用处的空值断言（只是更早抛出 NPE），能让 dex 小一些
+        freeCompilerArgs += listOf("-Xno-param-assertions", "-Xno-call-assertions", "-Xno-receiver-assertions")
     }
 
     testOptions {
@@ -91,7 +93,14 @@ android {
     }
 
     lint {
-        abortOnError = false
+        // 只跑翻译相关的检查（CI 的 i18n 步骤会运行 lintDebug）：缺翻译、多余翻译、复数、占位符不一致都算错误
+        val i18n = setOf(
+            "MissingTranslation", "ExtraTranslation", "MissingQuantity",
+            "StringFormatInvalid", "StringFormatCount", "StringFormatMatches",
+        )
+        checkOnly += i18n + setOf("UnusedQuantity", "ImpliedQuantity")
+        error += i18n
+        abortOnError = true
         checkReleaseBuilds = false
     }
 

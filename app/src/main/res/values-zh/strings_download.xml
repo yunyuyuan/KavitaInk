@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="percent_n">%1$d%%</string>
+    <plurals name="dl_pages_progress">
+        <item quantity="other">%1$d / %2$d 页</item>
+    </plurals>
+    <string name="dl_state_pausing">正在暂停…</string>
+    <string name="dl_state_cancelling">正在取消…</string>
+    <string name="dl_state_running">下载中</string>
+    <string name="dl_state_queued">排队中</string>
+    <string name="dl_state_queued_partial">排队中 · 已下载 %1$s</string>
+    <string name="dl_state_paused">已暂停</string>
+    <string name="dl_state_paused_detail">已暂停 · %1$s</string>
+    <string name="dl_state_failed">失败：%1$s</string>
+    <string name="dl_state_failed_partial">失败：%1$s（已下载 %2$s，重试会接着下载）</string>
+    <string name="dl_retry_note">%1$s，%2$d 秒后自动重试（第 %3$d 次）</string>
+
+    <string name="notif_channel_downloads">下载</string>
+    <string name="notif_preparing">准备下载…</string>
+    <plurals name="notif_failed_n">
+        <item quantity="other">%d 项下载失败</item>
+    </plurals>
+    <plurals name="notif_paused_n">
+        <item quantity="other">已暂停 %d 项下载</item>
+    </plurals>
+    <string name="notif_join">%1$s，%2$s</string>
+    <string name="notif_tap_retry">点击查看并重试，已下载的部分会保留</string>
+    <string name="notif_tap_resume">已下载的部分已保留，点击「全部继续」接着下载</string>
+    <plurals name="notif_downloading_left">
+        <item quantity="other">正在下载（剩余 %d 项）</item>
+    </plurals>
+    <string name="action_resume_all">全部继续</string>
+    <string name="action_pause_all">全部暂停</string>
+    <string name="dlq_title">下载队列</string>
+    <string name="dlq_retry_failed">重试全部失败项</string>
+    <string name="dlq_clear_failed">清除失败项</string>
+    <string name="dlq_cancel_all">全部取消（删除未完成的文件）</string>
+    <string name="dlq_cancel_all_title">全部取消</string>
+    <string name="dlq_cancel_all_msg">取消队列中的所有下载，并删除已下载的未完成部分？</string>
+    <string name="dlq_retry_one">重试（接着下载）</string>
+    <string name="dlq_cancel_one">取消下载</string>
+    <string name="dlq_cancel_one_msg">%1$s\n\n将删除已下载的未完成部分。</string>
+    <string name="dlq_empty">没有进行中的下载。下载完成的内容在「书架」中。</string>
+    <string name="dlq_n_running">下载中 %1$d</string>
+    <string name="dlq_n_queued">排队 %1$d</string>
+    <string name="dlq_n_paused">已暂停 %1$d</string>
+    <string name="dlq_n_failed">失败 %1$d</string>
+    <plurals name="dlq_total">
+        <item quantity="other">共 %1$d 项</item>
+    </plurals>
+    <string name="dlq_hint">点击某一项可暂停 / 继续 / 取消；暂停后已下载的部分会保留</string>
+</resources>

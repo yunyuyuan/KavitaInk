@@ -2,7 +2,9 @@ package com.manus.kavitaink.ui
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
@@ -14,7 +16,11 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
 import com.manus.kavitaink.App
+import com.manus.kavitaink.Lang
 import com.manus.kavitaink.Prefs
+import com.manus.kavitaink.R
+import com.manus.kavitaink.core.Texts
+import com.manus.kavitaink.texts
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -22,17 +28,64 @@ object Exec {
     val io: ExecutorService = Executors.newFixedThreadPool(2)
 }
 
+/** 设置里的屏幕方向 → Activity 的 requestedOrientation */
+fun orientationFlag(v: Int): Int = when (v) {
+    1 -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    2 -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+    3 -> ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
+    4 -> ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+    else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+}
+
+/** 屏幕方向设置值的显示名称（设置页和阅读菜单共用） */
+fun android.content.Context.orientationName(v: Int): String = getString(
+    when (v) {
+        1 -> R.string.orient_portrait
+        2 -> R.string.orient_landscape
+        3 -> R.string.orient_portrait_reverse
+        4 -> R.string.orient_landscape_reverse
+        else -> R.string.orient_system
+    }
+)
+
+/** 小说字体设置值的显示名称 */
+fun android.content.Context.fontName(id: String): String = when (id) {
+    Prefs.FONT_DEFAULT -> getString(R.string.font_book_default)
+    Prefs.FONT_SERIF -> getString(R.string.font_serif)
+    Prefs.FONT_SANS -> getString(R.string.font_sans)
+    else -> App.I.fonts.get(id)?.name ?: getString(R.string.font_book_default)
+}
+
 abstract class BaseActivity : Activity() {
 
     protected val app: App get() = App.I
     protected val prefs: Prefs get() = App.I.prefs
 
+    /** 当前语言的文案 */
+    protected val x: Texts by lazy { texts() }
+
     /** 若设置，则音量键 / 翻页键用来整屏翻列表 */
     protected var pagedList: ListView? = null
 
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(Lang.wrap(base))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        applyOrientation()
         overridePendingTransition(0, 0)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 从设置页返回时立即生效
+        applyOrientation()
+    }
+
+    protected fun applyOrientation() {
+        val want = orientationFlag(prefs.orientation)
+        if (requestedOrientation != want) requestedOrientation = want
     }
 
     @Suppress("DEPRECATION")
@@ -84,20 +137,18 @@ abstract class BaseActivity : Activity() {
     /** 顶部标题栏：返回 + 标题 + 操作按钮。返回 (标题栏, 操作按钮列表) */
     fun header(title: String, back: Boolean, actions: List<Pair<String, () -> Unit>> = emptyList()): Pair<View, List<Button>> {
         val wrap = vbox()
-        val bar = hbox()
-        bar.setPadding(dp(6), dp(4), dp(6), dp(4))
-        bar.minimumHeight = dp(52)
-        if (back) bar.addView(button("‹ 返回") { finish() }, lp(WRAP, WRAP).apply { rightMargin = dp(8) })
+        val backBtn = if (back) button(getString(R.string.back)) { onBackPressed() } else null
         val t = label(title, 20f, bold = true).apply {
             maxLines = 1
             ellipsize = TextUtils.TruncateAt.END
-            setPadding(if (back) 0 else dp(8), 0, dp(4), 0)
+            setPadding(if (back) dp(2) else dp(8), 0, dp(4), 0)
         }
-        bar.addView(t, lp(0, WRAP, 1f))
-        val btns = actions.map { (name, fn) ->
-            button(name, fn).also { bar.addView(it, lp(WRAP, WRAP).apply { leftMargin = dp(6) }) }
-        }
-        wrap.addView(bar)
+        val btns = actions.map { (name, fn) -> button(name, fn) }
+        // 按钮放不下时自动换到第二行（德语、俄语等文案较长）
+        val bar = HeaderBar(this, backBtn, t, btns)
+        bar.setPadding(dp(6), dp(4), dp(6), dp(4))
+        bar.minimumHeight = dp(52)
+        wrap.addView(bar, lp(MATCH, WRAP))
         wrap.addView(hline(2))
         return wrap to btns
     }
@@ -106,12 +157,12 @@ abstract class BaseActivity : Activity() {
         setPadding(dp(12), dp(6), dp(12), dp(6))
     }
 
-    fun confirm(title: String, msg: String, ok: String = "确定", onOk: () -> Unit) {
+    fun confirm(title: String, msg: String, ok: String = getString(R.string.ok), onOk: () -> Unit) {
         AlertDialog.Builder(this)
             .setTitle(title)
             .setMessage(msg)
             .setPositiveButton(ok) { _, _ -> onOk() }
-            .setNegativeButton("取消", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
@@ -122,7 +173,7 @@ abstract class BaseActivity : Activity() {
                 d.dismiss()
                 onPick(which)
             }
-            .setNegativeButton("取消", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 

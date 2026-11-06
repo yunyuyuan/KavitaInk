@@ -14,11 +14,25 @@ object Paginator {
     data class Style(
         val marginX: Int = 16,
         val marginTop: Int = 18,
-        val marginBottom: Int = 30,
+        val marginBottom: Int = 18,
         val lineHeight: Int = 160, // 百分比；0 = 使用书籍自带行距
-        val fontFamily: Int = 0,   // 0 书籍默认，1 衬线，2 无衬线
+        /** null = 书籍默认；"serif" / "sans-serif" = 系统字体；其它 = 已安装字体（需配合 fontUrl） */
+        val fontFamily: String? = null,
+        /** 已安装字体的各个变体（地址由阅读器拦截请求提供文件） */
+        val fontFaces: List<FontFace> = emptyList(),
         val forceBlack: Boolean = true,
+        /** true = 首行缩进 / 段间距 / 对齐 / 字间距使用书里自带的样式 */
+        val bookStyle: Boolean = true,
+        val textIndent: Int = 2,    // 字（em）
+        val paraSpacing: Int = 5,   // 0.1 行
+        val justify: Boolean = true,
+        val letterSpacing: Int = 0, // 0.01 em
     )
+
+    /** 一个字体变体：url 只能含 ASCII 且不含 < & " ' ( ) \\ */
+    data class FontFace(val url: String, val style: String = "normal", val weight: String = "400")
+
+    private const val TEXT_SEL = "body,p,div,span,li,dd,dt,blockquote,h1,h2,h3,h4,h5,h6,a"
 
     /** 模板只含 ASCII 且不含 < 和 &，可以安全插入 XHTML */
     private fun template(s: Style): String {
@@ -40,13 +54,38 @@ object Paginator {
         sb.append("-webkit-column-break-inside:avoid;break-inside:avoid;object-fit:contain;}")
         sb.append("img{height:auto;}")
         sb.append("pre{white-space:pre-wrap !important;}table{max-width:100% !important;}")
+        // 比一行还宽的词（长网址、连续的不换行空格）允许断开，否则会伸进下一栏被截断；普通文字不受影响
+        sb.append("body{word-wrap:break-word !important;overflow-wrap:break-word !important;}")
         if (s.lineHeight > 0) {
             val lh = String.format(java.util.Locale.US, "%.2f", s.lineHeight / 100.0)
             sb.append("p,div,li,dd,dt,blockquote,span{line-height:$lh !important;}")
         }
-        when (s.fontFamily) {
-            1 -> sb.append("body,p,div,span,li,dd,dt,blockquote,h1,h2,h3,h4,h5,h6,a{font-family:serif !important;}")
-            2 -> sb.append("body,p,div,span,li,dd,dt,blockquote,h1,h2,h3,h4,h5,h6,a{font-family:sans-serif !important;}")
+        val faces = safeFaces(s)
+        when {
+            faces.isNotEmpty() -> {
+                // 每个变体一条 @font-face；字体里缺的字（例如西文字体遇到中文）自动回退到系统字体
+                for (f in faces) {
+                    sb.append("@font-face{font-family:\"__einkfont\";src:url(\"").append(f.url).append("\");")
+                    sb.append("font-style:").append(FontStore.cssStyle(f.style)).append(";")
+                    sb.append("font-weight:").append(FontStore.cssWeight(f.weight)).append(";}")
+                }
+                sb.append(TEXT_SEL).append("{font-family:\"__einkfont\",serif !important;}")
+            }
+            s.fontFamily == "serif" -> sb.append(TEXT_SEL).append("{font-family:serif !important;}")
+            s.fontFamily == "sans-serif" -> sb.append(TEXT_SEL).append("{font-family:sans-serif !important;}")
+        }
+        if (!s.bookStyle) {
+            val lhEm = if (s.lineHeight > 0) s.lineHeight / 100.0 else 1.5
+            val gap = s.paraSpacing / 10.0 * lhEm
+            // 规则挂在 html.__einkx 下：分页脚本先按书籍原样式标出居中 / 右对齐 / 只含图片的段落（__einkn），
+            // 再加上 __einkx 让规则生效。这些段落保持原来的对齐方式，也不缩进（WebView 66 不支持 :has()）
+            sb.append("html.__einkx p:not(.__einkn){text-indent:").append(s.textIndent.coerceIn(0, 4)).append("em !important;")
+            sb.append("text-align:").append(if (s.justify) "justify" else "left").append(" !important;}")
+            sb.append("html.__einkx p.__einkn{text-indent:0 !important;}")
+            sb.append("html.__einkx p{margin-top:0 !important;margin-bottom:")
+                .append(String.format(java.util.Locale.US, "%.2f", gap)).append("em !important;}")
+            sb.append("p,div,span,li,dd,dt,blockquote{letter-spacing:")
+                .append(String.format(java.util.Locale.US, "%.2f", s.letterSpacing / 100.0)).append("em !important;}")
         }
         if (s.forceBlack) {
             sb.append("*{color:#000 !important;background-color:transparent !important;text-shadow:none !important;}")
@@ -74,9 +113,25 @@ object Paginator {
     const val VIEWPORT_META =
         "<meta id=\"__einkvp\" name=\"viewport\" content=\"width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no\"/>"
 
+    /**
+     * 自定义排版用：按书籍原样式标出居中 / 右对齐 / 只含图片的段落（__einkn），再给 html 加 __einkx 启用自定义规则。
+     * 跟样式一起注入到 <head>，在 DOMContentLoaded 时执行（此时还没排版，只多一次样式计算，不会多排一次版）；
+     * 分页脚本里再调用一次兜底（已标记过则直接跳过）。不含 < 和 &，可以安全放进 XHTML。
+     */
+    private val MARK_JS = """(function(){function m(){var de=document.documentElement;""" +
+        """if(/(^|\s)__einkx(\s|${'$'})/.test(de.className))return;""" +
+        """var ps=document.getElementsByTagName('p'),i,pe,ta,only;""" +
+        """for(i=0;ps.length>i;i++){pe=ps[i];ta=getComputedStyle(pe).textAlign;only=false;""" +
+        """if(!/\S/.test((pe.textContent||'').replace(/\u00a0/g,' ')))only=!!pe.querySelector('img,svg,image,video,object');""" +
+        """if(ta=='center'||ta=='right'||ta=='end'||ta=='-webkit-center'||ta=='-webkit-right'||only)""" +
+        """pe.className=(pe.className?pe.className+' ':'')+'__einkn';}""" +
+        """de.className=(de.className?de.className+' ':'')+'__einkx';}""" +
+        """if(document.readyState=='loading')document.addEventListener('DOMContentLoaded',m,false);else m();})();"""
+
     /** 含占位符的注入片段（测试工具用同一份模板） */
     fun headTemplate(s: Style): String =
-        VIEWPORT_META + "<style id=\"__einkcss\" type=\"text/css\" data-w=\"__W__\" data-h=\"__H__\">" + template(s) + "</style>"
+        VIEWPORT_META + "<style id=\"__einkcss\" type=\"text/css\" data-w=\"__W__\" data-h=\"__H__\">" + template(s) + "</style>" +
+            (if (s.bookStyle) "" else "<script id=\"__einkmark\" type=\"text/javascript\">$MARK_JS</script>")
 
     fun styleTag(s: Style, w: Int, h: Int): String = fill(headTemplate(s), s, w, h)
 
@@ -146,6 +201,8 @@ object Paginator {
       }
     }
   }catch(err){}
+  // 自定义排版：兜底标记（正常情况下 <head> 里注入的脚本已在 DOMContentLoaded 时标记完，这里直接跳过）
+  if(${if (s.bookStyle) 0 else 1}){ try{ $MARK_JS }catch(err){} }
   var MEDIA={IMG:1,SVG:1,IMAGE:1,VIDEO:1,HR:1,TABLE:1,CANVAS:1,OBJECT:1,EMBED:1,IFRAME:1,MATH:1};
   // 最后一段实际内容（文字或图片）所在的页；分栏按文档顺序填充，所以它就是最后一页
   function lastContentPage(){
@@ -202,10 +259,23 @@ object Paginator {
   function report(){
     try{ EinkBridge.onLayout(G, window.__einkCount()); }catch(e){}
   }
-  if(document.fonts&&document.fonts.ready){
-    document.fonts.ready.then(function(){ setTimeout(report,0); }, function(){ setTimeout(report,0); });
-  } else { setTimeout(report,30); }
+  function whenReady(){
+    if(document.fonts&&document.fonts.ready){
+      document.fonts.ready.then(function(){ setTimeout(report,0); }, function(){ setTimeout(report,0); });
+    } else { setTimeout(report,30); }
+  }
+  // 自定义字体按需加载：先显式触发下载，等它就绪后再计算页数（否则页数按回退字体算，会错）
+  if(${if (customFont(s)) 1 else 0} && document.fonts && document.fonts.load){
+    document.fonts.load('1em "__einkfont"').then(whenReady, whenReady);
+  } else { whenReady(); }
 })();
 """.trimIndent()
     }
+
+    private fun customFont(s: Style) = safeFaces(s).isNotEmpty()
+
+    private fun safeFaces(s: Style): List<FontFace> = s.fontFaces.filter { safeUrl(it.url) != null }
+
+    private fun safeUrl(u: String?): String? =
+        u?.takeIf { v -> v.isNotEmpty() && v.all { it.code in 0x21..0x7E && it !in "<&\"'()\\" } }
 }

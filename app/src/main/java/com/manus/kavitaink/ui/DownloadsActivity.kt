@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
+import com.manus.kavitaink.R
 import com.manus.kavitaink.download.DownloadQueue
 import com.manus.kavitaink.download.DownloadQueue.State
 
@@ -19,8 +20,8 @@ class DownloadsActivity : BaseActivity() {
         { TwoLineRow(this, false).root },
         { v, e, _ ->
             val r = TwoLineRow.of(v)
-            r.title.text = "${e.task.seriesName} · ${e.task.label}"
-            r.sub.text = DownloadQueue.describe(e)
+            r.title.text = getString(R.string.title_dot, e.task.seriesName, e.task.title(x))
+            r.sub.text = DownloadQueue.describe(e, x)
         },
     )
     private val listener: () -> Unit = { refresh() }
@@ -29,9 +30,9 @@ class DownloadsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         val root = root()
         val (bar, btns) = header(
-            "下载队列", back = true, actions = listOf(
-                "全部暂停" to { toggleAll() },
-                "更多" to { more() },
+            getString(R.string.dlq_title), back = true, actions = listOf(
+                getString(R.string.action_pause_all) to { toggleAll() },
+                getString(R.string.more) to { more() },
             )
         )
         toggleBtn = btns[0]
@@ -71,39 +72,39 @@ class DownloadsActivity : BaseActivity() {
     }
 
     private fun more() {
-        val opts = arrayOf("重试全部失败项", "清除失败项", "全部取消（删除未完成的文件）")
+        val opts = arrayOf(getString(R.string.dlq_retry_failed), getString(R.string.dlq_clear_failed), getString(R.string.dlq_cancel_all))
         AlertDialog.Builder(this)
-            .setTitle("下载队列")
+            .setTitle(R.string.dlq_title)
             .setItems(opts) { _, which ->
                 when (which) {
                     0 -> app.queue.retryAll()
                     1 -> app.queue.clearFailed()
                     2 -> if (app.queue.size() > 0) {
-                        confirm("全部取消", "取消队列中的所有下载，并删除已下载的未完成部分？", "全部取消") { app.queue.cancelAll() }
+                        confirm(getString(R.string.dlq_cancel_all_title), getString(R.string.dlq_cancel_all_msg), getString(R.string.dlq_cancel_all_title)) { app.queue.cancelAll() }
                     }
                 }
             }
-            .setNegativeButton("关闭", null)
+            .setNegativeButton(R.string.close, null)
             .show()
     }
 
     private fun itemActions(e: DownloadQueue.Entry) {
-        val title = "${e.task.seriesName} · ${e.task.label}"
+        val title = getString(R.string.title_dot, e.task.seriesName, e.task.title(x))
         val actions = ArrayList<Pair<String, () -> Unit>>()
         when (e.state) {
-            State.RUNNING -> if (e.stopping) actions += "继续" to { app.queue.resume(e) }
-            else actions += "暂停" to { app.queue.pause(e) }
-            State.QUEUED -> actions += "暂停" to { app.queue.pause(e) }
-            State.PAUSED -> actions += "继续" to { app.queue.resume(e) }
-            State.FAILED -> actions += "重试（接着下载）" to { app.queue.resume(e) }
+            State.RUNNING -> if (e.stopping) actions += getString(R.string.resume) to { app.queue.resume(e) }
+            else actions += getString(R.string.pause) to { app.queue.pause(e) }
+            State.QUEUED -> actions += getString(R.string.pause) to { app.queue.pause(e) }
+            State.PAUSED -> actions += getString(R.string.resume) to { app.queue.resume(e) }
+            State.FAILED -> actions += getString(R.string.dlq_retry_one) to { app.queue.resume(e) }
         }
-        actions += "取消下载" to {
-            confirm("取消下载", "$title\n\n将删除已下载的未完成部分。", "取消下载") { app.queue.cancel(e) }
+        actions += getString(R.string.dlq_cancel_one) to {
+            confirm(getString(R.string.dlq_cancel_one), getString(R.string.dlq_cancel_one_msg, title), getString(R.string.dlq_cancel_one)) { app.queue.cancel(e) }
         }
         AlertDialog.Builder(this)
             .setTitle(title)
             .setItems(actions.map { it.first }.toTypedArray()) { _, which -> actions[which].second() }
-            .setNegativeButton("关闭", null)
+            .setNegativeButton(R.string.close, null)
             .show()
     }
 
@@ -115,17 +116,18 @@ class DownloadsActivity : BaseActivity() {
         val paused = entries.count { it.state == State.PAUSED }
         val failed = entries.count { it.state == State.FAILED }
         status.text = if (entries.isEmpty()) {
-            "没有进行中的下载。下载完成的内容在「书架」中。"
+            getString(R.string.dlq_empty)
         } else {
             val parts = ArrayList<String>()
-            if (running > 0) parts += "下载中 $running"
-            if (queued > 0) parts += "排队 $queued"
-            if (paused > 0) parts += "已暂停 $paused"
-            if (failed > 0) parts += "失败 $failed"
-            "共 ${entries.size} 项 · " + parts.joinToString(" · ") + "\n点击某一项可暂停 / 继续 / 取消；暂停后已下载的部分会保留"
+            if (running > 0) parts += getString(R.string.dlq_n_running, running)
+            if (queued > 0) parts += getString(R.string.dlq_n_queued, queued)
+            if (paused > 0) parts += getString(R.string.dlq_n_paused, paused)
+            if (failed > 0) parts += getString(R.string.dlq_n_failed, failed)
+            (listOf(resources.getQuantityString(R.plurals.dlq_total, entries.size, entries.size)) + parts).joinToString(" · ") +
+                "\n" + getString(R.string.dlq_hint)
         }
         val active = hasActive()
-        toggleBtn.text = if (active) "全部暂停" else "全部继续"
+        toggleBtn.text = getString(if (active) R.string.action_pause_all else R.string.action_resume_all)
         toggleBtn.visibility = if (active || paused > 0 || failed > 0) View.VISIBLE else View.GONE
     }
 }

@@ -6,13 +6,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ListView
 import android.widget.TextView
+import com.manus.kavitaink.R
 import com.manus.kavitaink.core.ChapterItem
 import com.manus.kavitaink.core.DownloadTask
 import com.manus.kavitaink.core.Fmt
-import com.manus.kavitaink.core.KavitaApi
-import com.manus.kavitaink.core.Kind
 import com.manus.kavitaink.core.LocalChapter
 import com.manus.kavitaink.core.Storage
+import com.manus.kavitaink.core.error
 import com.manus.kavitaink.core.formatBytes
 import com.manus.kavitaink.download.DownloadQueue
 import com.manus.kavitaink.reader.Readers
@@ -54,6 +54,7 @@ class SeriesActivity : BaseActivity() {
     private lateinit var list: ListView
     private lateinit var status: TextView
     private lateinit var adapter: RowAdapter<Row>
+    private lateinit var sel: MultiSelect<Row, Int>
     private val queueListener: () -> Unit = { loadLocal() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,27 +68,45 @@ class SeriesActivity : BaseActivity() {
         val api = app.api()
         val sameServer = api != null && api.serverKey == sk
         val actions = ArrayList<Pair<String, () -> Unit>>()
-        actions += "继续阅读" to ::resume
-        if (online) actions += "全部下载" to ::downloadAll
-        else if (sameServer) actions += "在线" to {
+        actions += getString(R.string.series_resume) to ::resume
+        if (online) actions += getString(R.string.series_download_all) to ::downloadAll
+        else if (sameServer) actions += getString(R.string.series_online) to {
             open(this, sk, seriesId, name, format, online = true)
             finish()
         }
+        actions += getString(R.string.sel_select) to { if (adapter.items.isNotEmpty()) sel.enter() }
 
         adapter = RowAdapter(emptyList(), { TwoLineRow(this, false).root }, ::bindRow)
+        list = einkList()
+        list.adapter = adapter
+        sel = MultiSelect(
+            this, list, { adapter }, { it.id },
+            filters = listOf(
+                getString(R.string.sel_not_downloaded) to { r: Row -> r.local == null },
+                getString(R.string.sel_downloaded) to { r: Row -> r.local != null },
+            ),
+        )
+        val ops = ArrayList<MultiSelect.Op>()
+        if (online) ops += MultiSelect.Op(R.string.sel_download_n, ::downloadSelected)
+        ops += MultiSelect.Op(R.string.sel_delete_n, ::deleteSelected)
+
         val root = root()
-        root.addView(header(name, back = true, actions = actions).first)
+        val head = header(name, back = true, actions = actions).first
+        sel.build(head, ops)
+        root.addView(head)
+        root.addView(sel.head)
         status = statusLine()
         root.addView(status)
         root.addView(hline())
-        list = einkList()
-        list.adapter = adapter
-        list.setOnItemClickListener { _, _, pos, _ -> adapter.items.getOrNull(pos)?.let(::onTap) }
+        list.setOnItemClickListener { _, _, pos, _ ->
+            if (sel.active) sel.toggle(pos) else adapter.items.getOrNull(pos)?.let(::onTap)
+        }
         list.setOnItemLongClickListener { _, _, pos, _ ->
-            adapter.items.getOrNull(pos)?.let(::onLongTap)
+            if (sel.active) sel.toggle(pos) else sel.enter(adapter.items.getOrNull(pos))
             true
         }
         root.addView(list, lp(MATCH, 0, 1f))
+        root.addView(sel.bottom)
         root.addView(pagerBar(list))
         setContentView(root)
         pagedList = list
@@ -106,6 +125,11 @@ class SeriesActivity : BaseActivity() {
         app.queue.removeListener(queueListener)
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (sel.active) sel.exit() else @Suppress("DEPRECATION") super.onBackPressed()
+    }
+
     private fun loadLocal() {
         bg({ app.storage.listChapters(sk, seriesId) }) { l, _ ->
             locals = (l ?: emptyList()).associateBy { it.chapterId }
@@ -115,10 +139,10 @@ class SeriesActivity : BaseActivity() {
 
     private fun loadOnline() {
         val api = app.api() ?: return
-        status.text = "正在获取章节列表…"
+        status.text = getString(R.string.series_loading_chapters)
         bg({ api.chapters(seriesId, format) }) { items, err ->
             if (items == null) {
-                onlineError = KavitaApi.friendlyError(err)
+                onlineError = x.error(err)
             } else {
                 onlineItems = items
                 onlineError = null
@@ -134,49 +158,51 @@ class SeriesActivity : BaseActivity() {
             val ids = HashSet<Int>()
             for (c in on) {
                 ids += c.id
-                rows += Row(c.id, c.label, c.pages, c.bytes, c.format, c, locals[c.id])
+                rows += Row(c.id, c.title(x), c.pages, c.bytes, c.format, c, locals[c.id])
             }
             // 服务器上已删除、但本地仍保留的内容
             locals.values.filter { it.chapterId !in ids }.sortedWith(Storage.chapterOrder).forEach {
-                rows += Row(it.chapterId, it.label + "（仅本地）", it.meta.pages, it.meta.bytes, it.meta.format, null, it)
+                rows += Row(it.chapterId, getString(R.string.series_local_only, it.title(x)), it.meta.pages, it.meta.bytes, it.meta.format, null, it)
             }
         } else {
             locals.values.sortedWith(Storage.chapterOrder).forEach {
-                rows += Row(it.chapterId, it.label, it.meta.pages, it.meta.bytes, it.meta.format, null, it)
+                rows += Row(it.chapterId, it.title(x), it.meta.pages, it.meta.bytes, it.meta.format, null, it)
             }
         }
         adapter.update(rows)
+        sel.prune()
         updateStatus(rows)
     }
 
     private fun updateStatus(rows: List<Row>) {
         val downloaded = rows.count { it.local != null }
         val inQueue = rows.count { app.queue.find(sk, it.id) != null }
-        val sb = StringBuilder()
-        onlineError?.let { sb.append("获取在线章节失败：").append(it).append('\n') }
-        sb.append("共 ${rows.size} 项 · 已下载 $downloaded")
-        if (inQueue > 0) sb.append(" · 队列中 $inQueue")
-        if (!online) sb.append(" · 离线模式")
-        else if (onlineItems != null && downloaded < rows.size) sb.append(" · 点击未下载项即可下载")
-        status.text = sb
+        val parts = ArrayList<String>()
+        parts += resources.getQuantityString(R.plurals.series_status, rows.size, rows.size, downloaded)
+        if (inQueue > 0) parts += getString(R.string.series_in_queue, inQueue)
+        if (!online) parts += getString(R.string.series_offline_mode)
+        else if (onlineItems != null && downloaded < rows.size) parts += getString(R.string.series_tap_to_download)
+        val err = onlineError?.let { getString(R.string.series_online_failed, it) + "\n" } ?: ""
+        status.text = err + parts.joinToString(" · ")
     }
 
     private fun bindRow(v: android.view.View, r: Row, @Suppress("UNUSED_PARAMETER") pos: Int) {
         val row = TwoLineRow.of(v)
         val last = prefs.lastChapter(sk, seriesId)
-        row.title.text = if (r.id == last && r.local != null) "▶ ${r.label}" else r.label
+        val playing = r.id == last && r.local != null && !sel.active
+        row.title.text = sel.mark(r) + (if (playing) "▶ " else "") + r.label
         val parts = ArrayList<String>()
-        if (r.pages > 0 && (r.format != Fmt.EPUB)) parts += "${r.pages} 页"
+        if (r.pages > 0 && (r.format != Fmt.EPUB)) parts += resources.getQuantityString(R.plurals.series_pages, r.pages, r.pages)
         formatBytes(r.bytes).takeIf { it.isNotBlank() }?.let { parts += it }
-        if (r.format == Fmt.EPUB || r.format == Fmt.PDF) parts += Fmt.label(r.format)
+        if (r.format == Fmt.EPUB || r.format == Fmt.PDF) parts += Fmt.label(r.format, x)
         val e = app.queue.find(sk, r.id)
         parts += when {
             r.local != null -> {
                 val pct = prefs.percent(sk, r.id)
-                if (pct >= 0) "已下载 · 读到 $pct%" else "已下载"
+                if (pct >= 0) getString(R.string.series_downloaded_pct, pct) else getString(R.string.series_downloaded)
             }
-            e != null -> DownloadQueue.describe(e)
-            r.online != null -> "未下载"
+            e != null -> DownloadQueue.describe(e, x)
+            r.online != null -> getString(R.string.series_not_downloaded)
             else -> ""
         }
         row.sub.text = parts.filter { it.isNotBlank() }.joinToString(" · ")
@@ -193,19 +219,21 @@ class SeriesActivity : BaseActivity() {
             val actions = ArrayList<Pair<String, () -> Unit>>()
             when (e.state) {
                 DownloadQueue.State.RUNNING ->
-                    if (e.stopping) actions += "继续" to { app.queue.resume(e) }
-                    else actions += "暂停" to { app.queue.pause(e) }
-                DownloadQueue.State.QUEUED -> actions += "暂停" to { app.queue.pause(e) }
-                DownloadQueue.State.PAUSED -> actions += "继续" to { app.queue.resume(e) }
-                DownloadQueue.State.FAILED -> actions += "重试（接着下载）" to { app.queue.resume(e) }
+                    if (e.stopping) actions += getString(R.string.resume) to { app.queue.resume(e) }
+                    else actions += getString(R.string.pause) to { app.queue.pause(e) }
+                DownloadQueue.State.QUEUED -> actions += getString(R.string.pause) to { app.queue.pause(e) }
+                DownloadQueue.State.PAUSED -> actions += getString(R.string.resume) to { app.queue.resume(e) }
+                DownloadQueue.State.FAILED -> actions += getString(R.string.dlq_retry_one) to { app.queue.resume(e) }
             }
-            actions += "取消下载" to {
-                confirm("取消下载", "${r.label}\n\n将删除已下载的未完成部分。", "取消下载") { app.queue.cancel(e) }
+            actions += getString(R.string.dlq_cancel_one) to {
+                confirm(getString(R.string.dlq_cancel_one), getString(R.string.dlq_cancel_one_msg, r.label), getString(R.string.dlq_cancel_one)) {
+                    app.queue.cancel(e)
+                }
             }
             AlertDialog.Builder(this)
-                .setTitle(r.label + " · " + DownloadQueue.describe(e))
+                .setTitle(getString(R.string.title_dot, r.label, DownloadQueue.describe(e, x)))
                 .setItems(actions.map { it.first }.toTypedArray()) { _, which -> actions[which].second() }
-                .setNegativeButton("关闭", null)
+                .setNegativeButton(R.string.close, null)
                 .show()
             return
         }
@@ -213,34 +241,46 @@ class SeriesActivity : BaseActivity() {
         enqueue(listOf(c))
     }
 
-    private fun onLongTap(r: Row) {
-        val local = r.local ?: return
-        val opts = arrayOf("删除离线内容", "从头阅读")
-        AlertDialog.Builder(this)
-            .setTitle(r.label)
-            .setItems(opts) { _, which ->
-                when (which) {
-                    0 -> confirm("删除", "删除「${r.label}」的离线文件？", "删除") {
-                        bg({ app.storage.deleteChapter(local) }) { _, _ ->
-                            prefs.clearProgress(sk, r.id)
-                            loadLocal()
-                        }
-                    }
-                    1 -> {
-                        prefs.clearProgress(sk, r.id)
-                        Readers.open(this, local)
-                    }
-                }
-            }
-            .show()
-    }
-
     private fun enqueue(items: List<ChapterItem>) {
         ensureNotificationPermission()
         val tasks = items.map { DownloadTask.of(sk, name, format, it) }
         val n = app.queue.enqueue(tasks)
-        status.text = if (n > 0) "已加入下载队列：$n 项（可离开此页面，下载在后台继续）" else "已在队列中或已下载"
+        status.text = if (n > 0) resources.getQuantityString(R.plurals.series_enqueued, n, n) else getString(R.string.series_already_queued)
         rebuild()
+    }
+
+    /** 批量下载：跳过已经下载完或已在队列中的章节，按章节顺序加入下载队列 */
+    private fun downloadSelected() {
+        val chosen = sel.selectedItems()
+        val todo = chosen.filter { it.online != null && it.local == null && app.queue.find(sk, it.id) == null }
+        val skipped = chosen.size - todo.size
+        sel.exit()
+        if (todo.isEmpty()) {
+            status.text = getString(R.string.series_already_queued)
+            return
+        }
+        enqueue(todo.mapNotNull { it.online })
+        if (skipped > 0) status.text = status.text.toString() + "\n" + resources.getQuantityString(R.plurals.series_skipped, skipped, skipped)
+    }
+
+    /** 批量删除：只删已下载的；先算出将释放的空间再确认 */
+    private fun deleteSelected() {
+        val todo = sel.selectedItems().mapNotNull { it.local }
+        if (todo.isEmpty()) {
+            status.text = getString(R.string.series_none_downloaded_selected)
+            return
+        }
+        bg({ todo.sumOf { app.storage.sizeOf(it.dir) } }) { bytes, _ ->
+            val n = todo.size
+            val msg = resources.getQuantityString(R.plurals.series_delete_msg, n, n, formatBytes(bytes ?: 0).ifBlank { "0 KB" })
+            confirm(getString(R.string.shelf_delete_title), msg, getString(R.string.delete)) {
+                bg({ todo.forEach { app.storage.deleteChapter(it) } }) { _, _ ->
+                    todo.forEach { prefs.clearProgress(sk, it.chapterId) }
+                    sel.exit()
+                    loadLocal()
+                }
+            }
+        }
     }
 
     private fun downloadAll() {
@@ -251,11 +291,14 @@ class SeriesActivity : BaseActivity() {
             }
         }
         if (todo.isEmpty()) {
-            status.text = if (onlineItems == null) "章节列表尚未加载" else "全部内容已下载或已在队列中"
+            status.text = getString(if (onlineItems == null) R.string.series_list_not_loaded else R.string.series_all_done)
             return
         }
         val size = formatBytes(todo.sumOf { it.bytes })
-        confirm("全部下载", "将下载 ${todo.size} 项" + (if (size.isNotBlank()) "，约 $size" else "") + "。", "下载") {
+        val n = todo.size
+        val msg = if (size.isNotBlank()) resources.getQuantityString(R.plurals.series_download_all_size, n, n, size)
+        else resources.getQuantityString(R.plurals.series_download_all_msg, n, n)
+        confirm(getString(R.string.series_download_all), msg, getString(R.string.kfonts_download)) {
             enqueue(todo.mapNotNull { it.online })
         }
     }
@@ -268,16 +311,9 @@ class SeriesActivity : BaseActivity() {
             ?: sorted.firstOrNull { prefs.percent(sk, it.chapterId) < 0 }
             ?: sorted.firstOrNull()
         if (target == null) {
-            status.text = "还没有已下载的内容，请先点击章节下载"
+            status.text = getString(R.string.series_nothing_downloaded)
             return
         }
         Readers.open(this, target)
-    }
-
-    @Suppress("unused")
-    private fun kindLabel(k: Kind) = when (k) {
-        Kind.EPUB -> "EPUB"
-        Kind.PDF -> "PDF"
-        Kind.IMAGES -> "图片"
     }
 }

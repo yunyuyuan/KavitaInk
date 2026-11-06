@@ -1,5 +1,6 @@
 package com.manus.kavitaink.core
 
+import com.manus.kavitaink.R
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -199,7 +200,7 @@ class PauseResumeLiveTest {
         proxy("drop")
         r.thread.join(30_000)
         val err = r.error
-        println("断网后的异常：${err?.javaClass?.simpleName}: ${err?.message} -> ${KavitaApi.friendlyError(err)}")
+        println("断网后的异常：${err?.javaClass?.simpleName}: ${err?.message} -> ${KavitaApi.friendlyError(err, XmlTexts("zh"))}")
         assertTrue("断网应抛出 IO 异常而不是被当作完成：$err", err is IOException)
         assertTrue("应判定为可自动重试", KavitaApi.isTransient(err))
         assertFalse(storage.isComplete(t.serverKey, t.seriesId, t.chapterId))
@@ -219,10 +220,10 @@ class PauseResumeLiveTest {
         val origin = env("BIG_EPUB_PATH")
         if (origin.isNotBlank()) assertEquals(sha(File(origin)), sha(f))
         // 不可重试的错误
-        assertFalse(KavitaApi.isTransient(ApiException(401, "认证失败")))
-        assertFalse(KavitaApi.isTransient(ApiException(403, "无权限")))
-        assertFalse(KavitaApi.isTransient(StorageException("存储空间不足")))
-        assertTrue(KavitaApi.isTransient(ApiException(503, "服务器错误")))
+        assertFalse(KavitaApi.isTransient(ApiException(401, R.string.err_http_401)))
+        assertFalse(KavitaApi.isTransient(ApiException(403, R.string.err_http_403)))
+        assertFalse(KavitaApi.isTransient(StorageException(R.string.err_no_space)))
+        assertTrue(KavitaApi.isTransient(ApiException(503, R.string.err_http_5xx, "", 503)))
         storage.root.deleteRecursively()
     }
 }

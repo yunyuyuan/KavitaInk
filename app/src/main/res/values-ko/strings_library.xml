@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="login_title">Kavita에 연결</string>
+    <string name="login_connect">연결</string>
+    <string name="login_server">서버 주소</string>
+    <string name="login_server_hint">예: http://192.168.1.10:5000</string>
+    <string name="login_way1">방법 1: 사용자 이름과 비밀번호</string>
+    <string name="login_way1_note">비밀번호는 Auth Key를 받는 데만 사용되며 이 기기에 저장되지 않습니다</string>
+    <string name="login_user">사용자 이름</string>
+    <string name="login_pass">비밀번호</string>
+    <string name="login_way2">방법 2: Auth Key 또는 OPDS 링크</string>
+    <string name="login_way2_note">Kavita: 설정 → 계정 → Auth Keys / OPDS. 이 항목을 입력하면 사용자 이름과 비밀번호는 비워 둘 수 있습니다</string>
+    <string name="login_key_hint">Auth Key 또는 http://…/api/opds/…</string>
+    <string name="login_notes">참고:\n• 다운로드하려면 Kavita에서 이 계정에 “다운로드” 역할이 있어야 합니다\n• 로컬 http 주소는 그대로 사용할 수 있습니다. 자체 서명 https 인증서는 먼저 시스템에 설치하세요\n• 이 앱은 다운로드와 오프라인 읽기만 지원합니다. 읽기 진행 상황을 업로드하거나 동기화하지 않습니다</string>
+    <string name="login_need_server">서버 주소를 입력하세요</string>
+    <string name="login_connecting">연결 중…</string>
+    <string name="err_need_credentials">사용자 이름과 비밀번호 또는 Auth Key를 입력하세요</string>
+    <string name="login_failed">연결 실패: %1$s</string>
+    <plurals name="login_ok">
+        <item quantity="other">연결됨: Kavita %1$s, 서재 %2$d개</item>
+    </plurals>
+    <string name="libs_title">서재</string>
+    <string name="libs_search_hint">시리즈 검색</string>
+    <string name="libs_loading">서재 불러오는 중…</string>
+    <string name="libs_none">이 계정으로 접근할 수 있는 서재가 없습니다</string>
+    <plurals name="libs_count">
+        <item quantity="other">서재 %1$d개 · %2$s</item>
+    </plurals>
+    <string name="series_title">시리즈</string>
+    <string name="series_search_title">검색: %1$s</string>
+    <plurals name="series_pages">
+        <item quantity="other">%1$d페이지</item>
+    </plurals>
+    <string name="series_more">더 불러오기</string>
+    <string name="series_more_page">더 불러오기 (%1$d/%2$d페이지)</string>
+    <string name="series_no_match">일치하는 시리즈가 없습니다</string>
+    <string name="series_empty_lib">이 서재는 비어 있습니다</string>
+    <plurals name="series_count">
+        <item quantity="other">시리즈 %1$d개 · %2$d개 표시됨</item>
+    </plurals>
+    <string name="shelf_title">책장</string>
+    <string name="shelf_libraries">서재</string>
+    <string name="shelf_downloads">다운로드</string>
+    <string name="shelf_downloads_n">다운로드 (%1$d)</string>
+    <string name="shelf_settings">설정</string>
+    <plurals name="shelf_items">
+        <item quantity="other">%1$d개 항목 다운로드됨</item>
+    </plurals>
+    <string name="shelf_read_to">%1$s 읽는 중</string>
+    <string name="shelf_read_to_pct">%1$s %2$d%% 읽는 중</string>
+    <plurals name="shelf_status">
+        <item quantity="other">작품 %1$d개 · %2$s 사용 중 · 길게 눌러 선택</item>
+    </plurals>
+    <string name="shelf_not_connected">아직 서버에 연결되지 않았습니다. 오른쪽 상단의 “서재”를 눌러 Kavita에 로그인한 후 읽고 싶은 콘텐츠를 다운로드하세요.</string>
+    <string name="shelf_empty">아직 오프라인 콘텐츠가 없습니다. “서재”를 눌러 둘러보고 다운로드하세요. 다운로드한 콘텐츠는 네트워크 연결 없이 읽을 수 있습니다.</string>
+    <string name="shelf_delete_title">오프라인 콘텐츠 삭제</string>
+    <string name="shelf_delete_one_msg">“%1$s”의 다운로드한 콘텐츠를 삭제할까요? %2$s의 공간이 확보됩니다.\n(서버의 파일에는 영향을 주지 않습니다.)</string>
+    <plurals name="shelf_delete_msg">
+        <item quantity="other">작품 %1$d개의 다운로드한 콘텐츠를 삭제할까요? %2$s의 공간이 확보됩니다.\n(서버의 파일에는 영향을 주지 않습니다.)</item>
+    </plurals>
+    <string name="series_resume">계속 읽기</string>
+    <string name="series_download_all">모두 다운로드</string>
+    <string name="series_online">온라인</string>
+    <string name="series_loading_chapters">챕터 불러오는 중…</string>
+    <string name="series_local_only">%1$s (로컬 전용)</string>
+    <plurals name="series_status">
+        <item quantity="other">항목 %1$d개 · %2$d개 다운로드됨</item>
+    </plurals>
+    <string name="series_in_queue">%1$d개 대기 중</string>
+    <string name="series_offline_mode">오프라인</string>
+    <string name="series_tap_to_download">항목을 눌러 다운로드하세요</string>
+    <string name="series_online_failed">서버에서 챕터를 불러오지 못했습니다: %1$s</string>
+    <string name="series_downloaded">다운로드됨</string>
+    <string name="series_downloaded_pct">다운로드됨 · %1$d%% 읽음</string>
+    <string name="series_not_downloaded">다운로드되지 않음</string>
+    <plurals name="series_enqueued">
+        <item quantity="other">항목 %1$d개를 다운로드 대기열에 추가했습니다 (이 페이지를 나가도 백그라운드에서 다운로드가 계속됩니다)</item>
+    </plurals>
+    <string name="series_already_queued">이미 다운로드되었거나 대기열에 있습니다</string>
+    <plurals name="series_skipped">
+        <item quantity="other">항목 %1$d개 건너뜀 (이미 다운로드되었거나 대기열에 있음)</item>
+    </plurals>
+    <string name="series_none_downloaded_selected">선택한 항목 중 다운로드된 항목이 없습니다</string>
+    <plurals name="series_delete_msg">
+        <item quantity="other">다운로드한 항목 %1$d개를 삭제할까요? %2$s의 공간이 확보됩니다.\n(서버의 파일에는 영향을 주지 않습니다.)</item>
+    </plurals>
+    <string name="series_list_not_loaded">아직 챕터 목록을 불러오지 않았습니다</string>
+    <string name="series_all_done">모든 콘텐츠가 다운로드되었거나 이미 대기열에 있습니다</string>
+    <plurals name="series_download_all_size">
+        <item quantity="other">항목 %1$d개(약 %2$s)를 다운로드할까요?</item>
+    </plurals>
+    <plurals name="series_download_all_msg">
+        <item quantity="other">항목 %1$d개를 다운로드할까요?</item>
+    </plurals>
+    <string name="series_nothing_downloaded">아직 다운로드된 콘텐츠가 없습니다. 먼저 챕터를 눌러 다운로드하세요.</string>
+</resources>

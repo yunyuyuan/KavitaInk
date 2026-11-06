@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="percent_n">%1$d%%</string>
+    <plurals name="dl_pages_progress">
+        <item quantity="other">%1$d / %2$d페이지</item>
+    </plurals>
+    <string name="dl_state_pausing">일시중지 중…</string>
+    <string name="dl_state_cancelling">취소 중…</string>
+    <string name="dl_state_running">다운로드 중</string>
+    <string name="dl_state_queued">대기 중</string>
+    <string name="dl_state_queued_partial">대기 중 · %1$s 다운로드됨</string>
+    <string name="dl_state_paused">일시중지됨</string>
+    <string name="dl_state_paused_detail">일시중지됨 · %1$s</string>
+    <string name="dl_state_failed">실패: %1$s</string>
+    <string name="dl_state_failed_partial">실패: %1$s (%2$s 다운로드됨, 재시도 시 이어서 다운로드)</string>
+    <string name="dl_retry_note">%1$s. %2$d초 후 재시도 (%3$d번째 시도)</string>
+    <string name="notif_channel_downloads">다운로드</string>
+    <string name="notif_preparing">다운로드 준비 중…</string>
+    <plurals name="notif_failed_n">
+        <item quantity="other">다운로드 %d개 실패</item>
+    </plurals>
+    <plurals name="notif_paused_n">
+        <item quantity="other">다운로드 %d개 일시중지됨</item>
+    </plurals>
+    <string name="notif_join">%1$s, %2$s</string>
+    <string name="notif_tap_retry">탭하여 확인하고 재시도하세요. 다운로드한 부분은 유지됩니다</string>
+    <string name="notif_tap_resume">다운로드한 부분은 유지됩니다. “모두 재개”를 탭하여 계속하세요</string>
+    <plurals name="notif_downloading_left">
+        <item quantity="other">다운로드 중 (%d개 남음)</item>
+    </plurals>
+    <string name="action_resume_all">모두 재개</string>
+    <string name="action_pause_all">모두 일시중지</string>
+    <string name="dlq_title">다운로드 대기열</string>
+    <string name="dlq_retry_failed">실패 항목 모두 재시도</string>
+    <string name="dlq_clear_failed">실패 항목 지우기</string>
+    <string name="dlq_cancel_all">모두 취소 (미완료 파일 삭제)</string>
+    <string name="dlq_cancel_all_title">모두 취소</string>
+    <string name="dlq_cancel_all_msg">대기열의 모든 다운로드를 취소하고 이미 다운로드한 부분을 삭제할까요?</string>
+    <string name="dlq_retry_one">재시도 (이어서 다운로드)</string>
+    <string name="dlq_cancel_one">다운로드 취소</string>
+    <string name="dlq_cancel_one_msg">%1$s\n\n이미 다운로드한 부분이 삭제됩니다.</string>
+    <string name="dlq_empty">진행 중인 다운로드가 없습니다. 다운로드가 완료된 항목은 책장에 있습니다.</string>
+    <string name="dlq_n_running">%1$d개 다운로드 중</string>
+    <string name="dlq_n_queued">%1$d개 대기 중</string>
+    <string name="dlq_n_paused">%1$d개 일시중지됨</string>
+    <string name="dlq_n_failed">%1$d개 실패</string>
+    <plurals name="dlq_total">
+        <item quantity="other">%1$d개 항목</item>
+    </plurals>
+    <string name="dlq_hint">항목을 탭하여 일시중지, 재개 또는 취소하세요. 일시중지하면 다운로드한 부분은 유지됩니다.</string>
+</resources>

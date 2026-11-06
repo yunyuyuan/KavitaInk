@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="back">‹ 뒤로</string>
+    <string name="ok">확인</string>
+    <string name="cancel">취소</string>
+    <string name="done">완료</string>
+    <string name="close">닫기</string>
+    <string name="delete">삭제</string>
+    <string name="on">켜짐</string>
+    <string name="off">꺼짐</string>
+    <string name="label_value">%1$s: %2$s</string>
+    <string name="value_default">기본값</string>
+    <string name="value_none">없음</string>
+    <string name="value_small">작게</string>
+    <string name="value_medium">중간</string>
+    <string name="value_large">크게</string>
+    <string name="list_prev_page">▲ 이전</string>
+    <string name="list_next_page">▼ 다음</string>
+    <string name="px_n">%1$d px</string>
+    <string name="loading">불러오는 중…</string>
+    <string name="refresh">새로고침</string>
+    <string name="search">검색</string>
+    <string name="retry">다시 시도</string>
+    <string name="load_failed">불러올 수 없음: %1$s</string>
+    <string name="more">더보기</string>
+    <string name="pause">일시중지</string>
+    <string name="resume">계속</string>
+    <string name="title_dot">%1$s · %2$s</string>
+    <string name="sel_select">선택</string>
+    <string name="sel_choose">선택…</string>
+    <string name="sel_all">전체 선택</string>
+    <string name="sel_invert">선택 반전</string>
+    <plurals name="sel_count">
+        <item quantity="other">%1$d개 선택됨</item>
+    </plurals>
+    <string name="sel_delete_n">선택 항목 삭제 (%1$d)</string>
+    <string name="sel_download_n">선택 항목 다운로드 (%1$d)</string>
+    <string name="sel_not_downloaded">미다운로드 항목만</string>
+    <string name="sel_downloaded">다운로드한 항목만</string>
+    <string name="list_sep">", "</string>
+</resources>

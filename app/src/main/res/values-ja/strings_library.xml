@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="login_title">Kavita に接続</string>
+    <string name="login_connect">接続</string>
+    <string name="login_server">サーバーアドレス</string>
+    <string name="login_server_hint">例：http://192.168.1.10:5000</string>
+    <string name="login_way1">方法1：ユーザー名とパスワード</string>
+    <string name="login_way1_note">パスワードは Auth Key の取得にのみ使用され、この端末には保存されません</string>
+    <string name="login_user">ユーザー名</string>
+    <string name="login_pass">パスワード</string>
+    <string name="login_way2">方法2：Auth Key または OPDS リンク</string>
+    <string name="login_way2_note">Kavita の設定 → アカウント → Auth Keys / OPDS。ここに入力すれば、ユーザー名とパスワードは空欄で構いません</string>
+    <string name="login_key_hint">Auth Key または http://…/api/opds/…</string>
+    <string name="login_notes">注意事項：\n• ダウンロードには、Kavita でこのアカウントに「Download」ロールが必要です\n• ローカルの http アドレスはそのまま使えます。自己署名の https 証明書は、先にシステムにインストールしてください\n• このアプリはダウンロードとオフライン読書専用です。読書の進捗をアップロード・同期することはありません</string>
+    <string name="login_need_server">サーバーアドレスを入力してください</string>
+    <string name="login_connecting">接続中…</string>
+    <string name="err_need_credentials">ユーザー名とパスワード、または Auth Key を入力してください</string>
+    <string name="login_failed">接続に失敗しました：%1$s</string>
+    <plurals name="login_ok">
+        <item quantity="other">接続しました：Kavita %1$s、ライブラリ %2$d 件</item>
+    </plurals>
+    <string name="libs_title">ライブラリ</string>
+    <string name="libs_search_hint">シリーズを検索</string>
+    <string name="libs_loading">ライブラリを読み込み中…</string>
+    <string name="libs_none">このアカウントでアクセスできるライブラリはありません</string>
+    <plurals name="libs_count">
+        <item quantity="other">ライブラリ %1$d 件 · %2$s</item>
+    </plurals>
+    <string name="series_title">シリーズ</string>
+    <string name="series_search_title">検索：%1$s</string>
+    <plurals name="series_pages">
+        <item quantity="other">%1$d ページ</item>
+    </plurals>
+    <string name="series_more">さらに読み込む</string>
+    <string name="series_more_page">さらに読み込む（%1$d / %2$d ページ）</string>
+    <string name="series_no_match">一致するシリーズがありません</string>
+    <string name="series_empty_lib">このライブラリは空です</string>
+    <plurals name="series_count">
+        <item quantity="other">%1$d シリーズ · %2$d 件表示</item>
+    </plurals>
+    <string name="shelf_title">本棚</string>
+    <string name="shelf_libraries">ライブラリ</string>
+    <string name="shelf_downloads">ダウンロード</string>
+    <string name="shelf_downloads_n">ダウンロード（%1$d）</string>
+    <string name="shelf_settings">設定</string>
+    <plurals name="shelf_items">
+        <item quantity="other">%1$d 件ダウンロード済み</item>
+    </plurals>
+    <string name="shelf_read_to">%1$s を読書中</string>
+    <string name="shelf_read_to_pct">%1$s を読書中 %2$d%%</string>
+    <plurals name="shelf_status">
+        <item quantity="other">%1$d 作品 · %2$s 使用 · 長押しで選択</item>
+    </plurals>
+    <string name="shelf_not_connected">まだサーバーに接続していません。右上の「ライブラリ」をタップして Kavita にログインし、読みたい作品をダウンロードしてください。</string>
+    <string name="shelf_empty">オフラインコンテンツはまだありません。「ライブラリ」をタップして作品を探し、ダウンロードしてください。ダウンロード後はネット接続なしで読めます。</string>
+    <string name="shelf_delete_title">オフラインコンテンツを削除</string>
+    <string name="shelf_delete_one_msg">「%1$s」のダウンロード済みコンテンツを削除しますか？ %2$s の空き容量が増えます。\n（サーバー上のファイルには影響しません。）</string>
+    <plurals name="shelf_delete_msg">
+        <item quantity="other">%1$d 作品のダウンロード済みコンテンツを削除しますか？ %2$s の空き容量が増えます。\n（サーバー上のファイルには影響しません。）</item>
+    </plurals>
+    <string name="series_resume">続きを読む</string>
+    <string name="series_download_all">すべてダウンロード</string>
+    <string name="series_online">オンライン</string>
+    <string name="series_loading_chapters">章を読み込み中…</string>
+    <string name="series_local_only">%1$s（ローカルのみ）</string>
+    <plurals name="series_status">
+        <item quantity="other">%1$d 件 · %2$d 件ダウンロード済み</item>
+    </plurals>
+    <string name="series_in_queue">%1$d 件待機中</string>
+    <string name="series_offline_mode">オフライン</string>
+    <string name="series_tap_to_download">項目をタップしてダウンロード</string>
+    <string name="series_online_failed">サーバーから章を読み込めませんでした：%1$s</string>
+    <string name="series_downloaded">ダウンロード済み</string>
+    <string name="series_downloaded_pct">ダウンロード済み · %1$d%% 既読</string>
+    <string name="series_not_downloaded">未ダウンロード</string>
+    <plurals name="series_enqueued">
+        <item quantity="other">%1$d 件をダウンロードキューに追加しました（この画面を離れても、バックグラウンドでダウンロードが続きます）</item>
+    </plurals>
+    <string name="series_already_queued">ダウンロード済み、またはキューに追加済みです</string>
+    <plurals name="series_skipped">
+        <item quantity="other">%1$d 件をスキップしました（ダウンロード済み、またはキューに追加済み）</item>
+    </plurals>
+    <string name="series_none_downloaded_selected">選択した項目はすべて未ダウンロードです</string>
+    <plurals name="series_delete_msg">
+        <item quantity="other">ダウンロード済みの %1$d 件を削除しますか？ %2$s の空き容量が増えます。\n（サーバー上のファイルには影響しません。）</item>
+    </plurals>
+    <string name="series_list_not_loaded">章の一覧はまだ読み込まれていません</string>
+    <string name="series_all_done">すべてダウンロード済み、またはキューに追加済みです</string>
+    <plurals name="series_download_all_size">
+        <item quantity="other">%1$d 件、約 %2$s をダウンロードしますか？</item>
+    </plurals>
+    <plurals name="series_download_all_msg">
+        <item quantity="other">%1$d 件をダウンロードしますか？</item>
+    </plurals>
+    <string name="series_nothing_downloaded">まだ何もダウンロードされていません。まず章をタップしてダウンロードしてください。</string>
+</resources>

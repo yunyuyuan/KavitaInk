@@ -129,6 +129,7 @@ def step0():
     proxy("ok", 300_000)
     print(sh("install", "-r", APK, timeout=600).decode().strip())
     shell("pm clear " + PKG)
+    set_app_lang("zh-CN")  # 模拟器系统语言是英文，脚本按中文文字查找控件
     shell("logcat -c")
     shell(f"am start -W -n {PKG}/.ui.MainActivity", timeout=300)
     wait_text("书架", 300)

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="fmt_image">画像</string>
+    <string name="fmt_archive">アーカイブ</string>
+    <string name="fmt_unknown">不明</string>
+    <string name="lib_type_manga">漫画</string>
+    <string name="lib_type_comic">コミック</string>
+    <string name="lib_type_book">書籍</string>
+    <string name="lib_type_image">画像</string>
+    <string name="lib_type_light_novel">ライトノベル</string>
+    <string name="lib_type_other">その他</string>
+    <string name="label_special">特別編</string>
+    <string name="label_chapter_generic">章</string>
+    <string name="label_single_volume">単巻</string>
+    <string name="label_volume_n">第%1$s巻</string>
+    <string name="label_chapter_book_n">第%1$s章</string>
+    <string name="label_chapter_manga_n">第%1$s話</string>
+    <string name="label_vol_chapter">%1$s, %2$s</string>
+    <string name="toc_section_n">第%1$d節</string>
+    <string name="toc_untitled">（無題）</string>
+    <string name="err_unknown">不明なエラー</string>
+    <string name="err_with_detail">%1$s: %2$s</string>
+    <string name="err_http_400">リクエストが拒否されました (400)</string>
+    <string name="err_http_401">認証に失敗しました。ユーザー名、パスワード、Auth Key が正しくないか、有効期限が切れています</string>
+    <string name="err_http_403">権限がありません（ダウンロードには Kavita でこのアカウントにダウンロード権限が必要です）</string>
+    <string name="err_http_404">サーバー上に見つかりません (404)</string>
+    <string name="err_http_5xx">サーバーエラー (%1$d)</string>
+    <string name="err_http_other">リクエストに失敗しました (%1$d)</string>
+    <string name="err_no_auth_key">ログインしましたが、サーバーから Auth Key が返されませんでした。Auth Key を使って接続してください</string>
+    <string name="err_unknown_host">サーバーアドレスを解決できません。URL またはネットワークを確認してください</string>
+    <string name="err_connect">サーバーに接続できません。アドレス、ポート、ネットワークを確認してください</string>
+    <string name="err_timeout">接続がタイムアウトしました。ネットワークを確認してください</string>
+    <string name="err_ssl">HTTPS 証明書の検証に失敗しました（自己署名証明書は先にシステムにインストールしてください）</string>
+    <string name="err_bad_url">サーバーアドレスが無効です</string>
+    <string name="err_bad_json">サーバーの応答を読み取れません（このアドレスは Kavita サーバーですか？）</string>
+    <string name="err_connection_lost">ネットワーク接続が切れました</string>
+    <string name="err_not_logged_in">サーバーにログインしていません</string>
+    <string name="err_other_server">このダウンロードは別のサーバーのものです。そのサーバーに再度ログインしてください</string>
+    <string name="err_mkdir">ダウンロードフォルダを作成できません。ストレージの空き容量を確認してください</string>
+    <string name="err_multi_file_epub">複数のファイルで構成された EPUB の章にはまだ対応していません</string>
+    <string name="err_incomplete">接続が中断されました（%2$d バイト中 %1$d バイトをダウンロード済み）</string>
+    <string name="err_save_file">ファイルを保存できません: %1$s</string>
+    <string name="err_write_space">ファイルを書き込めません。ストレージの空き容量を確認してください: %1$s</string>
+    <string name="err_no_space">ストレージの空き容量が不足しています</string>
+    <string name="err_write_failed">ファイルの書き込みに失敗しました: %1$s</string>
+    <string name="err_no_pages">この章にはダウンロードできるページがありません</string>
+    <string name="err_page_empty">%1$d ページ目が空です</string>
+    <string name="err_save_page">%1$d ページ目を保存できません</string>
+    <string name="err_epub_no_container">ダウンロードした EPUB に container.xml がありません</string>
+    <string name="err_epub_corrupt">EPUB ファイルが破損しています: %1$s</string>
+    <string name="err_epub_no_opf">無効な EPUB です: OPF ファイルが見つかりません</string>
+    <string name="err_epub_read_opf">OPF ファイルを読み取れません</string>
+</resources>

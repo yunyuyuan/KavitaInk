@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
+import com.manus.kavitaink.R
 import com.manus.kavitaink.core.LocalSeries
 import com.manus.kavitaink.core.formatBytes
 import com.manus.kavitaink.download.DownloadService
@@ -18,6 +19,7 @@ class MainActivity : BaseActivity() {
     private lateinit var status: TextView
     private lateinit var dlBtn: Button
     private lateinit var adapter: RowAdapter<LocalSeries>
+    private lateinit var sel: MultiSelect<LocalSeries, String>
     private var coversShown = true
     private val queueListener: () -> Unit = { updateDownloadButton() }
 
@@ -25,27 +27,34 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         val root = root()
         val (head, btns) = header(
-            "书架", back = false, actions = listOf(
-                "书库" to ::openLibrary,
-                "下载" to { startActivity(Intent(this, DownloadsActivity::class.java)) },
-                "设置" to { startActivity(Intent(this, SettingsActivity::class.java)) },
+            getString(R.string.shelf_title), back = false, actions = listOf(
+                getString(R.string.shelf_libraries) to ::openLibrary,
+                getString(R.string.shelf_downloads) to { startActivity(Intent(this, DownloadsActivity::class.java)) },
+                getString(R.string.sel_select) to { if (adapter.items.isNotEmpty()) sel.enter() },
+                getString(R.string.shelf_settings) to { startActivity(Intent(this, SettingsActivity::class.java)) },
             )
         )
         dlBtn = btns[1]
-        root.addView(head)
-        status = statusLine()
-        root.addView(status)
-        root.addView(hline())
         list = einkList()
         coversShown = prefs.showCovers
         adapter = makeAdapter()
         list.adapter = adapter
-        list.setOnItemClickListener { _, _, pos, _ -> adapter.items.getOrNull(pos)?.let(::open) }
+        sel = MultiSelect(this, list, { adapter }, { "${it.serverKey}:${it.seriesId}" })
+        sel.build(head, listOf(MultiSelect.Op(R.string.sel_delete_n) { askDeleteSelected() }))
+        root.addView(head)
+        root.addView(sel.head)
+        status = statusLine()
+        root.addView(status)
+        root.addView(hline())
+        list.setOnItemClickListener { _, _, pos, _ ->
+            if (sel.active) sel.toggle(pos) else adapter.items.getOrNull(pos)?.let(::open)
+        }
         list.setOnItemLongClickListener { _, _, pos, _ ->
-            adapter.items.getOrNull(pos)?.let(::askDelete)
+            if (sel.active) sel.toggle(pos) else sel.enter(adapter.items.getOrNull(pos))
             true
         }
         root.addView(list, lp(MATCH, 0, 1f))
+        root.addView(sel.bottom)
         root.addView(pagerBar(list))
         setContentView(root)
         pagedList = list
@@ -71,18 +80,25 @@ class MainActivity : BaseActivity() {
         app.queue.removeListener(queueListener)
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (sel.active) sel.exit() else @Suppress("DEPRECATION") super.onBackPressed()
+    }
+
     private fun makeAdapter() = RowAdapter<LocalSeries>(
         emptyList(),
         { TwoLineRow(this, prefs.showCovers).root },
         { v, s, _ ->
             val row = TwoLineRow.of(v)
-            row.title.text = s.name
-            val sb = StringBuilder("${s.chapters.size} 项已下载")
+            row.title.text = sel.mark(s) + s.name
+            val n = s.chapters.size
+            val sb = StringBuilder(resources.getQuantityString(R.plurals.shelf_items, n, n))
             val last = prefs.lastChapter(s.serverKey, s.seriesId)
             s.chapters.firstOrNull { it.chapterId == last }?.let { c ->
                 val pct = prefs.percent(c.serverKey, c.chapterId)
-                sb.append(" · 读到 ").append(c.label)
-                if (pct >= 0) sb.append(" ").append(pct).append('%')
+                sb.append(" · ").append(
+                    if (pct >= 0) getString(R.string.shelf_read_to_pct, c.title(x), pct) else getString(R.string.shelf_read_to, c.title(x))
+                )
             }
             row.sub.text = sb
             row.cover?.let { CoverLoader.bind(it, "local:${s.serverKey}:${s.seriesId}", s.cover, null, null) }
@@ -98,26 +114,41 @@ class MainActivity : BaseActivity() {
         }) { r, _ ->
             val items = r?.first ?: emptyList()
             adapter.update(items)
+            sel.prune()
+            if (items.isEmpty()) sel.exit()
             status.text = when {
-                items.isNotEmpty() -> "共 ${items.size} 部 · 占用 ${formatBytes(r!!.second).ifBlank { "0 KB" }} · 长按可删除"
-                app.api() == null -> "尚未连接服务器。点击右上角「书库」登录 Kavita，然后下载要读的书。"
-                else -> "还没有离线内容。点击「书库」浏览并下载，下载后无需联网即可阅读。"
+                items.isNotEmpty() -> resources.getQuantityString(
+                    R.plurals.shelf_status, items.size, items.size, formatBytes(r!!.second).ifBlank { "0 KB" },
+                )
+                app.api() == null -> getString(R.string.shelf_not_connected)
+                else -> getString(R.string.shelf_empty)
             }
         }
     }
 
     private fun updateDownloadButton() {
         val n = app.queue.size()
-        dlBtn.text = if (n > 0) "下载($n)" else "下载"
+        dlBtn.text = if (n > 0) getString(R.string.shelf_downloads_n, n) else getString(R.string.shelf_downloads)
     }
 
     private fun open(s: LocalSeries) {
         SeriesActivity.open(this, s.serverKey, s.seriesId, s.name, s.format, online = false)
     }
 
-    private fun askDelete(s: LocalSeries) {
-        confirm("删除离线内容", "删除《${s.name}》已下载的 ${s.chapters.size} 项？\n（不会影响服务器上的文件）", "删除") {
-            bg({ app.storage.deleteSeries(s) }) { _, _ -> refresh() }
+    /** 批量删除整部作品的本地内容：先算出将释放的空间再确认 */
+    private fun askDeleteSelected() {
+        val items = sel.selectedItems()
+        if (items.isEmpty()) return
+        bg({ items.sumOf { app.storage.sizeOf(it.dir) } }) { bytes, _ ->
+            val n = items.size
+            val msg = if (n == 1) getString(R.string.shelf_delete_one_msg, items[0].name, formatBytes(bytes ?: 0).ifBlank { "0 KB" })
+            else resources.getQuantityString(R.plurals.shelf_delete_msg, n, n, formatBytes(bytes ?: 0).ifBlank { "0 KB" })
+            confirm(getString(R.string.shelf_delete_title), msg, getString(R.string.delete)) {
+                bg({ items.forEach { app.storage.deleteSeries(it) } }) { _, _ ->
+                    sel.exit()
+                    refresh()
+                }
+            }
         }
     }
 

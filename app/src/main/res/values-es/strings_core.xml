@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="fmt_image">Imágenes</string>
+    <string name="fmt_archive">Archivo comprimido</string>
+    <string name="fmt_unknown">Desconocido</string>
+    <string name="lib_type_manga">Manga</string>
+    <string name="lib_type_comic">Cómic</string>
+    <string name="lib_type_book">Libro</string>
+    <string name="lib_type_image">Imágenes</string>
+    <string name="lib_type_light_novel">Novela ligera</string>
+    <string name="lib_type_other">Otro</string>
+    <string name="label_special">Especial</string>
+    <string name="label_chapter_generic">Capítulo</string>
+    <string name="label_single_volume">Volumen único</string>
+    <string name="label_volume_n">Volumen %1$s</string>
+    <string name="label_chapter_book_n">Capítulo %1$s</string>
+    <string name="label_chapter_manga_n">Capítulo %1$s</string>
+    <string name="label_vol_chapter">%1$s, %2$s</string>
+    <string name="toc_section_n">Sección %1$d</string>
+    <string name="toc_untitled">(Sin título)</string>
+    <string name="err_unknown">Error desconocido</string>
+    <string name="err_with_detail">%1$s: %2$s</string>
+    <string name="err_http_400">Solicitud rechazada (400)</string>
+    <string name="err_http_401">Error de autenticación: usuario, contraseña o Auth Key incorrectos, o Auth Key vencida</string>
+    <string name="err_http_403">Permiso denegado (para descargar, esta cuenta necesita el rol de descarga en Kavita)</string>
+    <string name="err_http_404">No se encontró en el servidor (404)</string>
+    <string name="err_http_5xx">Error del servidor (%1$d)</string>
+    <string name="err_http_other">Error en la solicitud (%1$d)</string>
+    <string name="err_no_auth_key">Sesión iniciada, pero el servidor no devolvió una Auth Key. Conéctese con una Auth Key</string>
+    <string name="err_unknown_host">No se puede resolver la dirección del servidor. Revise la URL o la red</string>
+    <string name="err_connect">No se puede conectar al servidor. Revise la dirección, el puerto y la red</string>
+    <string name="err_timeout">Se agotó el tiempo de conexión. Revise la red</string>
+    <string name="err_ssl">Error al verificar el certificado HTTPS (instale primero los certificados autofirmados en el sistema)</string>
+    <string name="err_bad_url">Dirección del servidor no válida</string>
+    <string name="err_bad_json">No se puede leer la respuesta del servidor (¿esta dirección corresponde a un servidor Kavita?)</string>
+    <string name="err_connection_lost">Se perdió la conexión de red</string>
+    <string name="err_not_logged_in">No ha iniciado sesión en un servidor</string>
+    <string name="err_other_server">Esta descarga pertenece a otro servidor. Inicie sesión de nuevo en ese servidor</string>
+    <string name="err_mkdir">No se puede crear la carpeta de descargas. Revise el espacio de almacenamiento</string>
+    <string name="err_multi_file_epub">Aún no se admiten capítulos EPUB compuestos por varios archivos</string>
+    <string name="err_incomplete">Conexión interrumpida (%1$d de %2$d bytes descargados)</string>
+    <string name="err_save_file">No se puede guardar el archivo: %1$s</string>
+    <string name="err_write_space">No se puede escribir el archivo. Revise el espacio de almacenamiento: %1$s</string>
+    <string name="err_no_space">Espacio de almacenamiento insuficiente</string>
+    <string name="err_write_failed">Error al escribir el archivo: %1$s</string>
+    <string name="err_no_pages">Este capítulo no tiene páginas para descargar</string>
+    <string name="err_page_empty">La página %1$d está vacía</string>
+    <string name="err_save_page">No se puede guardar la página %1$d</string>
+    <string name="err_epub_no_container">Falta container.xml en el EPUB descargado</string>
+    <string name="err_epub_corrupt">El archivo EPUB está dañado: %1$s</string>
+    <string name="err_epub_no_opf">EPUB no válido: no se encontró el archivo OPF</string>
+    <string name="err_epub_read_opf">No se puede leer el archivo OPF</string>
+</resources>

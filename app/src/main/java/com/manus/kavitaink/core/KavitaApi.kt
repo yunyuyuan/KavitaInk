@@ -1,5 +1,6 @@
 package com.manus.kavitaink.core
 
+import com.manus.kavitaink.R
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
@@ -13,7 +14,6 @@ import java.net.UnknownHostException
 import java.security.MessageDigest
 import javax.net.ssl.SSLException
 
-class ApiException(val code: Int, message: String) : IOException(message)
 
 /**
  * 极简 Kavita 客户端。认证统一使用 Auth Key：
@@ -147,7 +147,7 @@ class KavitaApi(baseUrl: String, val apiKey: String) {
         if (code !in 200..299) {
             val msg = runCatching { c.errorStream?.use { readText(it) } }.getOrNull().orEmpty()
             c.disconnect()
-            throw ApiException(code, describe(code, msg))
+            throw httpError(code, msg)
         }
         return c
     }
@@ -174,7 +174,7 @@ class KavitaApi(baseUrl: String, val apiKey: String) {
                 val keys = o.optJSONArray("authKeys")
                 if (keys != null && keys.length() > 0) key = keys.optJSONObject(0)?.s("key").orEmpty()
             }
-            if (key.isBlank()) throw ApiException(0, "登录成功，但服务器没有返回 Auth Key，请改用 Auth Key 方式连接")
+            if (key.isBlank()) throw ApiException(0, R.string.err_no_auth_key)
             return KavitaApi(baseUrl, key)
         }
 
@@ -202,15 +202,15 @@ class KavitaApi(baseUrl: String, val apiKey: String) {
 
         fun readText(input: InputStream): String = String(input.readBytes(), Charsets.UTF_8)
 
-        private fun describe(code: Int, body: String): String {
+        private fun httpError(code: Int, body: String): ApiException {
             val detail = extractMessage(body)
             return when (code) {
-                400 -> "请求被拒绝 (400)" + (if (detail.isNotBlank()) "：$detail" else "")
-                401 -> "认证失败：用户名/密码或 Auth Key 不正确，或已过期"
-                403 -> "没有权限（下载需要该账号在 Kavita 中拥有 Download 角色）"
-                404 -> "服务器上找不到该内容 (404)"
-                in 500..599 -> "服务器错误 ($code)" + (if (detail.isNotBlank()) "：$detail" else "")
-                else -> "请求失败 ($code)" + (if (detail.isNotBlank()) "：$detail" else "")
+                400 -> ApiException(code, R.string.err_http_400, detail)
+                401 -> ApiException(code, R.string.err_http_401)
+                403 -> ApiException(code, R.string.err_http_403)
+                404 -> ApiException(code, R.string.err_http_404)
+                in 500..599 -> ApiException(code, R.string.err_http_5xx, detail, code)
+                else -> ApiException(code, R.string.err_http_other, detail, code)
             }
         }
 
@@ -224,19 +224,27 @@ class KavitaApi(baseUrl: String, val apiKey: String) {
             return msg.take(120)
         }
 
-        /** 把各种网络异常翻译成中文提示 */
-        fun friendlyError(t: Throwable?): String = when (t) {
-            null -> "未知错误"
-            is ApiException -> t.message ?: "请求失败"
-            is UnknownHostException -> "无法解析服务器地址，请检查网址或网络"
-            is ConnectException -> "无法连接服务器，请检查地址、端口和网络"
-            is SocketTimeoutException -> "连接超时，请检查网络"
-            is SSLException -> "HTTPS 证书校验失败（自签名证书需先安装到系统）"
-            is java.net.MalformedURLException -> "服务器地址格式不正确"
-            is org.json.JSONException -> "服务器返回的数据无法解析（地址是否指向 Kavita？）"
-            // 我们自己抛出的中文提示原样显示；系统底层的英文报错（unexpected end of stream、
-            // Connection reset、Socket closed 等）统一显示为“网络连接中断”
-            is IOException -> t.message?.takeIf { m -> m.any { it.code in 0x4E00..0x9FFF } } ?: "网络连接中断"
+        /** 把各种异常转换成当前语言的提示 */
+        fun friendlyError(t: Throwable?, x: Texts): String = when (t) {
+            null -> x.s(R.string.err_unknown)
+            is ApiException -> {
+                val base = if (t.res != 0) x.s(t.res, *t.args) else ""
+                when {
+                    base.isEmpty() -> t.detail.ifBlank { x.s(R.string.err_http_other, t.code) }
+                    t.detail.isNotBlank() -> x.s(R.string.err_with_detail, base, t.detail)
+                    else -> base
+                }
+            }
+            is Localized -> x.s(t.res, *t.args)
+            is UnknownHostException -> x.s(R.string.err_unknown_host)
+            is ConnectException -> x.s(R.string.err_connect)
+            is SocketTimeoutException -> x.s(R.string.err_timeout)
+            is SSLException -> x.s(R.string.err_ssl)
+            is java.net.MalformedURLException -> x.s(R.string.err_bad_url)
+            is org.json.JSONException -> x.s(R.string.err_bad_json)
+            // 系统底层的英文报错（unexpected end of stream、Connection reset、Socket closed 等）
+            // 统一显示为“网络连接中断”
+            is IOException -> x.s(R.string.err_connection_lost)
             else -> t.message ?: t.javaClass.simpleName
         }
 

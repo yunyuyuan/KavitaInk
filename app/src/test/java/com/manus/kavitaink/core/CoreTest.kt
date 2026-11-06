@@ -7,6 +7,7 @@ import org.junit.Test
 import java.io.File
 
 class CoreTest {
+    private val ZH = XmlTexts("zh")
 
     private fun res(name: String): File = File(javaClass.classLoader!!.getResource(name)!!.toURI())
 
@@ -14,8 +15,8 @@ class CoreTest {
     fun mangaVolumesAreLabelledByVolume() {
         val list = Parsers.chapters(res("volumes_2.json").readText(), 2, Fmt.ARCHIVE)
         assertEquals(2, list.size)
-        assertEquals("第1卷", list[0].label)
-        assertEquals("第2卷", list[1].label)
+        assertEquals("第1卷", list[0].title(ZH))
+        assertEquals("第2卷", list[1].title(ZH))
         assertEquals(Kind.IMAGES, list[0].kind)
         assertEquals(".cbz", list[0].ext)
         assertEquals(5, list[0].pages)
@@ -26,7 +27,7 @@ class CoreTest {
     fun singleEpubIsSpecialWithBookTitle() {
         val list = Parsers.chapters(res("volumes_4.json").readText(), 4, Fmt.EPUB)
         assertEquals(1, list.size)
-        assertEquals("Alice's Adventures in Wonderland", list[0].label)
+        assertEquals("Alice's Adventures in Wonderland", list[0].title(ZH))
         assertEquals(Kind.EPUB, list[0].kind)
         assertEquals(2, list[0].group)
     }
@@ -35,7 +36,7 @@ class CoreTest {
     fun pdfIsDetected() {
         val list = Parsers.chapters(res("volumes_1.json").readText(), 1, Fmt.PDF)
         assertEquals(1, list.size)
-        assertEquals("PDF Book", list[0].label)
+        assertEquals("PDF Book", list[0].title(ZH))
         assertEquals(Kind.PDF, list[0].kind)
     }
 
@@ -48,8 +49,8 @@ class CoreTest {
             {"id":11,"range":"25","title":"25","titleName":null,"isSpecial":false,"pages":18,"sortOrder":25,"format":1,"files":[{"bytes":100,"extension":".cbr","format":1}]}]}]
         """.trimIndent()
         val list = Parsers.chapters(json, 9, Fmt.ARCHIVE)
-        assertEquals("第3卷 第21话 · 决战", list[0].label)
-        assertEquals("第25话", list[1].label)
+        assertEquals("第3卷 第21话 · 决战", list[0].title(ZH))
+        assertEquals("第25话", list[1].title(ZH))
     }
 
     @Test

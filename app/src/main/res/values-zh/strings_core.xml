@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fmt_image">图片</string>
+    <string name="fmt_archive">压缩包</string>
+    <string name="fmt_unknown">未知</string>
+    <string name="lib_type_manga">漫画</string>
+    <string name="lib_type_comic">美漫</string>
+    <string name="lib_type_book">图书</string>
+    <string name="lib_type_image">图片</string>
+    <string name="lib_type_light_novel">轻小说</string>
+    <string name="lib_type_other">其他</string>
+
+    <string name="label_special">特别篇</string>
+    <string name="label_chapter_generic">章节</string>
+    <string name="label_single_volume">单卷</string>
+    <string name="label_volume_n">第%1$s卷</string>
+    <string name="label_chapter_book_n">第%1$s章</string>
+    <string name="label_chapter_manga_n">第%1$s话</string>
+    <string name="label_vol_chapter">%1$s %2$s</string>
+    <string name="toc_section_n">第 %1$d 节</string>
+    <string name="toc_untitled">（无标题）</string>
+
+    <string name="err_unknown">未知错误</string>
+    <string name="err_with_detail">%1$s：%2$s</string>
+    <string name="err_http_400">请求被拒绝 (400)</string>
+    <string name="err_http_401">认证失败：用户名/密码或 Auth Key 不正确，或已过期</string>
+    <string name="err_http_403">没有权限（下载需要该账号在 Kavita 中拥有 Download 角色）</string>
+    <string name="err_http_404">服务器上找不到该内容 (404)</string>
+    <string name="err_http_5xx">服务器错误 (%1$d)</string>
+    <string name="err_http_other">请求失败 (%1$d)</string>
+    <string name="err_no_auth_key">登录成功，但服务器没有返回 Auth Key，请改用 Auth Key 方式连接</string>
+    <string name="err_unknown_host">无法解析服务器地址，请检查网址或网络</string>
+    <string name="err_connect">无法连接服务器，请检查地址、端口和网络</string>
+    <string name="err_timeout">连接超时，请检查网络</string>
+    <string name="err_ssl">HTTPS 证书校验失败（自签名证书需先安装到系统）</string>
+    <string name="err_bad_url">服务器地址格式不正确</string>
+    <string name="err_bad_json">服务器返回的数据无法解析（地址是否指向 Kavita？）</string>
+    <string name="err_connection_lost">网络连接中断</string>
+    <string name="err_not_logged_in">未登录服务器</string>
+    <string name="err_other_server">该任务属于另一个服务器，请重新登录原服务器</string>
+    <string name="err_mkdir">无法创建下载目录，请检查存储空间</string>
+    <string name="err_multi_file_epub">暂不支持包含多个文件的 EPUB 章节</string>
+    <string name="err_incomplete">连接中断（已下载 %1$d / %2$d 字节）</string>
+    <string name="err_save_file">无法保存文件：%1$s</string>
+    <string name="err_write_space">无法写入文件，请检查存储空间：%1$s</string>
+    <string name="err_no_space">存储空间不足</string>
+    <string name="err_write_failed">写入文件失败：%1$s</string>
+    <string name="err_no_pages">该章节没有可下载的页面</string>
+    <string name="err_page_empty">第 %1$d 页为空</string>
+    <string name="err_save_page">无法保存第 %1$d 页</string>
+    <string name="err_epub_no_container">下载的 EPUB 缺少 container.xml</string>
+    <string name="err_epub_corrupt">EPUB 文件损坏：%1$s</string>
+    <string name="err_epub_no_opf">不是有效的 EPUB：找不到 OPF 文件</string>
+    <string name="err_epub_read_opf">无法读取 OPF</string>
+</resources>

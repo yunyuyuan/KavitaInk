@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="percent_n">%1$d%%</string>
+    <plurals name="dl_pages_progress">
+        <item quantity="other">%1$d / %2$d ページ</item>
+    </plurals>
+    <string name="dl_state_pausing">一時停止中…</string>
+    <string name="dl_state_cancelling">キャンセル中…</string>
+    <string name="dl_state_running">ダウンロード中</string>
+    <string name="dl_state_queued">待機中</string>
+    <string name="dl_state_queued_partial">待機中 · %1$s ダウンロード済み</string>
+    <string name="dl_state_paused">一時停止</string>
+    <string name="dl_state_paused_detail">一時停止 · %1$s</string>
+    <string name="dl_state_failed">失敗：%1$s</string>
+    <string name="dl_state_failed_partial">失敗：%1$s（%2$s ダウンロード済み、再試行時は続きから再開）</string>
+    <string name="dl_retry_note">%1$s。%2$d 秒後に再試行（%3$d 回目）</string>
+    <string name="notif_channel_downloads">ダウンロード</string>
+    <string name="notif_preparing">ダウンロードを準備中…</string>
+    <plurals name="notif_failed_n">
+        <item quantity="other">%d 件のダウンロードが失敗</item>
+    </plurals>
+    <plurals name="notif_paused_n">
+        <item quantity="other">%d 件のダウンロードが一時停止</item>
+    </plurals>
+    <string name="notif_join">%1$s、%2$s</string>
+    <string name="notif_tap_retry">タップして確認・再試行できます。ダウンロード済みの部分は保持されます</string>
+    <string name="notif_tap_resume">ダウンロード済みの部分は保持されます。「すべて再開」をタップすると続行します</string>
+    <plurals name="notif_downloading_left">
+        <item quantity="other">ダウンロード中（残り %d 件）</item>
+    </plurals>
+    <string name="action_resume_all">すべて再開</string>
+    <string name="action_pause_all">すべて一時停止</string>
+    <string name="dlq_title">ダウンロードキュー</string>
+    <string name="dlq_retry_failed">失敗した項目をすべて再試行</string>
+    <string name="dlq_clear_failed">失敗した項目をクリア</string>
+    <string name="dlq_cancel_all">すべてキャンセル（未完了のファイルを削除）</string>
+    <string name="dlq_cancel_all_title">すべてキャンセル</string>
+    <string name="dlq_cancel_all_msg">キュー内のすべてのダウンロードをキャンセルし、ダウンロード済みの部分を削除しますか？</string>
+    <string name="dlq_retry_one">再試行（続きからダウンロード）</string>
+    <string name="dlq_cancel_one">ダウンロードをキャンセル</string>
+    <string name="dlq_cancel_one_msg">%1$s\n\nダウンロード済みの部分は削除されます。</string>
+    <string name="dlq_empty">進行中のダウンロードはありません。ダウンロード済みの本は本棚にあります。</string>
+    <string name="dlq_n_running">%1$d 件ダウンロード中</string>
+    <string name="dlq_n_queued">%1$d 件待機中</string>
+    <string name="dlq_n_paused">%1$d 件一時停止</string>
+    <string name="dlq_n_failed">%1$d 件失敗</string>
+    <plurals name="dlq_total">
+        <item quantity="other">%1$d 件</item>
+    </plurals>
+    <string name="dlq_hint">項目をタップすると、一時停止・再開・キャンセルできます。一時停止してもダウンロード済みの部分は保持されます。</string>
+</resources>

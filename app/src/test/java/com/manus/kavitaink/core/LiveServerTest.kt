@@ -44,7 +44,7 @@ class LiveServerTest {
                 val sp = api.seriesPage(lib.id, page, 2)
                 for (s in sp.items) {
                     val chapters = api.chapters(s.id, s.format)
-                    println("  [${lib.name}] ${s.name} (fmt=${s.format}) -> ${chapters.map { "${it.id}:${it.label}:${it.kind}" }}")
+                    println("  [${lib.name}] ${s.name} (fmt=${s.format}) -> ${chapters.map { "${it.id}:${it.title(XmlTexts())}:${it.kind}" }}")
                     for (c in chapters) {
                         val task = DownloadTask.of(api.serverKey, s.name, s.format, c)
                         var reports = 0

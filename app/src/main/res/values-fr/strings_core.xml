@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="fmt_image">Images</string>
+    <string name="fmt_archive">Archive</string>
+    <string name="fmt_unknown">Inconnu</string>
+    <string name="lib_type_manga">Manga</string>
+    <string name="lib_type_comic">Bande dessinée</string>
+    <string name="lib_type_book">Livre</string>
+    <string name="lib_type_image">Images</string>
+    <string name="lib_type_light_novel">Light novel</string>
+    <string name="lib_type_other">Autre</string>
+    <string name="label_special">Hors-série</string>
+    <string name="label_chapter_generic">Chapitre</string>
+    <string name="label_single_volume">Tome unique</string>
+    <string name="label_volume_n">Tome %1$s</string>
+    <string name="label_chapter_book_n">Chapitre %1$s</string>
+    <string name="label_chapter_manga_n">Chapitre %1$s</string>
+    <string name="label_vol_chapter">%1$s, %2$s</string>
+    <string name="toc_section_n">Section %1$d</string>
+    <string name="toc_untitled">(Sans titre)</string>
+    <string name="err_unknown">Erreur inconnue</string>
+    <string name="err_with_detail">%1$s : %2$s</string>
+    <string name="err_http_400">Requête rejetée (400)</string>
+    <string name="err_http_401">Échec de l’authentification : nom d’utilisateur, mot de passe ou Auth Key incorrect, ou Auth Key expirée</string>
+    <string name="err_http_403">Accès refusé (le téléchargement nécessite le rôle Download pour ce compte dans Kavita)</string>
+    <string name="err_http_404">Introuvable sur le serveur (404)</string>
+    <string name="err_http_5xx">Erreur du serveur (%1$d)</string>
+    <string name="err_http_other">Échec de la requête (%1$d)</string>
+    <string name="err_no_auth_key">Connexion réussie, mais le serveur n’a renvoyé aucune Auth Key. Veuillez vous connecter avec une Auth Key</string>
+    <string name="err_unknown_host">Impossible de résoudre l’adresse du serveur. Vérifiez l’URL ou votre réseau</string>
+    <string name="err_connect">Impossible de se connecter au serveur. Vérifiez l’adresse, le port et le réseau</string>
+    <string name="err_timeout">Délai de connexion dépassé. Vérifiez votre réseau</string>
+    <string name="err_ssl">Échec de la vérification du certificat HTTPS (installez d’abord les certificats autosignés dans le système)</string>
+    <string name="err_bad_url">Adresse du serveur invalide</string>
+    <string name="err_bad_json">Impossible de lire la réponse du serveur (cette adresse correspond-elle à un serveur Kavita ?)</string>
+    <string name="err_connection_lost">Connexion réseau perdue</string>
+    <string name="err_not_logged_in">Non connecté à un serveur</string>
+    <string name="err_other_server">Ce téléchargement appartient à un autre serveur. Reconnectez-vous à ce serveur</string>
+    <string name="err_mkdir">Impossible de créer le dossier de téléchargement. Vérifiez l’espace de stockage</string>
+    <string name="err_multi_file_epub">Les chapitres EPUB composés de plusieurs fichiers ne sont pas encore pris en charge</string>
+    <string name="err_incomplete">Connexion interrompue (%1$d octets téléchargés sur %2$d)</string>
+    <string name="err_save_file">Impossible d’enregistrer le fichier : %1$s</string>
+    <string name="err_write_space">Impossible d’écrire le fichier. Vérifiez l’espace de stockage : %1$s</string>
+    <string name="err_no_space">Espace de stockage insuffisant</string>
+    <string name="err_write_failed">Échec de l’écriture du fichier : %1$s</string>
+    <string name="err_no_pages">Ce chapitre ne contient aucune page à télécharger</string>
+    <string name="err_page_empty">La page %1$d est vide</string>
+    <string name="err_save_page">Impossible d’enregistrer la page %1$d</string>
+    <string name="err_epub_no_container">Le fichier EPUB téléchargé ne contient pas container.xml</string>
+    <string name="err_epub_corrupt">Le fichier EPUB est endommagé : %1$s</string>
+    <string name="err_epub_no_opf">EPUB invalide : fichier OPF introuvable</string>
+    <string name="err_epub_read_opf">Impossible de lire le fichier OPF</string>
+</resources>

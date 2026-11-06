@@ -1,5 +1,8 @@
 package com.manus.kavitaink.download
 
+import com.manus.kavitaink.core.error
+import com.manus.kavitaink.texts
+import com.manus.kavitaink.Lang
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -53,13 +56,17 @@ class DownloadService : Service() {
     private val app get() = application as App
     private val nm get() = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(Lang.wrap(base))
+    }
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         synchronized(lock) {
             lastStartId = startId
             nm.cancel(NOTIF_STATUS)
-            goForeground(build("准备下载…", "", -1))
+            goForeground(build(getString(R.string.notif_preparing), "", -1))
             if (!running) {
                 running = true
                 Thread({ loop() }, "kavita-download").start()
@@ -97,7 +104,7 @@ class DownloadService : Service() {
                 } ?: break
                 val api: KavitaApi? = app.prefs.api()
                 if (api == null) {
-                    app.queue.markFailed(e, "未登录服务器")
+                    app.queue.markFailed(e, getString(R.string.err_not_logged_in))
                     continue
                 }
                 notifyProgress(e, force = true)
@@ -147,7 +154,7 @@ class DownloadService : Service() {
                 }
                 if (attempt < RETRY_DELAYS.size && KavitaApi.isTransient(t)) {
                     val delay = RETRY_DELAYS[attempt++]
-                    app.queue.note(e, "${KavitaApi.friendlyError(t)}，${delay / 1000} 秒后自动重试（第 $attempt 次）")
+                    app.queue.note(e, getString(R.string.dl_retry_note, texts().error(t), (delay / 1000).toInt(), attempt))
                     notifyProgress(e, force = true)
                     if (!sleepUnlessStopped(e, delay)) {
                         app.queue.finishStopped(e)
@@ -156,7 +163,7 @@ class DownloadService : Service() {
                     app.queue.note(e, "")
                     continue
                 }
-                app.queue.markFailed(e, KavitaApi.friendlyError(t))
+                app.queue.markFailed(e, texts().error(t))
                 return
             }
         }
@@ -181,13 +188,16 @@ class DownloadService : Service() {
         val failed = app.queue.count(DownloadQueue.State.FAILED)
         val paused = app.queue.count(DownloadQueue.State.PAUSED)
         if (failed == 0 && paused == 0) return
+        val x = texts()
+        val f = x.p(R.plurals.notif_failed_n, failed)
+        val pz = x.p(R.plurals.notif_paused_n, paused)
         val title = when {
-            failed > 0 && paused > 0 -> "$failed 项下载失败，$paused 项已暂停"
-            failed > 0 -> "有 $failed 项下载失败"
-            else -> "已暂停 $paused 项下载"
+            failed > 0 && paused > 0 -> x.s(R.string.notif_join, f, pz)
+            failed > 0 -> f
+            else -> pz
         }
-        val text = if (failed > 0) "点击查看并重试，已下载的部分会保留" else "已下载的部分已保留，点击「全部继续」接着下载"
-        val n = build(title, text, -1, ongoing = false, action = "全部继续" to DownloadActionReceiver.RESUME_ALL)
+        val text = x.s(if (failed > 0) R.string.notif_tap_retry else R.string.notif_tap_resume)
+        val n = build(title, text, -1, ongoing = false, action = x.s(R.string.action_resume_all) to DownloadActionReceiver.RESUME_ALL)
         nm.notify(NOTIF_STATUS, n)
     }
 
@@ -196,15 +206,16 @@ class DownloadService : Service() {
         if (!force && now - lastNotifAt < 2500) return
         lastNotifAt = now
         val left = app.queue.pendingCount()
-        val detail = DownloadQueue.formatProgress(e)
+        val x = texts()
+        val detail = DownloadQueue.formatProgress(e, x)
         val text = buildString {
-            append(e.task.seriesName).append(" · ").append(e.task.label)
+            append(e.task.seriesName).append(" · ").append(e.task.title(x))
             if (detail.isNotBlank()) append(" · ").append(detail)
             if (e.note.isNotBlank()) append(" · ").append(e.note)
         }
         nm.notify(
             NOTIF_ID,
-            build("正在下载（剩余 $left 项）", text, if (e.total > 0) e.percent else -1, action = "全部暂停" to DownloadActionReceiver.PAUSE_ALL)
+            build(x.p(R.plurals.notif_downloading_left, left), text, if (e.total > 0) e.percent else -1, action = x.s(R.string.action_pause_all) to DownloadActionReceiver.PAUSE_ALL)
         )
     }
 
@@ -216,9 +227,10 @@ class DownloadService : Service() {
         ongoing: Boolean = true,
         action: Pair<String, String>? = null,
     ): Notification {
-        if (Build.VERSION.SDK_INT >= 26 && nm.getNotificationChannel(CHANNEL) == null) {
+        if (Build.VERSION.SDK_INT >= 26) {
+            // 每次都创建：同一 ID 重复创建只会更新名称，切换语言后渠道名也会跟着变
             nm.createNotificationChannel(
-                NotificationChannel(CHANNEL, "下载", NotificationManager.IMPORTANCE_LOW).apply {
+                NotificationChannel(CHANNEL, getString(R.string.notif_channel_downloads), NotificationManager.IMPORTANCE_LOW).apply {
                     setShowBadge(false)
                     enableVibration(false)
                     setSound(null, null)

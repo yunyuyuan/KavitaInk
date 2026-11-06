@@ -1,6 +1,7 @@
 package com.manus.kavitaink
 
 import android.app.Application
+import com.manus.kavitaink.core.FontStore
 import com.manus.kavitaink.core.KavitaApi
 import com.manus.kavitaink.core.Storage
 import com.manus.kavitaink.download.DownloadQueue
@@ -19,6 +20,12 @@ class App : Application() {
         private set
     lateinit var queue: DownloadQueue
         private set
+    /** 用户导入的小说字体 */
+    val fonts: FontStore by lazy { FontStore(File(filesDir, "fonts")) }
+
+    override fun attachBaseContext(base: android.content.Context) {
+        super.attachBaseContext(Lang.wrap(base))
+    }
 
     override fun onCreate() {
         super.onCreate()

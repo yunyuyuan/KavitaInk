@@ -99,8 +99,8 @@ object Pager {
 fun Context.pagerBar(lv: ListView): View {
     val bar = hbox()
     bar.setPadding(dp(6), dp(4), dp(6), dp(4))
-    val up = button("▲ 上一页") { Pager.up(lv) }
-    val down = button("▼ 下一页") { Pager.down(lv) }
+    val up = button(getString(com.manus.kavitaink.R.string.list_prev_page)) { Pager.up(lv) }
+    val down = button(getString(com.manus.kavitaink.R.string.list_next_page)) { Pager.down(lv) }
     bar.addView(up, lp(0, WRAP, 1f).apply { rightMargin = dp(6) })
     bar.addView(down, lp(0, WRAP, 1f))
     val wrap = vbox()

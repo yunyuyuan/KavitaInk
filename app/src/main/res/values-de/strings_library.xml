@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="login_title">Mit Kavita verbinden</string>
+    <string name="login_connect">Verbinden</string>
+    <string name="login_server">Serveradresse</string>
+    <string name="login_server_hint">z. B. http://192.168.1.10:5000</string>
+    <string name="login_way1">Option 1: Benutzername und Passwort</string>
+    <string name="login_way1_note">Das Passwort wird nur zum Abrufen eines Auth Key verwendet und nie auf diesem Gerät gespeichert</string>
+    <string name="login_user">Benutzername</string>
+    <string name="login_pass">Passwort</string>
+    <string name="login_way2">Option 2: Auth Key oder OPDS-Link</string>
+    <string name="login_way2_note">In Kavita: Einstellungen → Konto → Auth Keys / OPDS. Wenn Sie dies ausfüllen, können Benutzername und Passwort leer bleiben</string>
+    <string name="login_key_hint">Auth Key oder http://…/api/opds/…</string>
+    <string name="login_notes">Hinweise:\n• Zum Herunterladen benötigt dieses Konto in Kavita die Rolle „Download“\n• Lokale http-Adressen funktionieren direkt; ein selbstsigniertes https-Zertifikat muss zuerst im System installiert werden\n• Diese App dient nur zum Herunterladen und Offline-Lesen. Sie lädt den Lesefortschritt nie hoch und synchronisiert ihn nicht</string>
+    <string name="login_need_server">Bitte die Serveradresse eingeben</string>
+    <string name="login_connecting">Verbindung wird hergestellt…</string>
+    <string name="err_need_credentials">Benutzername und Passwort oder einen Auth Key eingeben</string>
+    <string name="login_failed">Verbindung fehlgeschlagen: %1$s</string>
+    <plurals name="login_ok">
+        <item quantity="one">Verbunden: Kavita %1$s, %2$d Bibliothek</item>
+        <item quantity="other">Verbunden: Kavita %1$s, %2$d Bibliotheken</item>
+    </plurals>
+    <string name="libs_title">Bibliotheken</string>
+    <string name="libs_search_hint">Serien suchen</string>
+    <string name="libs_loading">Bibliotheken werden geladen…</string>
+    <string name="libs_none">Dieses Konto hat keinen Zugriff auf Bibliotheken</string>
+    <plurals name="libs_count">
+        <item quantity="one">%1$d Bibliothek · %2$s</item>
+        <item quantity="other">%1$d Bibliotheken · %2$s</item>
+    </plurals>
+    <string name="series_title">Serien</string>
+    <string name="series_search_title">Suche: %1$s</string>
+    <plurals name="series_pages">
+        <item quantity="one">%1$d Seite</item>
+        <item quantity="other">%1$d Seiten</item>
+    </plurals>
+    <string name="series_more">Mehr laden</string>
+    <string name="series_more_page">Mehr laden (Seite %1$d von %2$d)</string>
+    <string name="series_no_match">Keine passenden Serien</string>
+    <string name="series_empty_lib">Diese Bibliothek ist leer</string>
+    <plurals name="series_count">
+        <item quantity="one">%1$d Serie · %2$d angezeigt</item>
+        <item quantity="other">%1$d Serien · %2$d angezeigt</item>
+    </plurals>
+    <string name="shelf_title">Bücherregal</string>
+    <string name="shelf_libraries">Bibliotheken</string>
+    <string name="shelf_downloads">Downloads</string>
+    <string name="shelf_downloads_n">Downloads (%1$d)</string>
+    <string name="shelf_settings">Einstellungen</string>
+    <plurals name="shelf_items">
+        <item quantity="one">%1$d Eintrag heruntergeladen</item>
+        <item quantity="other">%1$d Einträge heruntergeladen</item>
+    </plurals>
+    <string name="shelf_read_to">Lesestand: %1$s</string>
+    <string name="shelf_read_to_pct">Lesestand: %1$s %2$d%%</string>
+    <plurals name="shelf_status">
+        <item quantity="one">%1$d Titel · %2$s belegt · zum Auswählen lange drücken</item>
+        <item quantity="other">%1$d Titel · %2$s belegt · zum Auswählen lange drücken</item>
+    </plurals>
+    <string name="shelf_not_connected">Noch nicht mit einem Server verbunden. Tippen Sie oben rechts auf „Bibliotheken“, um sich bei Kavita anzumelden und die gewünschten Inhalte herunterzuladen.</string>
+    <string name="shelf_empty">Noch keine Offline-Inhalte. Tippen Sie auf „Bibliotheken“, um Inhalte zu durchsuchen und herunterzuladen. Downloads können ohne Netzwerkverbindung gelesen werden.</string>
+    <string name="shelf_delete_title">Offline-Inhalte löschen</string>
+    <string name="shelf_delete_one_msg">Heruntergeladene Inhalte von „%1$s“ löschen? Dadurch werden %2$s frei.\n(Dateien auf dem Server sind nicht betroffen.)</string>
+    <plurals name="shelf_delete_msg">
+        <item quantity="one">Heruntergeladene Inhalte von %1$d Titel löschen? Dadurch werden %2$s frei.\n(Dateien auf dem Server sind nicht betroffen.)</item>
+        <item quantity="other">Heruntergeladene Inhalte von %1$d Titeln löschen? Dadurch werden %2$s frei.\n(Dateien auf dem Server sind nicht betroffen.)</item>
+    </plurals>
+    <string name="series_resume">Weiterlesen</string>
+    <string name="series_download_all">Alles herunterladen</string>
+    <string name="series_online">Online</string>
+    <string name="series_loading_chapters">Kapitel werden geladen…</string>
+    <string name="series_local_only">%1$s (nur lokal)</string>
+    <plurals name="series_status">
+        <item quantity="one">%1$d Eintrag · %2$d heruntergeladen</item>
+        <item quantity="other">%1$d Einträge · %2$d heruntergeladen</item>
+    </plurals>
+    <string name="series_in_queue">%1$d in der Warteschlange</string>
+    <string name="series_offline_mode">Offline</string>
+    <string name="series_tap_to_download">Zum Herunterladen auf einen Eintrag tippen</string>
+    <string name="series_online_failed">Kapitel konnten nicht vom Server geladen werden: %1$s</string>
+    <string name="series_downloaded">Heruntergeladen</string>
+    <string name="series_downloaded_pct">Heruntergeladen · %1$d%% gelesen</string>
+    <string name="series_not_downloaded">Nicht heruntergeladen</string>
+    <plurals name="series_enqueued">
+        <item quantity="one">%1$d Eintrag zur Download-Warteschlange hinzugefügt (Sie können diese Seite verlassen; der Download läuft im Hintergrund weiter)</item>
+        <item quantity="other">%1$d Einträge zur Download-Warteschlange hinzugefügt (Sie können diese Seite verlassen; der Download läuft im Hintergrund weiter)</item>
+    </plurals>
+    <string name="series_already_queued">Bereits heruntergeladen oder in der Warteschlange</string>
+    <plurals name="series_skipped">
+        <item quantity="one">%1$d Eintrag übersprungen (bereits heruntergeladen oder in der Warteschlange)</item>
+        <item quantity="other">%1$d Einträge übersprungen (bereits heruntergeladen oder in der Warteschlange)</item>
+    </plurals>
+    <string name="series_none_downloaded_selected">Keiner der ausgewählten Einträge ist heruntergeladen</string>
+    <plurals name="series_delete_msg">
+        <item quantity="one">%1$d heruntergeladenen Eintrag löschen? Dadurch werden %2$s frei.\n(Dateien auf dem Server sind nicht betroffen.)</item>
+        <item quantity="other">%1$d heruntergeladene Einträge löschen? Dadurch werden %2$s frei.\n(Dateien auf dem Server sind nicht betroffen.)</item>
+    </plurals>
+    <string name="series_list_not_loaded">Die Kapitelliste ist noch nicht geladen</string>
+    <string name="series_all_done">Alles ist heruntergeladen oder bereits in der Warteschlange</string>
+    <plurals name="series_download_all_size">
+        <item quantity="one">%1$d Eintrag herunterladen, etwa %2$s?</item>
+        <item quantity="other">%1$d Einträge herunterladen, etwa %2$s?</item>
+    </plurals>
+    <plurals name="series_download_all_msg">
+        <item quantity="one">%1$d Eintrag herunterladen?</item>
+        <item quantity="other">%1$d Einträge herunterladen?</item>
+    </plurals>
+    <string name="series_nothing_downloaded">Noch nichts heruntergeladen. Tippen Sie zuerst auf ein Kapitel, um es herunterzuladen.</string>
+</resources>

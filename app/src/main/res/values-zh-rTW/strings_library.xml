@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="login_title">連線至 Kavita</string>
+    <string name="login_connect">連線</string>
+    <string name="login_server">伺服器位址</string>
+    <string name="login_server_hint">例如 http://192.168.1.10:5000</string>
+    <string name="login_way1">方式 1：使用者名稱與密碼</string>
+    <string name="login_way1_note">密碼僅用於取得 Auth Key，不會儲存在此裝置上</string>
+    <string name="login_user">使用者名稱</string>
+    <string name="login_pass">密碼</string>
+    <string name="login_way2">方式 2：Auth Key 或 OPDS 連結</string>
+    <string name="login_way2_note">在 Kavita 中：設定 → 帳戶 → Auth Keys / OPDS。填入後，使用者名稱與密碼可留空</string>
+    <string name="login_key_hint">Auth Key 或 http://…/api/opds/…</string>
+    <string name="login_notes">說明：\n• 下載需要此帳戶在 Kavita 中具備「Download」角色\n• 本機 http 位址可直接使用；自簽 https 憑證須先安裝至系統\n• 此應用程式僅供下載與離線閱讀，不會上傳或同步閱讀進度</string>
+    <string name="login_need_server">請輸入伺服器位址</string>
+    <string name="login_connecting">連線中…</string>
+    <string name="err_need_credentials">請輸入使用者名稱與密碼，或 Auth Key</string>
+    <string name="login_failed">連線失敗：%1$s</string>
+    <plurals name="login_ok">
+        <item quantity="other">已連線：Kavita %1$s，共 %2$d 個書庫</item>
+    </plurals>
+    <string name="libs_title">書庫</string>
+    <string name="libs_search_hint">搜尋系列</string>
+    <string name="libs_loading">正在載入書庫…</string>
+    <string name="libs_none">此帳戶沒有可存取的書庫</string>
+    <plurals name="libs_count">
+        <item quantity="other">%1$d 個書庫 · %2$s</item>
+    </plurals>
+    <string name="series_title">系列</string>
+    <string name="series_search_title">搜尋：%1$s</string>
+    <plurals name="series_pages">
+        <item quantity="other">%1$d 頁</item>
+    </plurals>
+    <string name="series_more">載入更多</string>
+    <string name="series_more_page">載入更多（第 %1$d 頁，共 %2$d 頁）</string>
+    <string name="series_no_match">找不到符合的系列</string>
+    <string name="series_empty_lib">此書庫沒有內容</string>
+    <plurals name="series_count">
+        <item quantity="other">%1$d 個系列 · 已顯示 %2$d 個</item>
+    </plurals>
+    <string name="shelf_title">書架</string>
+    <string name="shelf_libraries">書庫</string>
+    <string name="shelf_downloads">下載</string>
+    <string name="shelf_downloads_n">下載 (%1$d)</string>
+    <string name="shelf_settings">設定</string>
+    <plurals name="shelf_items">
+        <item quantity="other">已下載 %1$d 個項目</item>
+    </plurals>
+    <string name="shelf_read_to">閱讀中：%1$s</string>
+    <string name="shelf_read_to_pct">閱讀中：%1$s %2$d%%</string>
+    <plurals name="shelf_status">
+        <item quantity="other">%1$d 部作品 · 已使用 %2$s · 長按以選取</item>
+    </plurals>
+    <string name="shelf_not_connected">尚未連線至伺服器。輕觸右上角的「書庫」登入 Kavita，再下載想閱讀的內容。</string>
+    <string name="shelf_empty">尚無離線內容。輕觸「書庫」瀏覽並下載。下載後無須網路連線即可閱讀。</string>
+    <string name="shelf_delete_title">刪除離線內容</string>
+    <string name="shelf_delete_one_msg">要刪除「%1$s」已下載的內容嗎？將釋出 %2$s 空間。\n（不會影響伺服器上的檔案。）</string>
+    <plurals name="shelf_delete_msg">
+        <item quantity="other">要刪除 %1$d 部作品已下載的內容嗎？將釋出 %2$s 空間。\n（不會影響伺服器上的檔案。）</item>
+    </plurals>
+    <string name="series_resume">繼續閱讀</string>
+    <string name="series_download_all">全部下載</string>
+    <string name="series_online">線上</string>
+    <string name="series_loading_chapters">正在載入章節…</string>
+    <string name="series_local_only">%1$s（僅限本機）</string>
+    <plurals name="series_status">
+        <item quantity="other">%1$d 個項目 · 已下載 %2$d 個</item>
+    </plurals>
+    <string name="series_in_queue">佇列中有 %1$d 個項目</string>
+    <string name="series_offline_mode">離線</string>
+    <string name="series_tap_to_download">輕觸項目即可下載</string>
+    <string name="series_online_failed">無法從伺服器載入章節：%1$s</string>
+    <string name="series_downloaded">已下載</string>
+    <string name="series_downloaded_pct">已下載 · 已讀 %1$d%%</string>
+    <string name="series_not_downloaded">未下載</string>
+    <plurals name="series_enqueued">
+        <item quantity="other">已將 %1$d 個項目加入下載佇列（可離開此頁面，下載會在背景繼續）</item>
+    </plurals>
+    <string name="series_already_queued">已下載或已在佇列中</string>
+    <plurals name="series_skipped">
+        <item quantity="other">已略過 %1$d 個項目（已下載或已在佇列中）</item>
+    </plurals>
+    <string name="series_none_downloaded_selected">所選項目皆未下載</string>
+    <plurals name="series_delete_msg">
+        <item quantity="other">要刪除 %1$d 個已下載的項目嗎？將釋出 %2$s 空間。\n（不會影響伺服器上的檔案。）</item>
+    </plurals>
+    <string name="series_list_not_loaded">章節清單尚未載入</string>
+    <string name="series_all_done">所有內容皆已下載或已在佇列中</string>
+    <plurals name="series_download_all_size">
+        <item quantity="other">要下載 %1$d 個項目，約 %2$s 嗎？</item>
+    </plurals>
+    <plurals name="series_download_all_msg">
+        <item quantity="other">要下載 %1$d 個項目嗎？</item>
+    </plurals>
+    <string name="series_nothing_downloaded">尚未下載任何內容。請先輕觸章節下載。</string>
+</resources>

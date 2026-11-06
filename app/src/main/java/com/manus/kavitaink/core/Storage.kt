@@ -12,7 +12,7 @@ data class LocalChapter(
     val serverKey get() = meta.serverKey
     val seriesId get() = meta.seriesId
     val chapterId get() = meta.chapterId
-    val label get() = meta.label
+    fun title(x: Texts): String = meta.title(x)
     val epubFile get() = File(dir, Storage.EPUB_FILE)
     val pdfFile get() = File(dir, Storage.PDF_FILE)
     val pagesDir get() = File(dir, Storage.PAGES_DIR)
@@ -157,4 +157,7 @@ class Storage(val root: File) {
     }
 
     fun usedBytes(): Long = if (root.exists()) root.walkTopDown().filter { it.isFile }.sumOf { it.length() } else 0L
+
+    /** 某个目录（作品或章节）占用的空间，用于批量删除前提示可释放的空间 */
+    fun sizeOf(dir: File): Long = if (dir.exists()) dir.walkTopDown().filter { it.isFile }.sumOf { it.length() } else 0L
 }

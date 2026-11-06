@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="percent_n">%1$d%%</string>
+    <plurals name="dl_pages_progress">
+        <item quantity="one">%1$d / %2$d page</item>
+        <item quantity="other">%1$d / %2$d pages</item>
+    </plurals>
+    <string name="dl_bytes_progress" translatable="false">%1$s / %2$s</string>
+    <string name="dl_state_pausing">Pausing…</string>
+    <string name="dl_state_cancelling">Cancelling…</string>
+    <string name="dl_state_running">Downloading</string>
+    <string name="dl_state_queued">Queued</string>
+    <string name="dl_state_queued_partial">Queued · %1$s downloaded</string>
+    <string name="dl_state_paused">Paused</string>
+    <string name="dl_state_paused_detail">Paused · %1$s</string>
+    <string name="dl_state_failed">Failed: %1$s</string>
+    <string name="dl_state_failed_partial">Failed: %1$s (%2$s downloaded, retrying continues from there)</string>
+    <string name="dl_retry_note">%1$s. Retrying in %2$d s (attempt %3$d)</string>
+
+    <string name="notif_channel_downloads">Downloads</string>
+    <string name="notif_preparing">Preparing download…</string>
+    <plurals name="notif_failed_n">
+        <item quantity="one">%d download failed</item>
+        <item quantity="other">%d downloads failed</item>
+    </plurals>
+    <plurals name="notif_paused_n">
+        <item quantity="one">%d download paused</item>
+        <item quantity="other">%d downloads paused</item>
+    </plurals>
+    <string name="notif_join">%1$s, %2$s</string>
+    <string name="notif_tap_retry">Tap to view and retry. Downloaded parts are kept</string>
+    <string name="notif_tap_resume">Downloaded parts are kept. Tap “Resume all” to continue</string>
+    <plurals name="notif_downloading_left">
+        <item quantity="one">Downloading (%d left)</item>
+        <item quantity="other">Downloading (%d left)</item>
+    </plurals>
+    <string name="action_resume_all">Resume all</string>
+    <string name="action_pause_all">Pause all</string>
+    <string name="dlq_title">Download queue</string>
+    <string name="dlq_retry_failed">Retry all failed</string>
+    <string name="dlq_clear_failed">Clear failed</string>
+    <string name="dlq_cancel_all">Cancel all (delete unfinished files)</string>
+    <string name="dlq_cancel_all_title">Cancel all</string>
+    <string name="dlq_cancel_all_msg">Cancel every download in the queue and delete the parts already downloaded?</string>
+    <string name="dlq_retry_one">Retry (continue downloading)</string>
+    <string name="dlq_cancel_one">Cancel download</string>
+    <string name="dlq_cancel_one_msg">%1$s\n\nThe parts already downloaded will be deleted.</string>
+    <string name="dlq_empty">No downloads in progress. Finished downloads are on the Bookshelf.</string>
+    <string name="dlq_n_running">%1$d downloading</string>
+    <string name="dlq_n_queued">%1$d queued</string>
+    <string name="dlq_n_paused">%1$d paused</string>
+    <string name="dlq_n_failed">%1$d failed</string>
+    <plurals name="dlq_total">
+        <item quantity="one">%1$d item</item>
+        <item quantity="other">%1$d items</item>
+    </plurals>
+    <string name="dlq_hint">Tap an item to pause, resume or cancel it. Downloaded parts are kept when paused.</string>
+</resources>

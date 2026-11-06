@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由 tools/translate.py 生成；修改英文原文后重新运行脚本即可更新 -->
+<resources>
+    <string name="fmt_image">이미지</string>
+    <string name="fmt_archive">압축 파일</string>
+    <string name="fmt_unknown">알 수 없음</string>
+    <string name="lib_type_manga">일본 만화</string>
+    <string name="lib_type_comic">코믹스</string>
+    <string name="lib_type_book">도서</string>
+    <string name="lib_type_image">이미지</string>
+    <string name="lib_type_light_novel">라이트 노벨</string>
+    <string name="lib_type_other">기타</string>
+    <string name="label_special">특별편</string>
+    <string name="label_chapter_generic">챕터</string>
+    <string name="label_single_volume">단권</string>
+    <string name="label_volume_n">%1$s권</string>
+    <string name="label_chapter_book_n">%1$s장</string>
+    <string name="label_chapter_manga_n">%1$s화</string>
+    <string name="label_vol_chapter">%1$s, %2$s</string>
+    <string name="toc_section_n">섹션 %1$d</string>
+    <string name="toc_untitled">(제목 없음)</string>
+    <string name="err_unknown">알 수 없는 오류</string>
+    <string name="err_with_detail">%1$s: %2$s</string>
+    <string name="err_http_400">요청 거부됨 (400)</string>
+    <string name="err_http_401">인증 실패: 사용자 이름, 비밀번호 또는 Auth Key가 잘못되었거나 만료되었습니다</string>
+    <string name="err_http_403">권한 없음 (다운로드하려면 Kavita에서 이 계정에 다운로드 역할이 필요합니다)</string>
+    <string name="err_http_404">서버에서 찾을 수 없음 (404)</string>
+    <string name="err_http_5xx">서버 오류 (%1$d)</string>
+    <string name="err_http_other">요청 실패 (%1$d)</string>
+    <string name="err_no_auth_key">로그인했지만 서버가 Auth Key를 반환하지 않았습니다. Auth Key로 연결해 주세요</string>
+    <string name="err_unknown_host">서버 주소를 확인할 수 없습니다. URL 또는 네트워크를 확인해 주세요</string>
+    <string name="err_connect">서버에 연결할 수 없습니다. 주소, 포트 및 네트워크를 확인해 주세요</string>
+    <string name="err_timeout">연결 시간이 초과되었습니다. 네트워크를 확인해 주세요</string>
+    <string name="err_ssl">HTTPS 인증서 확인 실패 (자체 서명 인증서를 먼저 시스템에 설치해 주세요)</string>
+    <string name="err_bad_url">잘못된 서버 주소</string>
+    <string name="err_bad_json">서버 응답을 읽을 수 없습니다 (이 주소가 Kavita 서버인가요?)</string>
+    <string name="err_connection_lost">네트워크 연결 끊김</string>
+    <string name="err_not_logged_in">서버에 로그인하지 않음</string>
+    <string name="err_other_server">이 다운로드는 다른 서버에 속합니다. 해당 서버에 다시 로그인해 주세요</string>
+    <string name="err_mkdir">다운로드 폴더를 만들 수 없습니다. 저장 공간을 확인해 주세요</string>
+    <string name="err_multi_file_epub">여러 파일로 구성된 EPUB 챕터는 아직 지원하지 않습니다</string>
+    <string name="err_incomplete">연결 중단 (%2$d바이트 중 %1$d바이트 다운로드됨)</string>
+    <string name="err_save_file">파일을 저장할 수 없음: %1$s</string>
+    <string name="err_write_space">파일을 쓸 수 없습니다. 저장 공간을 확인해 주세요: %1$s</string>
+    <string name="err_no_space">저장 공간 부족</string>
+    <string name="err_write_failed">파일 쓰기 실패: %1$s</string>
+    <string name="err_no_pages">이 챕터에는 다운로드할 페이지가 없습니다</string>
+    <string name="err_page_empty">%1$d페이지가 비어 있습니다</string>
+    <string name="err_save_page">%1$d페이지를 저장할 수 없습니다</string>
+    <string name="err_epub_no_container">다운로드한 EPUB에 container.xml이 없습니다</string>
+    <string name="err_epub_corrupt">EPUB 파일이 손상되었습니다: %1$s</string>
+    <string name="err_epub_no_opf">유효하지 않은 EPUB: OPF 파일을 찾을 수 없음</string>
+    <string name="err_epub_read_opf">OPF 파일을 읽을 수 없습니다</string>
+</resources>

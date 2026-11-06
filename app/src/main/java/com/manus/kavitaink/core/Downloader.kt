@@ -1,5 +1,6 @@
 package com.manus.kavitaink.core
 
+import com.manus.kavitaink.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -9,7 +10,6 @@ import java.net.HttpURLConnection
 import java.util.zip.ZipFile
 
 /** 本地存储问题（空间不足、无法写入），重试没有意义 */
-class StorageException(message: String) : IOException(message)
 
 /**
  * 下载单个章节到本地。纯 Kotlin，不依赖 Android，可在 JVM 上直接测试。
@@ -25,7 +25,7 @@ class StorageException(message: String) : IOException(message)
 class Downloader(private val api: KavitaApi, private val storage: Storage) {
 
     /** 因暂停或取消而中止（不是错误） */
-    class Cancelled : Exception("已停止")
+    class Cancelled : Exception("stopped")
 
     fun interface Progress {
         /** pages = true 时 done/total 是页数，否则是字节数 */
@@ -65,10 +65,10 @@ class Downloader(private val api: KavitaApi, private val storage: Storage) {
         cancelled: () -> Boolean,
         pdfOk: (File) -> Boolean,
     ): Kind {
-        if (t.serverKey != api.serverKey) throw ApiException(0, "该任务属于另一个服务器，请重新登录原服务器")
+        if (t.serverKey != api.serverKey) throw ApiException(0, R.string.err_other_server)
         val dir = storage.chapterDir(t.serverKey, t.seriesId, t.chapterId)
         dir.mkdirs()
-        if (!dir.isDirectory) throw StorageException("无法创建下载目录，请检查存储空间")
+        if (!dir.isDirectory) throw StorageException(R.string.err_mkdir)
         storage.ensureSeries(t)
         if (cancelled()) throw Cancelled()
         saveCover(t)
@@ -76,7 +76,7 @@ class Downloader(private val api: KavitaApi, private val storage: Storage) {
         var kind = t.kind
         when (kind) {
             Kind.EPUB -> {
-                if (t.fileCount > 1) throw ApiException(0, "暂不支持包含多个文件的 EPUB 章节")
+                if (t.fileCount > 1) throw ApiException(0, R.string.err_multi_file_epub)
                 val f = File(dir, Storage.EPUB_FILE)
                 fetchFile(api.downloadUrl(t.chapterId), f, t.bytes, progress, cancelled)
                 validateZip(f)
@@ -104,6 +104,22 @@ class Downloader(private val api: KavitaApi, private val storage: Storage) {
         if (cancelled()) throw Cancelled()
         storage.writeChapterMeta(dir, t, kind)
         return kind
+    }
+
+    /**
+     * 下载单个文件（断点续传：未完成的部分保存在 <dest>.part，下次从断点继续）。
+     * 字体、应用更新等复用；expected ≤ 0 表示大小未知。
+     */
+    fun fetch(url: String, dest: File, expected: Long, progress: Progress, stopped: () -> Boolean) {
+        val cancelled = { aborted || stopped() }
+        try {
+            fetchFile(url, dest, expected, progress, cancelled)
+        } catch (e: IOException) {
+            if (cancelled()) throw Cancelled()
+            throw e
+        } finally {
+            conn = null
+        }
     }
 
     private fun hasPages(dir: File): Boolean =
@@ -167,7 +183,7 @@ class Downloader(private val api: KavitaApi, private val storage: Storage) {
                     copy(input, out, have, total, progress, cancelled)
                 }
             }
-            if (total > 0 && part.length() < total) throw IOException("连接中断（已下载 ${part.length()} / $total 字节）")
+            if (total > 0 && part.length() < total) throw LocalizedIOException(R.string.err_incomplete, part.length(), total)
         } finally {
             conn = null
             c.disconnect()
@@ -177,13 +193,13 @@ class Downloader(private val api: KavitaApi, private val storage: Storage) {
 
     private fun finishFile(part: File, dest: File) {
         if (dest.exists()) dest.delete()
-        if (!part.renameTo(dest)) throw StorageException("无法保存文件：${dest.name}")
+        if (!part.renameTo(dest)) throw StorageException(R.string.err_save_file, dest.name)
     }
 
     private fun openOut(f: File, append: Boolean): FileOutputStream = try {
         FileOutputStream(f, append)
     } catch (e: IOException) {
-        throw StorageException("无法写入文件，请检查存储空间：${e.message}")
+        throw StorageException(R.string.err_write_space, e.message ?: "")
     }
 
     private fun write(out: OutputStream, buf: ByteArray, n: Int) {
@@ -191,8 +207,8 @@ class Downloader(private val api: KavitaApi, private val storage: Storage) {
             out.write(buf, 0, n)
         } catch (e: IOException) {
             val m = e.message.orEmpty()
-            if (m.contains("ENOSPC") || m.contains("No space", true)) throw StorageException("存储空间不足")
-            throw StorageException("写入文件失败：$m")
+            if (m.contains("ENOSPC") || m.contains("No space", true)) throw StorageException(R.string.err_no_space)
+            throw StorageException(R.string.err_write_failed, m)
         }
     }
 
@@ -232,7 +248,7 @@ class Downloader(private val api: KavitaApi, private val storage: Storage) {
         pagesDir.mkdirs()
         var n = t.pages
         if (n <= 0) n = api.chapterPages(t.chapterId)
-        if (n <= 0) throw ApiException(0, "该章节没有可下载的页面")
+        if (n <= 0) throw ApiException(0, R.string.err_no_pages)
         val existing = (pagesDir.list() ?: emptyArray())
             .filter { !it.endsWith(".part") }
             .map { it.substringBefore('.') }
@@ -248,8 +264,8 @@ class Downloader(private val api: KavitaApi, private val storage: Storage) {
                 val ext = extForMime(c.contentType)
                 val part = File(pagesDir, "$name.part")
                 c.inputStream.use { input -> openOut(part, false).use { out -> copyPage(input, out, cancelled) } }
-                if (part.length() == 0L) throw IOException("第 ${i + 1} 页为空")
-                if (!part.renameTo(File(pagesDir, name + ext))) throw StorageException("无法保存第 ${i + 1} 页")
+                if (part.length() == 0L) throw LocalizedIOException(R.string.err_page_empty, i + 1)
+                if (!part.renameTo(File(pagesDir, name + ext))) throw StorageException(R.string.err_save_page, i + 1)
             } finally {
                 conn = null
                 c.disconnect()
@@ -277,11 +293,11 @@ class Downloader(private val api: KavitaApi, private val storage: Storage) {
     private fun validateZip(f: File) {
         try {
             ZipFile(f).use { z ->
-                if (z.getEntry("META-INF/container.xml") == null) throw IOException("下载的 EPUB 缺少 container.xml")
+                if (z.getEntry("META-INF/container.xml") == null) throw LocalizedIOException(R.string.err_epub_no_container)
             }
         } catch (e: IOException) {
             f.delete()
-            throw IOException("EPUB 文件损坏：${e.message}")
+            throw LocalizedIOException(R.string.err_epub_corrupt, e.message ?: "")
         }
     }
 

@@ -7,6 +7,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
+import com.manus.kavitaink.R
+import com.manus.kavitaink.core.error
 import com.manus.kavitaink.core.Fmt
 import com.manus.kavitaink.core.KavitaApi
 import com.manus.kavitaink.core.SeriesItem
@@ -20,7 +22,7 @@ class SeriesListActivity : BaseActivity() {
             ctx.startActivity(Intent(ctx, SeriesListActivity::class.java).putExtra("lib", id).putExtra("title", name))
 
         fun search(ctx: Context, q: String) =
-            ctx.startActivity(Intent(ctx, SeriesListActivity::class.java).putExtra("q", q).putExtra("title", "搜索：$q"))
+            ctx.startActivity(Intent(ctx, SeriesListActivity::class.java).putExtra("q", q).putExtra("title", ctx.getString(R.string.series_search_title, q)))
 
         const val PAGE_SIZE = 50
     }
@@ -51,8 +53,8 @@ class SeriesListActivity : BaseActivity() {
             { v, s, _ ->
                 val r = TwoLineRow.of(v)
                 r.title.text = s.name
-                val sb = StringBuilder(Fmt.label(s.format))
-                if (s.pages > 0 && s.format != Fmt.EPUB) sb.append(" · ").append(s.pages).append(" 页")
+                val sb = StringBuilder(Fmt.label(s.format, x))
+                if (s.pages > 0 && s.format != Fmt.EPUB) sb.append(" · ").append(resources.getQuantityString(R.plurals.series_pages, s.pages, s.pages))
                 if (query != null && s.libraryName.isNotBlank()) sb.append(" · ").append(s.libraryName)
                 r.sub.text = sb
                 r.cover?.let { iv ->
@@ -66,13 +68,13 @@ class SeriesListActivity : BaseActivity() {
         )
 
         val root = root()
-        root.addView(header(intent.getStringExtra("title") ?: "系列", back = true).first)
+        root.addView(header(intent.getStringExtra("title") ?: getString(R.string.series_title), back = true).first)
         status = statusLine()
         root.addView(status)
         root.addView(hline())
         list = einkList()
         val footer = vbox().apply { setPadding(dp(12), dp(10), dp(12), dp(10)) }
-        more = button("加载更多") { loadNext() }
+        more = button(getString(R.string.series_more)) { loadNext() }
         footer.addView(more, lp(MATCH, WRAP))
         list.addFooterView(footer, null, false)
         list.adapter = adapter
@@ -91,7 +93,7 @@ class SeriesListActivity : BaseActivity() {
         if (loading) return
         loading = true
         more.isEnabled = false
-        status.text = "正在加载…"
+        status.text = getString(R.string.loading)
         val q = query
         bg({
             if (q != null) api.search(q).let { com.manus.kavitaink.core.SeriesPage(it, 1, 1, it.size) }
@@ -100,8 +102,8 @@ class SeriesListActivity : BaseActivity() {
             loading = false
             more.isEnabled = true
             if (r == null) {
-                status.text = "加载失败：" + KavitaApi.friendlyError(err)
-                more.text = "重试"
+                status.text = getString(R.string.load_failed, x.error(err))
+                more.text = getString(R.string.retry)
                 more.visibility = View.VISIBLE
                 return@bg
             }
@@ -112,11 +114,11 @@ class SeriesListActivity : BaseActivity() {
             adapter.update(ArrayList(items))
             val total = if (totalItems >= 0) totalItems else items.size
             status.text = when {
-                items.isEmpty() -> if (q != null) "没有找到匹配的系列" else "该书库没有内容"
-                else -> "共 $total 个系列 · 已显示 ${items.size}"
+                items.isEmpty() -> if (q != null) getString(R.string.series_no_match) else getString(R.string.series_empty_lib)
+                else -> resources.getQuantityString(R.plurals.series_count, total, total, items.size)
             }
             if (page < totalPages) {
-                more.text = "加载更多（第 ${page + 1}/$totalPages 页）"
+                more.text = getString(R.string.series_more_page, page + 1, totalPages)
                 more.visibility = View.VISIBLE
             } else {
                 more.visibility = View.GONE
