@@ -145,4 +145,6 @@
     <string name="kfonts_downloading">正在下載 %1$s：%2$s / %3$s</string>
     <string name="kfonts_done">已下載：%1$s。可在「字型」或閱讀選單中選用。</string>
     <string name="kfonts_cancelled">已取消下載，下次會從中斷處繼續。</string>
+    <string name="split_wide">分割跨頁</string>
+    <string name="split_wide_note">直向時，將跨頁的左右兩半分開顯示；封面保持完整</string>
 </resources>

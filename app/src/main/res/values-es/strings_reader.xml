@@ -153,4 +153,6 @@
     <string name="kfonts_downloading">Descargando %1$s: %2$s / %3$s</string>
     <string name="kfonts_done">Descargada: %1$s. Selecciónala en Fuentes o en el menú de lectura.</string>
     <string name="kfonts_cancelled">Descarga cancelada. La próxima vez se reanudará donde se detuvo.</string>
+    <string name="split_wide">Dividir páginas dobles</string>
+    <string name="split_wide_note">en orientación vertical, mostrar cada mitad de una página doble por separado; la portada se mantiene entera</string>
 </resources>

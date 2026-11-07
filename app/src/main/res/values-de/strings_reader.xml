@@ -149,4 +149,6 @@
     <string name="kfonts_downloading">%1$s wird heruntergeladen: %2$s / %3$s</string>
     <string name="kfonts_done">Heruntergeladen: %1$s. Unter „Schriftarten“ oder im Lesemenü auswählen.</string>
     <string name="kfonts_cancelled">Download abgebrochen. Er wird beim nächsten Mal an derselben Stelle fortgesetzt.</string>
+    <string name="split_wide">Breite Seiten teilen</string>
+    <string name="split_wide_note">Im Hochformat jede Hälfte einer Doppelseite einzeln anzeigen; das Cover bleibt ungeteilt</string>
 </resources>

@@ -316,11 +316,14 @@ object Trim {
  * 每一组按阅读顺序排列（显示时由页序决定哪一页放左边）。
  */
 object Spreads {
+    /** 宽高比超过它就算横图（跨页）：双页模式里单独显示，拆分跨页时拆成两半 */
+    const val WIDE = 1.0f
+
     fun build(aspects: FloatArray, coverAlone: Boolean, shift: Boolean = false): List<IntArray> {
         val out = ArrayList<IntArray>()
         val n = aspects.size
         var i = 0
-        fun wide(k: Int) = aspects[k] > 1.0f
+        fun wide(k: Int) = aspects[k] > WIDE
         if (n > 0 && coverAlone) {
             out += intArrayOf(0)
             i = 1

@@ -1596,6 +1596,14 @@
    "src": "915e18148d59",
    "t": "Bücherregal"
   },
+  "split_wide": {
+   "src": "43dfb445e9c2",
+   "t": "Breite Seiten teilen"
+  },
+  "split_wide_note": {
+   "src": "e3f734acdfaa",
+   "t": "Im Hochformat jede Hälfte einer Doppelseite einzeln anzeigen; das Cover bleibt ungeteilt"
+  },
   "spread_always": {
    "src": "9be9e068d59d",
    "t": "Immer"
@@ -3405,6 +3413,14 @@
   "shelf_title": {
    "src": "915e18148d59",
    "t": "Estantería"
+  },
+  "split_wide": {
+   "src": "43dfb445e9c2",
+   "t": "Dividir páginas dobles"
+  },
+  "split_wide_note": {
+   "src": "e3f734acdfaa",
+   "t": "en orientación vertical, mostrar cada mitad de una página doble por separado; la portada se mantiene entera"
   },
   "spread_always": {
    "src": "9be9e068d59d",
@@ -5216,6 +5232,14 @@
    "src": "915e18148d59",
    "t": "Étagère"
   },
+  "split_wide": {
+   "src": "43dfb445e9c2",
+   "t": "Diviser les doubles pages"
+  },
+  "split_wide_note": {
+   "src": "e3f734acdfaa",
+   "t": "en mode portrait, afficher séparément chaque moitié d’une double page ; la couverture reste entière"
+  },
   "spread_always": {
    "src": "9be9e068d59d",
    "t": "Toujours"
@@ -6978,6 +7002,14 @@
    "src": "915e18148d59",
    "t": "本棚"
   },
+  "split_wide": {
+   "src": "43dfb445e9c2",
+   "t": "見開きページを分割"
+  },
+  "split_wide_note": {
+   "src": "e3f734acdfaa",
+   "t": "縦向きでは見開きページを左右に分けて表示します。表紙は分割しません"
+  },
   "spread_always": {
    "src": "9be9e068d59d",
    "t": "常にオン"
@@ -8739,6 +8771,14 @@
   "shelf_title": {
    "src": "915e18148d59",
    "t": "책장"
+  },
+  "split_wide": {
+   "src": "43dfb445e9c2",
+   "t": "넓은 페이지 나누기"
+  },
+  "split_wide_note": {
+   "src": "e3f734acdfaa",
+   "t": "세로 모드에서 펼친 두 페이지를 반씩 나눠 표시합니다. 표지는 나누지 않습니다"
   },
   "spread_always": {
    "src": "9be9e068d59d",
@@ -10549,6 +10589,14 @@
   "shelf_title": {
    "src": "915e18148d59",
    "t": "Estante"
+  },
+  "split_wide": {
+   "src": "43dfb445e9c2",
+   "t": "Dividir páginas duplas"
+  },
+  "split_wide_note": {
+   "src": "e3f734acdfaa",
+   "t": "no modo retrato, exibir cada metade de uma página dupla separadamente; a capa permanece inteira"
   },
   "spread_always": {
    "src": "9be9e068d59d",
@@ -12384,6 +12432,14 @@
    "src": "915e18148d59",
    "t": "Книжная полка"
   },
+  "split_wide": {
+   "src": "43dfb445e9c2",
+   "t": "Разделять широкие страницы"
+  },
+  "split_wide_note": {
+   "src": "e3f734acdfaa",
+   "t": "в портретной ориентации показывать каждую половину разворота отдельно; обложка остаётся целой"
+  },
   "spread_always": {
    "src": "9be9e068d59d",
    "t": "Всегда"
@@ -14145,6 +14201,14 @@
   "shelf_title": {
    "src": "915e18148d59",
    "t": "書架"
+  },
+  "split_wide": {
+   "src": "43dfb445e9c2",
+   "t": "分割跨頁"
+  },
+  "split_wide_note": {
+   "src": "e3f734acdfaa",
+   "t": "直向時，將跨頁的左右兩半分開顯示；封面保持完整"
   },
   "spread_always": {
    "src": "9be9e068d59d",

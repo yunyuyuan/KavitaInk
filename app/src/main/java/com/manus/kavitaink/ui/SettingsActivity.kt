@@ -127,6 +127,7 @@ class SettingsActivity : BaseActivity() {
             item(R.string.spread_mode, { ReaderOptions.spreadModeName(this, p.spreadMode) }) {
                 optionsDialog(getString(R.string.img_layout_title), ReaderOptions.spread(this, p) {}) { refreshList() }
             },
+            item(R.string.split_wide, { withNote(onOff(p.splitWide), R.string.split_wide_note) }) { p.splitWide = !p.splitWide },
             item(R.string.set_crop, { ReaderOptions.cropName(this, p) }) {
                 val labels = arrayOf(getString(R.string.off), getString(R.string.crop_white), getString(R.string.crop_white_black))
                 val cur = if (!p.cropMargins) 0 else if (p.cropBlack) 2 else 1

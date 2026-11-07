@@ -145,4 +145,6 @@
     <string name="kfonts_downloading">%1$s をダウンロード中：%2$s / %3$s</string>
     <string name="kfonts_done">ダウンロードしました：%1$s。「フォント」または読書メニューで選択できます。</string>
     <string name="kfonts_cancelled">ダウンロードをキャンセルしました。次回は中断した位置から再開します。</string>
+    <string name="split_wide">見開きページを分割</string>
+    <string name="split_wide_note">縦向きでは見開きページを左右に分けて表示します。表紙は分割しません</string>
 </resources>

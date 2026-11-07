@@ -17,6 +17,7 @@ import android.os.ParcelFileDescriptor
 import android.view.View
 import com.manus.kavitaink.core.LumSource
 import com.manus.kavitaink.core.RawLum
+import com.manus.kavitaink.core.Split
 import com.manus.kavitaink.core.ZipPages
 import com.manus.kavitaink.core.Trim
 import java.io.Closeable
@@ -35,7 +36,8 @@ interface PageSource : Closeable {
     val count: Int
     /** 第 index 页的宽高比（宽 / 高），读不到时返回 0.7（按普通竖页处理） */
     fun aspect(index: Int): Float
-    fun decode(index: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt?): Bitmap?
+    /** side：Split.WHOLE 整页，Split.LEFT / Split.RIGHT 只解码左半 / 右半（拆分跨页） */
+    fun decode(index: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt?, side: Int = Split.WHOLE): Bitmap?
     /** 裁边设置变化后清掉缓存的裁切区域 */
     fun clearCrop()
 }
@@ -238,7 +240,7 @@ class ZipInput(file: File) : PageInput {
     }
 }
 
-/** 位图页面（漫画）：解码、按需裁白边 */
+/** 位图页面（漫画）：解码、按需裁白边；拆分跨页时只解码左半或右半 */
 class RasterSource(private val input: PageInput) : PageSource {
     private val crops = CropCache()
 
@@ -257,20 +259,23 @@ class RasterSource(private val input: PageInput) : PageSource {
 
     override fun clearCrop() = crops.clear()
 
-    override fun decode(index: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt?): Bitmap? =
-        timedDecode(index, crop) { decodeImpl(index, reqW, reqH, fitWidth, crop) }
+    override fun decode(index: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt?, side: Int): Bitmap? =
+        timedDecode(index, crop) { decodeImpl(index, reqW, reqH, fitWidth, crop, side) }
 
-    private fun decodeImpl(index: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt?): Bitmap? {
+    private fun decodeImpl(index: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt?, side: Int): Bitmap? {
         if (index !in 0 until count) return null
-        val f = index
         val o = bounds(index) ?: return null
         val fw = o.outWidth
         val fh = o.outHeight
-        if (crop == null) return decodeRegion(f, fw, fh, null, reqW, reqH, fitWidth)
-        val cached = crops.peek(index, crop)
-            ?: return decodeAndDetect(index, f, fw, fh, reqW, reqH, fitWidth, crop)
+        // 拆分跨页：只看这一半（null = 整页）
+        val base = Split.half(fw, fh, side)?.let { Rect(it[0], it[1], it[2], it[3]) }
+        if (crop == null) return decodeRegion(index, fw, fh, base, reqW, reqH, fitWidth)
+        // 左半、右半、整页各自检测白边：外侧白边宽，靠中缝那侧通常没有
+        val ck = index * 3 + side
+        val cached = crops.peek(ck, crop)
+            ?: return decodeAndDetect(ck, index, fw, fh, base, reqW, reqH, fitWidth, crop)
         // 翻回这一页：裁切区域已知，只解码内容区域
-        return decodeRegion(f, fw, fh, regionOf(cached, fw, fh), reqW, reqH, fitWidth)
+        return decodeRegion(index, fw, fh, regionOf(cached, fw, fh) ?: base, reqW, reqH, fitWidth)
     }
 
     private fun regionOf(frac: FloatArray, fw: Int, fh: Int): Rect? =
@@ -292,16 +297,22 @@ class RasterSource(private val input: PageInput) : PageSource {
         inPreferredConfig = Bitmap.Config.RGB_565
     }
 
-    /** 裁切区域已知（或不裁）：只解码需要的部分，比先解码整页再裁省内存、清晰度也更好 */
+    /**
+     * 只解码需要的部分（内容区域、半页，或整页）：按这部分的尺寸决定缩小倍数，
+     * 所以半页和普通页一样清晰，内存也和普通页一样。
+     */
     private fun decodeRegion(f: Int, fw: Int, fh: Int, region: Rect?, reqW: Int, reqH: Int, fitWidth: Boolean): Bitmap? {
-        val o = opts(sampleSize(region?.width() ?: fw, region?.height() ?: fh, reqW, reqH, fitWidth))
-        if (region == null) return input.decode(f, o)
+        val s = sampleSize(region?.width() ?: fw, region?.height() ?: fh, reqW, reqH, fitWidth)
+        if (region == null) return input.decode(f, opts(s))
         val partial = runCatching {
             val d = input.regionDecoder(f) ?: return@runCatching null
-            try { d.decodeRegion(region, o) } finally { d.recycle() }
+            try { d.decodeRegion(region, opts(s)) } finally { d.recycle() }
         }.getOrNull()
         if (partial != null) return partial
-        val full = input.decode(f, o) ?: return null
+        // 退路：解码整页再截取；整页比这部分大，要另外保证不超过像素上限
+        var sf = s
+        while ((fw / sf).toLong() * (fh / sf) > MAX_PIXELS) sf *= 2
+        val full = input.decode(f, opts(sf)) ?: return null
         return cropBitmap(full, region, fw, fh)
     }
 
@@ -314,15 +325,15 @@ class RasterSource(private val input: PageInput) : PageSource {
     }
 
     /**
-     * 第一次打开这一页（裁切区域未知）：照常解码整页 → 拷出原始像素 → 在按块平均的缩小图上检测 → 直接截出内容区域。
+     * 第一次打开这一页（裁切区域未知）：照常解码整页（或半页）→ 拷出原始像素 → 在按块平均的缩小图上检测 → 直接截出内容区域。
      * 不为了检测再读一遍文件，也不经过 Skia，所以额外耗时只有「拷像素 + 检测 + 截取」。
      * 只有裁掉的部分多到截出来的分辨率不够时，才改为只解码内容区域（大图、裁得多时才会发生）。
      */
     private fun decodeAndDetect(
-        index: Int, f: Int, fw: Int, fh: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt,
+        ck: Int, f: Int, fw: Int, fh: Int, base: Rect?, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt,
     ): Bitmap? {
-        val s = sampleSize(fw, fh, reqW, reqH, fitWidth)
-        val full = input.decode(f, opts(s)) ?: return null
+        val area = base ?: Rect(0, 0, fw, fh)
+        val full = decodeRegion(f, fw, fh, base, reqW, reqH, fitWidth) ?: return null
         val bw = full.width
         val bh = full.height
         val t0 = System.nanoTime()
@@ -330,16 +341,19 @@ class RasterSource(private val input: PageInput) : PageSource {
         val fullBleed = runCatching { outerEdgesAreContent(full, RawLum.blockFor(bw, bh, PROBE_MAX), crop.black) }.getOrDefault(false)
         val raw = if (fullBleed) null else runCatching { RawPixels.of(full) }.getOrNull()
         val t1 = System.nanoTime()
-        val frac = raw?.let { r -> runCatching { r.detectFrac(PROBE_MAX, crop.black) }.getOrNull() } ?: FloatArray(0)
+        val local = raw?.let { r -> runCatching { r.detectFrac(PROBE_MAX, crop.black) }.getOrNull() } ?: FloatArray(0)
         val t2 = System.nanoTime()
-        crops.put(index, frac)
+        // 检测结果相对这一部分 → 换算成相对整张原图后缓存
+        val frac = Split.toFull(local, intArrayOf(area.left, area.top, area.right, area.bottom), fw, fh)
+        crops.put(ck, frac)
         val region = regionOf(frac, fw, fh)
         var redecode = false
         val out = when {
             region == null || raw == null -> full
-            // 已解码的分辨率够用：直接从像素拷贝里截取
-            sampleSize(region.width(), region.height(), reqW, reqH, fitWidth) >= s -> {
-                val r = decodedRect(region, bw, bh, fw, fh)
+            // 已解码的分辨率够用：直接从像素拷贝里截取（按实际缩小倍数判断，退路解码时倍数可能更大）
+            sampleSize(region.width(), region.height(), reqW, reqH, fitWidth) * 1.02f >= area.width().toFloat() / bw -> {
+                val rel = Rect(region.left - area.left, region.top - area.top, region.right - area.left, region.bottom - area.top)
+                val r = decodedRect(rel, bw, bh, area.width(), area.height())
                 full.recycle()
                 raw.crop(r[0], r[1], r[2], r[3])
             }
@@ -354,8 +368,8 @@ class RasterSource(private val input: PageInput) : PageSource {
             val t3 = System.nanoTime()
             android.util.Log.d(
                 "KavitaInk",
-                "crop page=$index ms=${ms(t0, t3)} read=${ms(t0, t1)} detect=${ms(t1, t2)} copy=${ms(t2, t3)} " +
-                    "cut=${region != null} redecode=$redecode skip=$fullBleed size=${bw}x$bh",
+                "crop page=$f ms=${ms(t0, t3)} read=${ms(t0, t1)} detect=${ms(t1, t2)} copy=${ms(t2, t3)} " +
+                    "cut=${region != null} redecode=$redecode skip=$fullBleed size=${bw}x$bh side=${ck % 3}",
             )
         }
         return out
@@ -364,7 +378,7 @@ class RasterSource(private val input: PageInput) : PageSource {
     override fun close() = input.close()
 }
 
-/** 系统自带 PdfRenderer，无需第三方库 */
+/** 系统自带 PdfRenderer，无需第三方库；拆分跨页时只渲染左半或右半 */
 class PdfSource(file: File) : PageSource {
     private val pfd = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
     private val renderer = PdfRenderer(pfd)
@@ -386,19 +400,24 @@ class PdfSource(file: File) : PageSource {
     override fun clearCrop() = crops.clear()
 
     @Synchronized
-    override fun decode(index: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt?): Bitmap? =
-        timedDecode(index, crop) { decodeImpl(index, reqW, reqH, fitWidth, crop) }
+    override fun decode(index: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt?, side: Int): Bitmap? =
+        timedDecode(index, crop) { decodeImpl(index, reqW, reqH, fitWidth, crop, side) }
 
-    private fun decodeImpl(index: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt?): Bitmap? {
+    private fun decodeImpl(index: Int, reqW: Int, reqH: Int, fitWidth: Boolean, crop: CropOpt?, side: Int): Bitmap? {
         if (index !in 0 until renderer.pageCount) return null
         val p = renderer.openPage(index)
         try {
             val pw = p.width.toFloat()
             val ph = p.height.toFloat()
-            val frac = if (crop != null) crops.get(index, crop) { probe(p, crop.black) } else FloatArray(0)
-            val l = if (frac.size == 4) frac[0] * pw else 0f
+            // 这一次要显示的部分（页面坐标，点）：整页或半页
+            val half = Split.half(p.width, p.height, side)
+            val bx = half?.get(0)?.toFloat() ?: 0f
+            val bw = half?.let { (it[2] - it[0]).toFloat() } ?: pw
+            // 裁切比例相对这一部分
+            val frac = if (crop != null) crops.get(index * 3 + side, crop) { probe(p, crop.black, bx, bw) } else FloatArray(0)
+            val l = bx + if (frac.size == 4) frac[0] * bw else 0f
             val t = if (frac.size == 4) frac[1] * ph else 0f
-            val rw = if (frac.size == 4) (frac[2] - frac[0]) * pw else pw
+            val rw = if (frac.size == 4) (frac[2] - frac[0]) * bw else bw
             val rh = if (frac.size == 4) (frac[3] - frac[1]) * ph else ph
             val scale = if (fitWidth) reqW / rw else min(reqW / rw, reqH / rh)
             var w = max(1, (rw * scale).toInt())
@@ -411,7 +430,7 @@ class PdfSource(file: File) : PageSource {
             }
             val b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
             b.eraseColor(Color.WHITE)
-            // 页面坐标（点）→ 位图像素：只渲染内容区域，按目标分辨率出图
+            // 页面坐标（点）→ 位图像素：只渲染需要的部分，按目标分辨率出图
             val m = Matrix()
             m.postTranslate(-l, -t)
             m.postScale(w / rw, h / rh)
@@ -422,14 +441,19 @@ class PdfSource(file: File) : PageSource {
         }
     }
 
-    private fun probe(p: PdfRenderer.Page, black: Boolean): FloatArray {
-        val k = PROBE_PDF / max(p.width, p.height).toFloat()
-        val w = max(8, (p.width * k).toInt())
-        val h = max(8, (p.height * k).toInt())
+    /** 把 [bx, bx + bw] 这一部分渲染成小图检测白边，结果相对这一部分 */
+    private fun probe(p: PdfRenderer.Page, black: Boolean, bx: Float, bw: Float): FloatArray {
+        val ph = p.height.toFloat()
+        val k = PROBE_PDF / max(bw, ph)
+        val w = max(8, (bw * k).toInt())
+        val h = max(8, (ph * k).toInt())
         val b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         return try {
             b.eraseColor(Color.WHITE)
-            p.render(b, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+            val m = Matrix()
+            m.postTranslate(-bx, 0f)
+            m.postScale(w / bw, h / ph)
+            p.render(b, null, m, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
             RawPixels.of(b)?.detectFrac(PROBE_PDF, black) ?: FloatArray(0)
         } finally {
             b.recycle()

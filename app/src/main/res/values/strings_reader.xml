@@ -162,4 +162,6 @@
     <string name="kfonts_downloading">Downloading %1$s: %2$s / %3$s</string>
     <string name="kfonts_done">Downloaded: %1$s. Choose it in Fonts or in the reader menu.</string>
     <string name="kfonts_cancelled">Download cancelled. It will resume where it stopped next time.</string>
+    <string name="split_wide">Split wide pages</string>
+    <string name="split_wide_note">in portrait, show each half of a two-page spread separately; the cover stays whole</string>
 </resources>

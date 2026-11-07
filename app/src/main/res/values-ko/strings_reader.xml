@@ -145,4 +145,6 @@
     <string name="kfonts_downloading">%1$s 다운로드 중: %2$s / %3$s</string>
     <string name="kfonts_done">다운로드 완료: %1$s. 글꼴 또는 읽기 메뉴에서 선택하세요.</string>
     <string name="kfonts_cancelled">다운로드가 취소되었습니다. 다음에 중단된 지점부터 이어서 다운로드합니다.</string>
+    <string name="split_wide">넓은 페이지 나누기</string>
+    <string name="split_wide_note">세로 모드에서 펼친 두 페이지를 반씩 나눠 표시합니다. 표지는 나누지 않습니다</string>
 </resources>

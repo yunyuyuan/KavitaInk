@@ -150,4 +150,6 @@
     <string name="kfonts_downloading">正在下载 %1$s：%2$s / %3$s</string>
     <string name="kfonts_done">已下载：%1$s。可以在「字体」或阅读菜单中选用。</string>
     <string name="kfonts_cancelled">已取消下载，下次会从断点继续。</string>
+    <string name="split_wide">拆分跨页</string>
+    <string name="split_wide_note">竖屏时把一张图里的左右两页分开显示，封面不拆</string>
 </resources>

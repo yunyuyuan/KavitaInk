@@ -83,6 +83,8 @@ class Prefs(ctx: Context) {
     /** 双页时首页（封面）单独显示 */
     var spreadCover: Boolean get() = bool("spreadCover", true); set(v) = putBool("spreadCover", v)
     var cropMargins: Boolean get() = bool("cropMargins", false); set(v) = putBool("cropMargins", v)
+    /** 拆分跨页：竖屏时把宽页拆成左右两半分别显示（默认关） */
+    var splitWide: Boolean get() = bool("splitWide", false); set(v) = putBool("splitWide", v)
     /** 裁白边时同时裁黑边 */
     var cropBlack: Boolean get() = bool("cropBlack", false); set(v) = putBool("cropBlack", v)
 

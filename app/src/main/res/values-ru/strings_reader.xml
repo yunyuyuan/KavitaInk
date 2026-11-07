@@ -157,4 +157,6 @@
     <string name="kfonts_downloading">Скачивание %1$s: %2$s / %3$s</string>
     <string name="kfonts_done">Скачан: %1$s. Выберите его в разделе «Шрифты» или в меню чтения.</string>
     <string name="kfonts_cancelled">Скачивание отменено. В следующий раз оно продолжится с места остановки.</string>
+    <string name="split_wide">Разделять широкие страницы</string>
+    <string name="split_wide_note">в портретной ориентации показывать каждую половину разворота отдельно; обложка остаётся целой</string>
 </resources>
