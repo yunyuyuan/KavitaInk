@@ -261,7 +261,7 @@ python3 tools/e2e_update.py <低版本号的 apk>
 
 - 竖排（日文直排）EPUB 会被转成横排显示。
 - 漫画中的 AVIF 图片需要 Android 12+ 才能解码；JXL 图片 Android 系统目前无法解码（Kavita 默认保留原图格式，JPG / PNG / WebP 不受影响）。
-- Android 10 和 11 的系统规则：屏幕去掉状态栏、导航栏后长宽比不超过 4:3 时，系统会忽略应用指定的屏幕方向（AOSP `config_closeToSquareDisplayMaxAspectRatio = 1.333`），这时设置里的「屏幕方向」不起作用，请用系统自带的旋转。Android 12 起没有这条限制。
+- Android 10 和 11 的系统规则：屏幕去掉状态栏、导航栏后长宽比不超过 4:3 时，系统会忽略应用指定的屏幕方向（AOSP `config_closeToSquareDisplayMaxAspectRatio = 1.333`），这时设置里的「屏幕方向」不起作用，请用系统自带的旋转。Android 12 起 AOSP 去掉了这条规则（个别厂商可能在大屏设备上通过系统的 ignoreOrientationRequest 设置忽略应用方向）。
 - 拆分跨页只按宽高比判断（宽度大于高度即视为跨页），不识别中缝位置，总是从正中间分开；本来就是一整幅的横图也会被拆开，遇到这种书可以在阅读菜单里临时关掉。
 - 包含多个文件的 EPUB 章节暂不支持（极少见）。
 - cbr / cb7 / rar / 7z 和图片文件夹不会保存原文件，而是由服务器解压后逐页下载到应用私有目录，其他阅读器看不到。
