@@ -10,7 +10,7 @@ import urllib.request
 import websocket
 
 ADB = "/home/ubuntu/android-sdk/platform-tools/adb"
-PKG = "com.manus.kavitaink"
+PKG = "net.yunyuyuan.kavitaink"
 
 
 def connect():

@@ -124,7 +124,7 @@ def shot(name):
 
 
 
-PKG = "com.manus.kavitaink"
+PKG = "net.yunyuyuan.kavitaink"
 
 
 def stop_app():

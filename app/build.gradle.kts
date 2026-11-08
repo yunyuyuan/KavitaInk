@@ -7,7 +7,7 @@ plugins {
 
 // ---------- 版本 ----------
 // 版本名可由 CI 覆盖：./gradlew assembleRelease -PappVersionName=1.2.0
-val baseVersionName = "1.4.0"
+val baseVersionName = "1.5.0"
 val appVersionName = (findProperty("appVersionName") as String?)?.takeIf { it.isNotBlank() } ?: baseVersionName
 
 /** 1.2.3 -> 10203；忽略 "-xxx" 后缀，同一版本的 CI 构建可以互相覆盖安装 */
@@ -34,11 +34,11 @@ val releaseKeyPassword = signingValue("KAVITAINK_KEY_PASSWORD", "keyPassword") ?
 val hasReleaseSigning = releaseKeystore.isFile && releaseStorePassword != null
 
 android {
-    namespace = "com.manus.kavitaink"
+    namespace = "net.yunyuyuan.kavitaink"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.manus.kavitaink"
+        applicationId = "net.yunyuyuan.kavitaink"
         // Android 5.0+，兼容大多数老款墨水屏阅读器
         // 正式包固定 29；-PtestMinSdk=28 只用于在 Android 9 模拟器上跑测试（无硬件加速时 Android 10+ 模拟器跑不动）
         minSdk = (findProperty("testMinSdk") as String?)?.toIntOrNull() ?: 29

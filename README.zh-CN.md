@@ -71,7 +71,10 @@
 
 ## 使用
 
-1. 从 [Releases](https://github.com/yunyuyuan/KavitaInk/releases/latest) 下载最新的 `KavitaInk-x.y.z.apk` 并安装（直接覆盖安装即可。注意 1.3.0 改了下载目录，之前版本下载的内容不会迁移，需要重新下载；旧文件在 `Android/data/com.manus.kavitaink/files/library/`，可以手动删掉）。
+1. 从 [Releases](https://github.com/yunyuyuan/KavitaInk/releases/latest) 下载最新的 `KavitaInk-x.y.z.apk` 并安装。之后的版本可以直接覆盖安装，或在应用内更新。
+
+   > **从 1.4.0 及更早版本升级**：1.5.0 把包名改成了 `net.yunyuyuan.kavitaink`，不能覆盖安装旧版，请先卸载旧版再安装。
+
 2. 打开后点右上角「书库」，填写服务器地址（如 `http://192.168.1.10:5000`），然后任选一种方式：
    - **用户名 + 密码**：只用于换取 Auth Key，密码不保存；
    - **Auth Key 或 OPDS 链接**：在 Kavita 网页「设置 → 账户 → Auth Keys / OPDS」复制，直接粘贴整个 OPDS 链接也可以。
@@ -130,7 +133,7 @@ PDF 的处理方式：使用系统自带的 `PdfRenderer` 渲染；若本机无�
                                                     小说/Big Novel/Big Novel.epub
     <书库名>/<系列文件夹>/.<文件名>.part        ← 下载中的临时文件，完成后改名
 
-Android/data/com.manus.kavitaink/files/index/<服务器>/s<系列ID>/   ← 私有索引
+Android/data/net.yunyuyuan.kavitaink/files/index/<服务器>/s<系列ID>/   ← 私有索引
     series.json  cover
     c<章节ID>/chapter.json        ← 下载完成才写入，记录原文件在下载目录里的相对路径
     c<章节ID>/pages/00000.jpg …   （只有逐页下载的章节才有：cbr / rar / 7z / 图片文件夹、本机打不开的 PDF）
@@ -141,7 +144,7 @@ Android/data/com.manus.kavitaink/files/index/<服务器>/s<系列ID>/   ← 私�
 代码结构：
 
 ```
-app/src/main/java/com/manus/kavitaink/
+app/src/main/java/net/yunyuyuan/kavitaink/
   core/      纯 Kotlin，不依赖 Android，可在电脑上直接单元测试
     KavitaApi.kt   接口客户端（HttpURLConnection + org.json）
     Parsers.kt     卷 / 章节解析；Texts.kt 按当前语言生成标题（Volume 1 / 第1卷 / 第3话…）

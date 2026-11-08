@@ -70,7 +70,10 @@ A minimal [Kavita](https://www.kavitareader.com/) client for Android, **designed
 
 ## Getting started
 
-1. Download the latest `KavitaInk-x.y.z.apk` from [Releases](https://github.com/yunyuyuan/KavitaInk/releases/latest) and install it. Installing over an older version is fine. Note that 1.3.0 changed the download folder: content downloaded by earlier versions is not migrated and has to be downloaded again; the old files are in `Android/data/com.manus.kavitaink/files/library/` and can be deleted by hand.
+1. Download the latest `KavitaInk-x.y.z.apk` from [Releases](https://github.com/yunyuyuan/KavitaInk/releases/latest) and install it. Later versions install over it, or update from within the app.
+
+   > **Upgrading from 1.4.0 or earlier**: 1.5.0 changed the package name to `net.yunyuyuan.kavitaink`, so it can't be installed over older versions; uninstall the old version, then install it.
+
 2. Open the app, tap "Libraries" at the top right, enter the server address (e.g. `http://192.168.1.10:5000`), then use either:
    - **Username + password**: only used to obtain an Auth Key; the password is not stored;
    - **Auth Key or OPDS URL**: copy it from the Kavita web UI under "Settings → Account → Auth Keys / OPDS"; pasting the whole OPDS URL works too.
@@ -131,7 +134,7 @@ Original files and the app's own records are stored separately:
                                                         Novels/Big Novel/Big Novel.epub
     <library>/<series folder>/.<file name>.part    ← temporary file while downloading, renamed when done
 
-Android/data/com.manus.kavitaink/files/index/<server>/s<series ID>/   ← private index
+Android/data/net.yunyuyuan.kavitaink/files/index/<server>/s<series ID>/   ← private index
     series.json  cover
     c<chapter ID>/chapter.json        ← written only when the download completes; stores the file's path relative to the download folder
     c<chapter ID>/pages/00000.jpg …   (only for chapters downloaded page by page: cbr / rar / 7z / image folders, PDFs the device can't open)
@@ -142,7 +145,7 @@ Library names and root folders come from `GET /api/Library/libraries`. The origi
 Code layout:
 
 ```
-app/src/main/java/com/manus/kavitaink/
+app/src/main/java/net/yunyuyuan/kavitaink/
   core/      Plain Kotlin with no Android dependencies; unit-tested directly on the JVM
     KavitaApi.kt   API client (HttpURLConnection + org.json)
     Parsers.kt     volume / chapter parsing; Texts.kt builds titles in the current language (Volume 1 / 第1卷 / 第3话…)

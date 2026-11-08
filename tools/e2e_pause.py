@@ -17,7 +17,7 @@ import time
 from adbui import *
 
 APK = sys.argv[1] if len(sys.argv) > 1 else "/home/ubuntu/KavitaInk/app/build/outputs/apk/release/app-release.apk"
-PKG = "com.manus.kavitaink"
+PKG = "net.yunyuyuan.kavitaink"
 BASE = "http://10.0.2.2:5001"
 SK = hashlib.sha1(BASE.lower().encode()).hexdigest()[:10]
 IDX = f"/sdcard/Android/data/{PKG}/files/index/{SK}"   # 私有索引

@@ -5,7 +5,7 @@ import time
 sys.path.insert(0, '/home/ubuntu/KavitaInk/tools')
 from adbui import shell, shot, texts, tap_text, set_app_lang, sh
 
-PKG = "com.manus.kavitaink"
+PKG = "net.yunyuyuan.kavitaink"
 APK = sys.argv[1]
 
 

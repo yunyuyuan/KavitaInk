@@ -10,7 +10,7 @@ import time
 from adbui import *
 
 APK = sys.argv[1] if len(sys.argv) > 1 else "/home/ubuntu/KavitaInk/app/build/outputs/apk/release/app-release.apk"
-PKG = "com.manus.kavitaink"
+PKG = "net.yunyuyuan.kavitaink"
 W, H = 1072, 1448
 step = sys.argv[2] if len(sys.argv) > 2 else "all"
 
