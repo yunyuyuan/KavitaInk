@@ -9,7 +9,10 @@
     <string name="reader_orientation">螢幕：%1$s</string>
     <string name="reader_status_bar">狀態列</string>
     <string name="reader_full_refresh">全螢幕刷新</string>
-    <string name="reader_exit">退出</string>
+    <string name="reader_tab_go">導覽</string>
+    <string name="reader_tab_page">頁面</string>
+    <string name="reader_tab_text">文字</string>
+    <string name="reader_tab_screen">螢幕</string>
     <string name="reader_last_page">已是最後一頁</string>
     <string name="reader_first_page">已是第一頁</string>
     <string name="reader_end_of_chapter">本章已讀完，再翻一頁開啟：\n%1$s</string>

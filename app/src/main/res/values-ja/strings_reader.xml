@@ -9,7 +9,10 @@
     <string name="reader_orientation">画面：%1$s</string>
     <string name="reader_status_bar">ステータスバー</string>
     <string name="reader_full_refresh">全画面リフレッシュ</string>
-    <string name="reader_exit">終了</string>
+    <string name="reader_tab_go">移動</string>
+    <string name="reader_tab_page">ページ</string>
+    <string name="reader_tab_text">文字</string>
+    <string name="reader_tab_screen">画面</string>
     <string name="reader_last_page">最後のページです</string>
     <string name="reader_first_page">最初のページです</string>
     <string name="reader_end_of_chapter">章の終わりです。もう一度ページをめくると開きます：\n%1$s</string>

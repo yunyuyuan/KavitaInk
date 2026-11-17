@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 阅读菜单的分页标签（端到端测试按 id 识别，与界面语言无关） -->
+    <item name="reader_tab_0" type="id" />
+    <item name="reader_tab_1" type="id" />
+    <item name="reader_tab_2" type="id" />
+</resources>

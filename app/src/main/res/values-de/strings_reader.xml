@@ -9,7 +9,10 @@
     <string name="reader_orientation">Bildschirm: %1$s</string>
     <string name="reader_status_bar">Statusleiste</string>
     <string name="reader_full_refresh">Vollständige Bildschirmaktualisierung</string>
-    <string name="reader_exit">Beenden</string>
+    <string name="reader_tab_go">Navigation</string>
+    <string name="reader_tab_page">Seite</string>
+    <string name="reader_tab_text">Text</string>
+    <string name="reader_tab_screen">Bildschirm</string>
     <string name="reader_last_page">Dies ist die letzte Seite</string>
     <string name="reader_first_page">Dies ist die erste Seite</string>
     <string name="reader_end_of_chapter">Kapitelende. Noch einmal umblättern, um zu öffnen:\n%1$s</string>

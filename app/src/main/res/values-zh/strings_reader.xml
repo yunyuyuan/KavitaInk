@@ -8,7 +8,10 @@
     <string name="reader_orientation">屏幕：%1$s</string>
     <string name="reader_status_bar">状态栏</string>
     <string name="reader_full_refresh">全刷屏幕</string>
-    <string name="reader_exit">退出阅读</string>
+    <string name="reader_tab_go">跳转</string>
+    <string name="reader_tab_page">画面</string>
+    <string name="reader_tab_text">文字</string>
+    <string name="reader_tab_screen">屏幕</string>
     <string name="reader_last_page">已经是最后一页</string>
     <string name="reader_first_page">已经是第一页</string>
     <string name="reader_end_of_chapter">本章已读完，再翻一页打开：\n%1$s</string>

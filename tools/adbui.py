@@ -72,12 +72,39 @@ def tap(x, y):
 def tap_text(text, exact=False, wait=60):
     end = time.time() + wait
     while time.time() < end:
-        p = find(text, exact)
-        if p:
-            tap(*p)
+        r = find_in_tabs(lambda t: (t == text) if exact else (text in t))
+        if r:
+            tap(r[1], r[2])
             return True
         time.sleep(2)
     raise RuntimeError(f"找不到控件：{text}；当前界面：{texts()[:30]}")
+
+
+def reader_tabs(root=None):
+    """阅读菜单的分页标签（按资源 id 识别，与界面语言无关）：[(文字, x, y, 是否选中)]"""
+    out = []
+    for t, x, y, n in nodes(root):
+        if re.search(r":id/reader_tab_\d$", n.get("resource-id", "")):
+            out.append((t, x, y, n.get("selected") == "true"))
+    return out
+
+
+def find_in_tabs(pred):
+    """在当前界面找文字满足 pred 的控件；找不到且阅读菜单开着时，依次切换各分页再找。
+    返回 (文字, x, y) 或 None（找到时停在该控件所在的分页）"""
+    root = dump()
+    for t, x, y, _ in nodes(root):
+        if pred(t):
+            return t, x, y
+    for _, tx, ty, sel in reader_tabs(root):
+        if sel:
+            continue
+        tap(tx, ty)
+        time.sleep(3)
+        for t, x, y, _ in nodes():
+            if pred(t):
+                return t, x, y
+    return None
 
 
 def wait_text(text, wait=120):

@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.text.InputType
 import android.widget.EditText
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import net.yunyuyuan.kavitaink.R
 import net.yunyuyuan.kavitaink.core.Kind
 import net.yunyuyuan.kavitaink.core.Spreads
@@ -53,6 +52,8 @@ class ImageReaderActivity : ReaderActivity() {
     private var waiting = false
     private var waitingPart = 0
     private var waitingFromEnd = false
+    /** 离开阅读器（例如进入设置页）时的显示设置；回来时和当前设置比较，变了才重新排版 */
+    private var pausedPrefs: List<Any>? = null
 
     override val rtl: Boolean get() = prefs.mangaRtl
     override val novel: Boolean get() = false
@@ -358,17 +359,20 @@ class ImageReaderActivity : ReaderActivity() {
         prefs.savePosition(chapter, Split.encode(page, part), ((units[unit].last() + 1) * 100) / n)
     }
 
-    override fun buildMenu(rows: LinearLayout) {
-        menuRow(
-            getString(R.string.img_jump) to ::askJump,
+    override val viewTabTitle = R.string.reader_tab_page
+
+    override fun buildNavMenu() {
+        menuRow(getString(R.string.img_jump) to ::askJump)
+    }
+
+    override fun buildViewMenu() {
+        val first = menuRow(
             getString(R.string.img_direction, getString(if (prefs.mangaRtl) R.string.dir_rtl else R.string.dir_ltr)) to {
                 prefs.mangaRtl = !prefs.mangaRtl
                 // 页序「跟随阅读方向」时，左右两页要交换；拆分页的前半换成另一侧
                 if (prefs.spreadOrder == 0 && (spreadOn || isSplit(unit) == true)) show(unit, part, false)
                 rebuildMenu()
             },
-        )
-        val zoom = menuRow(
             getString(R.string.img_zoom, getString(if (prefs.fitMode == 1) R.string.fit_width else R.string.fit_screen)) to {
                 prefs.fitMode = if (prefs.fitMode == 1) 0 else 1
                 relayout()
@@ -379,19 +383,22 @@ class ImageReaderActivity : ReaderActivity() {
                 view.contrast = prefs.contrast
                 rebuildMenu()
             },
-            getString(R.string.label_value, getString(R.string.split_wide), getString(if (prefs.splitWide) R.string.on else R.string.off)) to {
-                prefs.splitWide = !prefs.splitWide
+        )
+        // 双页模式只用「适应屏幕」
+        if (spreadOn) first[1].disable()
+        val shift = prefs.spreadShift(chapter)
+        val spread = menuRow(
+            getString(R.string.img_spread, ReaderOptions.spreadModeName(this, prefs.spreadMode)) to ::showSpread,
+            getString(R.string.label_value, getString(R.string.spread_shift), getString(if (shift) R.string.on else R.string.off)) to {
+                prefs.setSpreadShift(chapter, !shift)
                 relayout()
                 rebuildMenu()
             },
         )
-        // 双页模式只用「适应屏幕」
-        if (spreadOn) zoom[0].disable()
-        val shift = prefs.spreadShift(chapter)
-        val third = menuRow(
-            getString(R.string.img_spread, ReaderOptions.spreadModeName(this, prefs.spreadMode)) to ::showSpread,
-            getString(R.string.label_value, getString(R.string.spread_shift), getString(if (shift) R.string.on else R.string.off)) to {
-                prefs.setSpreadShift(chapter, !shift)
+        if (!spreadOn) spread[1].disable()
+        menuRow(
+            getString(R.string.label_value, getString(R.string.split_wide), getString(if (prefs.splitWide) R.string.on else R.string.off)) to {
+                prefs.splitWide = !prefs.splitWide
                 relayout()
                 rebuildMenu()
             },
@@ -407,7 +414,6 @@ class ImageReaderActivity : ReaderActivity() {
                 rebuildMenu()
             },
         )
-        if (!spreadOn) third[1].disable()
     }
 
     private fun showSpread() {
@@ -445,5 +451,28 @@ class ImageReaderActivity : ReaderActivity() {
         decoder.shutdownNow()
         source?.let { s -> Thread { runCatching { s.close() } }.start() }
         cache.clear()
+    }
+
+    /** 影响显示的设置（对比度另外处理，不需要重新解码）；最后两项是裁边 */
+    private fun displayPrefs(): List<Any> = with(prefs) {
+        listOf(mangaRtl, fitMode, spreadMode, spreadOrder, spreadGap, spreadDivider, dividerWidth, dividerColor,
+            spreadCover, splitWide, cropMargins, cropBlack)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (::view.isInitialized) pausedPrefs = displayPrefs()
+    }
+
+    override fun applyChangedPrefs(resized: Boolean) {
+        if (!::view.isInitialized) return
+        if (view.contrast != prefs.contrast) view.contrast = prefs.contrast
+        val before = pausedPrefs ?: return
+        pausedPrefs = null
+        val now = displayPrefs()
+        if (now == before) return
+        if (now.takeLast(2) != before.takeLast(2)) source?.clearCrop()
+        // 阅读区域尺寸变了（或还没完成首次排版）时 onSize 会按新设置排版，这里不必重复解码
+        if (!resized && started) relayout()
     }
 }

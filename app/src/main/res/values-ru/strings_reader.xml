@@ -9,7 +9,10 @@
     <string name="reader_orientation">Экран: %1$s</string>
     <string name="reader_status_bar">Строка состояния</string>
     <string name="reader_full_refresh">Полное обновление экрана</string>
-    <string name="reader_exit">Выход</string>
+    <string name="reader_tab_go">Навигация</string>
+    <string name="reader_tab_page">Страница</string>
+    <string name="reader_tab_text">Текст</string>
+    <string name="reader_tab_screen">Экран</string>
     <string name="reader_last_page">Это последняя страница</string>
     <string name="reader_first_page">Это первая страница</string>
     <string name="reader_end_of_chapter">Конец главы. Перелистните ещё раз, чтобы открыть:\n%1$s</string>

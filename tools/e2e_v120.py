@@ -113,22 +113,21 @@ def wait_any(cands, wait=60):
 
 
 def tap_prefix(prefix, wait=30):
-    """点击以 prefix 开头的控件（菜单按钮「双页：关闭」之类）"""
+    """点击以 prefix 开头的控件（菜单按钮「双页：关闭」之类；阅读菜单里会切换分页查找）"""
     end = time.time() + wait
     while time.time() < end:
-        for t, x, y, _ in nodes():
-            if t.startswith(prefix):
-                tap(x, y)
-                return t
+        r = find_in_tabs(lambda t: t.startswith(prefix))
+        if r:
+            tap(r[1], r[2])
+            return r[0]
         time.sleep(2)
     raise RuntimeError(f"找不到以「{prefix}」开头的控件：{texts()[:30]}")
 
 
 def label_of(prefix):
-    for t in texts():
-        if t.startswith(prefix):
-            return t
-    return None
+    """以 prefix 开头的控件文字；阅读菜单里会切换到它所在的分页"""
+    r = find_in_tabs(lambda t: t.startswith(prefix))
+    return r[0] if r else None
 
 
 # ---------- 本地内容 ----------
@@ -416,6 +415,7 @@ def sec_spread():
     res["menu_at_end"] = [t for t in texts() if re.search(r"\d+\s*[–-]\s*\d+", t)][:3]
     shot("v_sp_menu_end")
     # 双页时「缩放」显示为灰色
+    label_of(pre("img_zoom"))  # 切到「画面」分页
     zoom = [n for t, x, y, n in nodes() if t.startswith(pre("img_zoom"))]
     res["zoom_disabled"] = bool(zoom) and zoom[0].get("enabled") == "false"
     # 错开一页

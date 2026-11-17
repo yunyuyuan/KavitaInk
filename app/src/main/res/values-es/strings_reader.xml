@@ -9,7 +9,10 @@
     <string name="reader_orientation">Pantalla: %1$s</string>
     <string name="reader_status_bar">Barra de estado</string>
     <string name="reader_full_refresh">Refresco completo</string>
-    <string name="reader_exit">Salir</string>
+    <string name="reader_tab_go">Navegar</string>
+    <string name="reader_tab_page">Página</string>
+    <string name="reader_tab_text">Texto</string>
+    <string name="reader_tab_screen">Pantalla</string>
     <string name="reader_last_page">Esta es la última página</string>
     <string name="reader_first_page">Esta es la primera página</string>
     <string name="reader_end_of_chapter">Fin del capítulo. Avanza otra página para abrir:\n%1$s</string>

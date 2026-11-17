@@ -1021,10 +1021,6 @@
    "src": "fedd33a8a34d",
    "t": "Kapitelende. Noch einmal umblättern, um zu öffnen:\n%1$s"
   },
-  "reader_exit": {
-   "src": "c405d1bb2542",
-   "t": "Beenden"
-  },
   "reader_first_page": {
    "src": "4b8343b85db0",
    "t": "Dies ist die erste Seite"
@@ -1068,6 +1064,22 @@
   "reader_status_bar": {
    "src": "d29c9ff201fb",
    "t": "Statusleiste"
+  },
+  "reader_tab_go": {
+   "src": "e6b7d37bd85d",
+   "t": "Navigation"
+  },
+  "reader_tab_page": {
+   "src": "6c0cfaaaed85",
+   "t": "Seite"
+  },
+  "reader_tab_screen": {
+   "src": "5d8af05432f0",
+   "t": "Bildschirm"
+  },
+  "reader_tab_text": {
+   "src": "659358f0ff5a",
+   "t": "Text"
   },
   "refresh": {
    "src": "1bef86120ab0",
@@ -2826,10 +2838,6 @@
    "src": "fedd33a8a34d",
    "t": "Fin del capítulo. Avanza otra página para abrir:\n%1$s"
   },
-  "reader_exit": {
-   "src": "c405d1bb2542",
-   "t": "Salir"
-  },
   "reader_first_page": {
    "src": "4b8343b85db0",
    "t": "Esta es la primera página"
@@ -2873,6 +2881,22 @@
   "reader_status_bar": {
    "src": "d29c9ff201fb",
    "t": "Barra de estado"
+  },
+  "reader_tab_go": {
+   "src": "e6b7d37bd85d",
+   "t": "Navegar"
+  },
+  "reader_tab_page": {
+   "src": "6c0cfaaaed85",
+   "t": "Página"
+  },
+  "reader_tab_screen": {
+   "src": "5d8af05432f0",
+   "t": "Pantalla"
+  },
+  "reader_tab_text": {
+   "src": "659358f0ff5a",
+   "t": "Texto"
   },
   "refresh": {
    "src": "1bef86120ab0",
@@ -4644,10 +4668,6 @@
    "src": "fedd33a8a34d",
    "t": "Fin du chapitre. Tournez encore la page pour ouvrir :\n%1$s"
   },
-  "reader_exit": {
-   "src": "c405d1bb2542",
-   "t": "Quitter"
-  },
   "reader_first_page": {
    "src": "4b8343b85db0",
    "t": "C’est la première page"
@@ -4691,6 +4711,22 @@
   "reader_status_bar": {
    "src": "d29c9ff201fb",
    "t": "Barre d’état"
+  },
+  "reader_tab_go": {
+   "src": "e6b7d37bd85d",
+   "t": "Naviguer"
+  },
+  "reader_tab_page": {
+   "src": "6c0cfaaaed85",
+   "t": "Page"
+  },
+  "reader_tab_screen": {
+   "src": "5d8af05432f0",
+   "t": "Écran"
+  },
+  "reader_tab_text": {
+   "src": "659358f0ff5a",
+   "t": "Texte"
   },
   "refresh": {
    "src": "1bef86120ab0",
@@ -6440,10 +6476,6 @@
    "src": "fedd33a8a34d",
    "t": "章の終わりです。もう一度ページをめくると開きます：\n%1$s"
   },
-  "reader_exit": {
-   "src": "c405d1bb2542",
-   "t": "終了"
-  },
   "reader_first_page": {
    "src": "4b8343b85db0",
    "t": "最初のページです"
@@ -6487,6 +6519,22 @@
   "reader_status_bar": {
    "src": "d29c9ff201fb",
    "t": "ステータスバー"
+  },
+  "reader_tab_go": {
+   "src": "e6b7d37bd85d",
+   "t": "移動"
+  },
+  "reader_tab_page": {
+   "src": "6c0cfaaaed85",
+   "t": "ページ"
+  },
+  "reader_tab_screen": {
+   "src": "5d8af05432f0",
+   "t": "画面"
+  },
+  "reader_tab_text": {
+   "src": "659358f0ff5a",
+   "t": "文字"
   },
   "refresh": {
    "src": "1bef86120ab0",
@@ -8210,10 +8258,6 @@
    "src": "fedd33a8a34d",
    "t": "장의 끝입니다. 한 번 더 넘기면 다음 콘텐츠가 열립니다:\n%1$s"
   },
-  "reader_exit": {
-   "src": "c405d1bb2542",
-   "t": "나가기"
-  },
   "reader_first_page": {
    "src": "4b8343b85db0",
    "t": "첫 페이지입니다"
@@ -8257,6 +8301,22 @@
   "reader_status_bar": {
    "src": "d29c9ff201fb",
    "t": "상태 표시줄"
+  },
+  "reader_tab_go": {
+   "src": "e6b7d37bd85d",
+   "t": "이동"
+  },
+  "reader_tab_page": {
+   "src": "6c0cfaaaed85",
+   "t": "페이지"
+  },
+  "reader_tab_screen": {
+   "src": "5d8af05432f0",
+   "t": "화면"
+  },
+  "reader_tab_text": {
+   "src": "659358f0ff5a",
+   "t": "텍스트"
   },
   "refresh": {
    "src": "1bef86120ab0",
@@ -10002,10 +10062,6 @@
    "src": "fedd33a8a34d",
    "t": "Fim do capítulo. Avance a página novamente para abrir:\n%1$s"
   },
-  "reader_exit": {
-   "src": "c405d1bb2542",
-   "t": "Sair"
-  },
   "reader_first_page": {
    "src": "4b8343b85db0",
    "t": "Esta é a primeira página"
@@ -10049,6 +10105,22 @@
   "reader_status_bar": {
    "src": "d29c9ff201fb",
    "t": "Barra de status"
+  },
+  "reader_tab_go": {
+   "src": "e6b7d37bd85d",
+   "t": "Navegar"
+  },
+  "reader_tab_page": {
+   "src": "6c0cfaaaed85",
+   "t": "Página"
+  },
+  "reader_tab_screen": {
+   "src": "5d8af05432f0",
+   "t": "Tela"
+  },
+  "reader_tab_text": {
+   "src": "659358f0ff5a",
+   "t": "Texto"
   },
   "refresh": {
    "src": "1bef86120ab0",
@@ -11831,10 +11903,6 @@
    "src": "fedd33a8a34d",
    "t": "Конец главы. Перелистните ещё раз, чтобы открыть:\n%1$s"
   },
-  "reader_exit": {
-   "src": "c405d1bb2542",
-   "t": "Выход"
-  },
   "reader_first_page": {
    "src": "4b8343b85db0",
    "t": "Это первая страница"
@@ -11878,6 +11946,22 @@
   "reader_status_bar": {
    "src": "d29c9ff201fb",
    "t": "Строка состояния"
+  },
+  "reader_tab_go": {
+   "src": "e6b7d37bd85d",
+   "t": "Навигация"
+  },
+  "reader_tab_page": {
+   "src": "6c0cfaaaed85",
+   "t": "Страница"
+  },
+  "reader_tab_screen": {
+   "src": "5d8af05432f0",
+   "t": "Экран"
+  },
+  "reader_tab_text": {
+   "src": "659358f0ff5a",
+   "t": "Текст"
   },
   "refresh": {
    "src": "1bef86120ab0",
@@ -13640,10 +13724,6 @@
    "src": "fedd33a8a34d",
    "t": "本章已讀完，再翻一頁開啟：\n%1$s"
   },
-  "reader_exit": {
-   "src": "c405d1bb2542",
-   "t": "退出"
-  },
   "reader_first_page": {
    "src": "4b8343b85db0",
    "t": "已是第一頁"
@@ -13687,6 +13767,22 @@
   "reader_status_bar": {
    "src": "d29c9ff201fb",
    "t": "狀態列"
+  },
+  "reader_tab_go": {
+   "src": "e6b7d37bd85d",
+   "t": "導覽"
+  },
+  "reader_tab_page": {
+   "src": "6c0cfaaaed85",
+   "t": "頁面"
+  },
+  "reader_tab_screen": {
+   "src": "5d8af05432f0",
+   "t": "螢幕"
+  },
+  "reader_tab_text": {
+   "src": "659358f0ff5a",
+   "t": "文字"
   },
   "refresh": {
    "src": "1bef86120ab0",

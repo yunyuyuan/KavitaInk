@@ -68,18 +68,31 @@ abstract class BaseActivity : Activity() {
     /** 若设置，则音量键 / 翻页键用来整屏翻列表 */
     protected var pagedList: ListView? = null
 
+    /** 创建这个界面时的语言设置；回到前台时变了（在设置页改过）就重建 */
+    private var langTag: String? = null
+    /** onResume 里已经发起重建：子类不必再刷新内容 */
+    protected var recreating = false
+        private set
+
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(Lang.wrap(base))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        langTag = Lang.current(this)
         applyOrientation()
         overridePendingTransition(0, 0)
     }
 
     override fun onResume() {
         super.onResume()
+        // 在设置页改了语言：Android 12 及以下只有设置页自己会重建，返回到的界面在这里重建
+        if (langTag != null && Lang.current(this) != langTag) {
+            recreating = true
+            recreate()
+            return
+        }
         // 从设置页返回时立即生效
         applyOrientation()
         // 从系统授权页回来：已授权就接着做刚才被拦下的操作（例如下载）

@@ -49,7 +49,7 @@ A minimal [Kavita](https://www.kavitareader.com/) client for Android, **designed
 
 **Check for updates**: GitHub Releases is contacted only when you tap "Check for updates" in Settings; there are no background or scheduled checks. When a new version is found you can download it in the app (cancellable and resumable) and hand it to the system installer; the package name and signature are verified before installing.
 
-**Page turning**: Tap the left / right side, swipe, use the volume keys (direction can be swapped), hardware page-turn keys or the D-pad. Tap the center or long-press to open the menu. Turning past the end of a chapter opens the next downloaded chapter.
+**Page turning**: Tap the left / right side, swipe, use the volume keys (direction can be swapped), hardware page-turn keys or the D-pad. Tap the center or long-press to open the menu: the bar at the top has Back (leave the reader), the title and Settings; the controls at the bottom are split into three tabs, Navigate (jump to page / table of contents, previous / next chapter), Page for comics or Text for novels (reading direction, zoom, contrast, two-page spread, split wide pages, auto-trim; or text size, line height, font, layout), and Screen (orientation, status bar, full refresh). The tabs stay at the very bottom, and the menu reopens on the tab you used last. Settings changed there apply as soon as you return to the book, without reopening it. Turning past the end of a chapter opens the next downloaded chapter.
 
 ## Power saving and E Ink design
 
@@ -266,6 +266,10 @@ KAVITA_PASS=xxx python3 tools/e2e_v120.py                              # or run 
 # menu toggle); one CBZ group and one PDF group
 python3 tools/make_fixtures_v140.py <Kavita comics library folder>    # generate test files, then scan that library in Kavita
 python3 tools/e2e_split.py                                             # or only cbz / pdf
+# 1.6.0 Reader menu and Settings from the reader: top bar (Back / title / Settings), the three tabs and their buttons, the last tab
+# is remembered, every button has its bottom border; after changing split wide pages, the comic status bar, text size or the
+# language in Settings, going back applies it right away (the language also for the bookshelf), and the reading position is kept
+KAVITA_PASS=xxx python3 tools/e2e_reader_settings.py app/build/outputs/apk/release/app-release.apk
 
 # In-app update: build a release-signed APK with a lower version, e.g. -PappVersionName=1.1.9;
 # the script installs it, checks for updates against the latest GitHub Release, downloads, verifies the signature and upgrades through the system installer

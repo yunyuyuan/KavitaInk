@@ -11,7 +11,6 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import net.yunyuyuan.kavitaink.Prefs
 import net.yunyuyuan.kavitaink.R
 import net.yunyuyuan.kavitaink.ui.fontName
@@ -55,6 +54,12 @@ class EpubReaderActivity : ReaderActivity() {
 
     @Volatile private var book: EpubBook? = null
     private var web: WebView? = null
+    /**
+     * 加载 / 重新分页时盖在 WebView 上的白板，中间状态（先排到第一页再跳到目标页）不显示出来。
+     * 不把 WebView 设为 INVISIBLE：从设置页返回、WebView 刚恢复时，隐藏再显示后 Chromium 不出新的一帧，
+     * 屏幕停在暂停前残留的部分旧图块上，要翻一页才完整显示（Android 10 实测）。
+     */
+    private var cover: View? = null
     private var spine = 0
     private var page = 0
     private var pageCount = 1
@@ -161,6 +166,12 @@ class EpubReaderActivity : ReaderActivity() {
             }
         }
         frame.addView(w, FrameLayout.LayoutParams(MATCH, MATCH))
+        // 白板不可点击，触摸照常落到下面的 WebView
+        cover = View(this).apply {
+            setBackgroundColor(0xFFFFFFFF.toInt())
+            visibility = View.GONE
+        }
+        frame.addView(cover, FrameLayout.LayoutParams(MATCH, MATCH))
 
         bg({ EpubBook(chapter.epubFile) }) { b, err ->
             if (b == null) {
@@ -195,7 +206,7 @@ class EpubReaderActivity : ReaderActivity() {
         val d = resources.displayMetrics.density
         cssW = floor(w.width / d).toInt()
         cssH = floor(w.height / d).toInt()
-        if (t !is Target.First) w.visibility = View.INVISIBLE
+        if (t !is Target.First) cover?.visibility = View.VISIBLE
         currentUrl = BASE + b.spine[spine].split('/').joinToString("/") { Uri.encode(it) }
         w.loadUrl(currentUrl)
     }
@@ -226,7 +237,7 @@ class EpubReaderActivity : ReaderActivity() {
         w.evaluateJavascript("__einkGo($page)") {
             if (!ready) {
                 ready = true
-                w.visibility = View.VISIBLE
+                cover?.visibility = View.GONE
             }
         }
         updateInfo()
@@ -280,18 +291,23 @@ class EpubReaderActivity : ReaderActivity() {
         prefs.savePosition(chapter, "$spine:$page:$pageCount", bookPercent())
     }
 
-    override fun buildMenu(rows: LinearLayout) {
+    override val viewTabTitle = R.string.reader_tab_text
+
+    override fun buildNavMenu() {
+        menuRow(getString(R.string.epub_toc) to ::showToc)
+    }
+
+    override fun buildViewMenu() {
         menuRow(
-            getString(R.string.epub_toc) to ::showToc,
             getString(R.string.epub_font_smaller) to { step(FONT_STEPS, prefs.fontZoom, -1) { prefs.fontZoom = it } },
             getString(R.string.epub_font_larger) to { step(FONT_STEPS, prefs.fontZoom, +1) { prefs.fontZoom = it } },
-        )
-        menuRow(
             getString(R.string.epub_line_height, lineHeightName(prefs.lineHeight)) to {
                 prefs.lineHeight = ReaderOptions.next(LINE_STEPS, prefs.lineHeight)
                 relayout()
                 rebuildMenu()
             },
+        )
+        menuRow(
             getString(R.string.epub_font, fontName(prefs.fontId)) to ::chooseFont,
             getString(R.string.epub_layout) to ::showLayout,
         )
@@ -411,11 +427,16 @@ class EpubReaderActivity : ReaderActivity() {
         WebResourceResponse("text/plain", "utf-8", 404, "Not Found", emptyMap(), ByteArrayInputStream(ByteArray(0)))
 
     override fun onResume() {
-        super.onResume()
+        // 先恢复 WebView，基类的 onResume 可能马上要重新排版
         web?.onResume()
         web?.resumeTimers()
-        // 从字体管理页返回：字体可能被更换或删除
-        if (ready && novelStyle() != style) relayout()
+        super.onResume()
+    }
+
+    /** 从设置页 / 字体管理页返回：字号、字体（可能被删除）、行距、排版、强制黑字可能改了 */
+    override fun applyChangedPrefs(resized: Boolean) {
+        if (!ready || resized) return  // 尺寸变化时布局监听会按新设置重新分页
+        if (novelStyle() != style || web?.settings?.textZoom != prefs.fontZoom) relayout()
     }
 
     override fun onPause() {

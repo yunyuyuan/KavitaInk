@@ -146,6 +146,9 @@ class Prefs(ctx: Context) {
     var fullRefreshEvery: Int get() = int("fullRefreshEvery", 0); set(v) = putInt("fullRefreshEvery", v)
     var showCovers: Boolean get() = bool("showCovers", true); set(v) = putBool("showCovers", v)
     var notifAsked: Boolean get() = bool("notifAsked", false); set(v) = putBool("notifAsked", v)
+    /** 阅读菜单上次停留的分页（小说、漫画分开记） */
+    fun menuTab(novel: Boolean): Int = int(if (novel) "menuTabNovel" else "menuTabManga", 0)
+    fun setMenuTab(novel: Boolean, v: Int) = putInt(if (novel) "menuTabNovel" else "menuTabManga", v)
 
     // ---------- 阅读进度（仅本地） ----------
     fun position(c: LocalChapter): String = pr.getString("pos:${c.serverKey}:${c.chapterId}", "") ?: ""
